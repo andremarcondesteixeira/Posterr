@@ -1,9 +1,7 @@
-﻿#pragma warning disable CS8604 // Possible null reference argument.
-
-using Posterr.Core.Domain.Users;
+﻿using Posterr.Core.Domain.Users;
 using Posterr.Core.Domain.Users.Exceptions;
 
-namespace Posterr.Core.Domain.Test.Users;
+namespace Posterr.Core.Domain.Tests.Users;
 
 public class UserTests
 {
@@ -14,6 +12,7 @@ public class UserTests
         Assert.Equal("username", user.Username.Value);
     }
 
+#pragma warning disable CS8604 // Possible null reference argument.
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -23,6 +22,6 @@ public class UserTests
         // This test will guarantee tha the User entity is not swallowing the exception
         Assert.Throws<InvalidUsernameException>(() => new User(username));
     }
+#pragma warning restore CS8604 // Possible null reference argument.
 }
 
-#pragma warning restore CS8604 // Possible null reference argument.
