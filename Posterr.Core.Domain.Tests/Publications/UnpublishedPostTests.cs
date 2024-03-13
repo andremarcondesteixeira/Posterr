@@ -19,6 +19,7 @@ public class UnpublishedPostTests
     }
 
 #pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
     [Fact]
     public void GivenNullAuthor_WhenInstantiatingUnpublishedPostEntity_ThenThrowException()
     {
@@ -34,6 +35,7 @@ public class UnpublishedPostTests
         Assert.Throws<EmptyPostContentException>(() => new UnpublishedPost(new User("username"), content));
     }
 #pragma warning restore CS8604 // Possible null reference argument.
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
     [Fact]
     public async Task GivenUserHasNotReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenSucceed()
