@@ -5,13 +5,15 @@
 // Beyond this, for the scope of this test, I don't care about the date when a User was created.
 public sealed record User
 {
-    public Username Username { get; }
+    private readonly Username _username;
+
+    public string Username { get => _username.Value; }
 
     public User(string username)
     {
         // Here, the Username value object performs the validation.
         // I'm implementing the concept of making illegal states unrepresentable.
         // Doing validation in the constructor is, in my opinion, the strongest way of making illegal states unrepresentable in C#.
-        Username = new Username(username);
+        _username = new Username(username);
     }
 }

@@ -9,7 +9,7 @@ public class UserTests
     public void GivenValidParameters_WhenInstantiatingUserEntity_ThenSucceed()
     {
         var user = new User("username");
-        Assert.Equal("username", user.Username.Value);
+        Assert.Equal("username", user.Username);
     }
 
 #pragma warning disable CS8604 // Possible null reference argument.
