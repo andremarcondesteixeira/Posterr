@@ -4,12 +4,13 @@ using Posterr.Core.Domain.Users;
 
 namespace Posterr.Core.Domain.Tests.Publications;
 
+// TODO: Replace occurrences of new User with A.Fake<User>() by introducing an interface, which can be mocked.
+// Currently, sealed records cannot be mocked.
 public class PostTests
 {
     [Fact]
     public void GivenValidParameters_WhenInstantiatingPostEntity_ThenSucceed()
     {
-        // TODO: Future proof this test by creating an interface that can be mocked. User is sealed and cannot be mocked.
         var author = new User("username");
         var publicationDate = DateTime.UtcNow;
         var content = "test";
@@ -34,7 +35,6 @@ public class PostTests
         Assert.Throws<EmptyPostContentException>(() => Post
             .Builder()
             .WithId(1)
-            // TODO: Future proof this test by creating an interface that can be mocked. User is sealed and cannot be mocked.
             .WithAuthor(new User("username"))
             .WithPublicationDate(DateTime.UtcNow)
             .WithContent(content)
@@ -49,7 +49,6 @@ public class PostTests
         Assert.Throws<MaxPostContentLengthExceededException>(() => Post
             .Builder()
             .WithId(1)
-            // TODO: Future proof this test by creating an interface that can be mocked. User is sealed and cannot be mocked.
             .WithAuthor(new User("username"))
             .WithPublicationDate(DateTime.UtcNow)
             .WithContent(content)
@@ -57,7 +56,6 @@ public class PostTests
         );
     }
 
-#pragma warning disable CS8604 // Possible null reference argument.
     [Theory]
     [InlineData(true, true, true, true)]
     [InlineData(true, true, true, false)]
@@ -102,7 +100,6 @@ public class PostTests
             }
             else
             {
-                // TODO: Future proof this test by creating an interface that can be mocked. User is sealed and cannot be mocked.
                 postBuilder = postBuilder.WithAuthor(new User("username"));
             }
             
@@ -130,5 +127,4 @@ public class PostTests
 
         Assert.Equal(expectedListOfPropsWitNullValue, exception.PropertiesWithNullValue);
     }
-#pragma warning restore CS8604 // Possible null reference argument.
 }
