@@ -7,19 +7,19 @@ namespace Posterr.Core.Domain.Publications;
 // This could lead to some challenges in communication with the stakeholders: Is a Post a form of an UnpublishedPost?
 // Moreover, Post and UnpublishedPost have different responsibilities and could change for different reasons,
 // and because of this, I don't see one as being a subtype of the other
-public sealed record UnpublishedPost
+public sealed record UnpublishedPost : IUnpublishedPost
 {
     // This doesn't feel like the appropriate place for this const
     public const ushort MAX_ALLOWED_DAILY_PUBLICATIONS_BY_USER = 5;
 
     private readonly PostContent _content;
     public string Content { get => _content.Value; }
-    public User Author { get; }
+    public IUser Author { get; }
 
     // Here, I decided to get an User entity instead of just the author name.
     // That's because I understand that checking if the User exists is an Application Business Rule.
     // Therefore, the Application layer should pass the Domain layer an already verified user.
-    public UnpublishedPost(User author, string content)
+    public UnpublishedPost(IUser author, string content)
     {
         ArgumentNullException.ThrowIfNull(author);
 
@@ -29,7 +29,7 @@ public sealed record UnpublishedPost
         Author = author;
     }
 
-    public async Task<Post> Publish(IDomainPersistencePort persistencePort)
+    public async Task<IPost> Publish(IDomainPersistencePort persistencePort)
     {
         if (await persistencePort.AmountOfPublicationsMadeTodayBy(Author) >= MAX_ALLOWED_DAILY_PUBLICATIONS_BY_USER)
         {

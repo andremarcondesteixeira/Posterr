@@ -14,17 +14,17 @@ namespace Posterr.Core.Domain.Publications;
 //         Jeff: Hey Jimmy, we need to delete the post #1234 because it violated our terms of conduct
 //         Jimmy: Done!
 // Which one is easier? ;)
-public sealed record Post
+public sealed record Post : IPost
 {
     private readonly PostContent _content;
     public long Id { get; }
-    public User Author { get; }
+    public IUser Author { get; }
     public DateTime PublicationDate { get; }
     public string Content { get => _content.Value; }
 
     private Post(
         long id,
-        User author,
+        IUser author,
         DateTime publicationDate,
         string content
     )
@@ -44,12 +44,12 @@ public sealed record Post
     public sealed record PostBuilder
     {
         long? Id { get; set; }
-        User? Author { get; set; }
+        IUser? Author { get; set; }
         DateTime? PublicationDate { get; set; }
         string? Content { get; set; }
 
         public PostBuilder WithId(long id) => this with { Id = id };
-        public PostBuilder WithAuthor(User author) => this with { Author = author };
+        public PostBuilder WithAuthor(IUser author) => this with { Author = author };
         public PostBuilder WithPublicationDate(DateTime when) => this with { PublicationDate = when };
         public PostBuilder WithContent(string content) => this with { Content = content };
 

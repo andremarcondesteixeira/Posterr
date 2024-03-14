@@ -11,7 +11,7 @@ public class UnpublishedPostTests
     [Fact]
     public void GivenValidParameters_WhenInstantiatingUnpublishedPostEntity_ThenSucceed()
     {
-        var user = new User("username");
+        var user = A.Fake<IUser>();
         var content = "content";
         var unpublishedPost = new UnpublishedPost(user, content);
         Assert.Equal(user, unpublishedPost.Author);
@@ -32,7 +32,7 @@ public class UnpublishedPostTests
     [InlineData(" ")]
     public void GivenEmptyPostContent_WhenInstantiatingUnpublishedPostEntity_ThenThrowException(string? content)
     {
-        Assert.Throws<EmptyPostContentException>(() => new UnpublishedPost(new User("username"), content));
+        Assert.Throws<EmptyPostContentException>(() => new UnpublishedPost(A.Fake<IUser>(), content));
     }
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
@@ -40,7 +40,7 @@ public class UnpublishedPostTests
     [Fact]
     public async Task GivenUserHasNotReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenSucceed()
     {
-        var user = new User("username");
+        var user = A.Fake<IUser>();
         var content = "content";
         var unpublishedPost = new UnpublishedPost(user, content);
         var now = DateTime.UtcNow;

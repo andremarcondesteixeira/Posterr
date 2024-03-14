@@ -1,4 +1,5 @@
-﻿using Posterr.Core.Domain.Publications;
+﻿using FakeItEasy;
+using Posterr.Core.Domain.Publications;
 using Posterr.Core.Domain.Users;
 
 namespace Posterr.Core.Domain.Tests.Publications;
@@ -8,15 +9,12 @@ namespace Posterr.Core.Domain.Tests.Publications;
 public class RepostTests
 {
     [Fact]
-    public void GivenValidArguments_WhenCreatingRepostEntity_ThenSucceed()
+    public void GivenValidArguments_WhenInstantiatingRepostEntity_ThenSucceed()
     {
-        var repostAuthor = new User("username");
-        var originalPost = Post.Builder()
-            .WithId(1)
-            .WithAuthor(new User("originalAuthor"))
-            .WithPublicationDate(DateTime.UtcNow)
-            .WithContent("content")
-            .Build();
+        // Using fakes here future proofs the test against changes in the user and post models.
+        // The same applies to other tests.
+        var repostAuthor = A.Fake<IUser>();
+        var originalPost = A.Fake<IPost>();
         var publicationDate = DateTime.UtcNow;
         var repost = new Repost(repostAuthor, originalPost, publicationDate);
 
@@ -31,7 +29,7 @@ public class RepostTests
     {
         var originalPost = Post.Builder()
             .WithId(1)
-            .WithAuthor(new User("originalAuthor"))
+            .WithAuthor(A.Fake<IUser>())
             .WithPublicationDate(DateTime.UtcNow)
             .WithContent("content")
             .Build();

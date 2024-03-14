@@ -1,17 +1,18 @@
-﻿using Posterr.Core.Domain.Publications;
+﻿using FakeItEasy;
+using Posterr.Core.Domain.Publications;
 using Posterr.Core.Domain.Publications.Exceptions;
 using Posterr.Core.Domain.Users;
 
 namespace Posterr.Core.Domain.Tests.Publications;
 
-// TODO: Replace occurrences of new User with A.Fake<User>() by introducing an interface, which can be mocked.
-// Currently, sealed records cannot be mocked.
 public class PostTests
 {
     [Fact]
     public void GivenValidParameters_WhenInstantiatingPostEntity_ThenSucceed()
     {
-        var author = new User("username");
+        // Using A.Fake for such a simple object provides value because
+        // this code will not need change when new properties are added to IUser
+        var author = A.Fake<IUser>();
         var publicationDate = DateTime.UtcNow;
         var content = "test";
         var post = Post.Builder()
@@ -35,7 +36,7 @@ public class PostTests
         Assert.Throws<EmptyPostContentException>(() => Post
             .Builder()
             .WithId(1)
-            .WithAuthor(new User("username"))
+            .WithAuthor(A.Fake<IUser>())
             .WithPublicationDate(DateTime.UtcNow)
             .WithContent(content)
             .Build()
@@ -49,7 +50,7 @@ public class PostTests
         Assert.Throws<MaxPostContentLengthExceededException>(() => Post
             .Builder()
             .WithId(1)
-            .WithAuthor(new User("username"))
+            .WithAuthor(A.Fake<IUser>())
             .WithPublicationDate(DateTime.UtcNow)
             .WithContent(content)
             .Build()
@@ -100,7 +101,7 @@ public class PostTests
             }
             else
             {
-                postBuilder = postBuilder.WithAuthor(new User("username"));
+                postBuilder = postBuilder.WithAuthor(A.Fake<IUser>());
             }
             
             if (makePublicationDateNull)

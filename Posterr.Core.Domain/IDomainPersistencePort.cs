@@ -7,6 +7,6 @@ namespace Posterr.Core.Domain;
 // interface compatible with a wider range of persistence methods
 public interface IDomainPersistencePort
 {
-    Task<ushort> AmountOfPublicationsMadeTodayBy(User author);
-    Task<Post> PublishNewPost(UnpublishedPost unpublishedPost);
+    Task<ushort> AmountOfPublicationsMadeTodayBy(IUser author);
+    Task<Post> PublishNewPost(IUnpublishedPost unpublishedPost);
 }
