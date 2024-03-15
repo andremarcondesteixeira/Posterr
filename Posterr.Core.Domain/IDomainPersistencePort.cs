@@ -8,5 +8,6 @@ namespace Posterr.Core.Domain;
 public interface IDomainPersistencePort
 {
     Task<ushort> AmountOfPublicationsMadeTodayBy(IUser author);
-    Task<Post> PublishNewPost(IUnpublishedPost unpublishedPost);
+    Task<IPost> PublishNewPost(IUnpublishedPost unpublishedPost);
+    Task<IRepost> PublishNewRepost(IUnpublishedRepost unpublishedRepost);
 }
