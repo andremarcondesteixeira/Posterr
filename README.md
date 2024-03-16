@@ -41,7 +41,7 @@ A.K.A Enterprise Business Rules in Clean Architecture.
 
 Apart from the basic CRUD operations, those are the business rules I identified, in the way I interpreted them, sorted and grouped in a way that makes sense for me:
 
-- Usernames are unique (alphanumeric)
+- Usernames are unique (alphanumeric) (This will be guaranteed only at database level, because this test asks not to make a Users CRUD)
 - Posts are text only
 - Publications cannot be deleted (or only Posts? I will consider both)
 - Restrictions when posting:
