@@ -26,14 +26,15 @@ public sealed record Post : IPost
         long id,
         IUser author,
         DateTime publicationDate,
-        string content
+        string content,
+        IDomainConfig domainConfig
     )
     {
         ArgumentNullException.ThrowIfNull(author);
         Id = id;
         Author = author;
         PublicationDate = publicationDate;
-        _content = new PostContent(content);
+        _content = new PostContent(content, domainConfig);
     }
 
     public static PostBuilder Builder() => new();
@@ -47,11 +48,13 @@ public sealed record Post : IPost
         IUser? Author { get; set; }
         DateTime? PublicationDate { get; set; }
         string? Content { get; set; }
+        IDomainConfig? DomainConfig { get; set; }
 
         public PostBuilder WithId(long id) => this with { Id = id };
         public PostBuilder WithAuthor(IUser author) => this with { Author = author };
         public PostBuilder WithPublicationDate(DateTime when) => this with { PublicationDate = when };
         public PostBuilder WithContent(string content) => this with { Content = content };
+        public PostBuilder WithDomainConfig(IDomainConfig domainConfig) => this with { DomainConfig = domainConfig };
 
         public Post Build()
         {
@@ -77,12 +80,17 @@ public sealed record Post : IPost
                 propertiesWithNullValue.Add(nameof(Content));
             }
 
+            if (DomainConfig is null)
+            {
+                propertiesWithNullValue.Add(nameof(DomainConfig));
+            }
+
             if (propertiesWithNullValue.Count > 0)
             {
                 throw new PostBuilderStateHadNullValuesOnBuildException(propertiesWithNullValue);
             }
 
-            return new Post((long)Id!, Author!, (DateTime)PublicationDate!, Content!);
+            return new Post((long)Id!, Author!, (DateTime)PublicationDate!, Content!, DomainConfig!);
         }
     }
 }

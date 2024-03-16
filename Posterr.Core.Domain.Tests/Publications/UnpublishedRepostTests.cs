@@ -7,28 +7,43 @@ namespace Posterr.Core.Domain.Tests.Publications;
 
 public class UnpublishedRepostTests
 {
+    private readonly IDomainConfig _domainConfig;
+
+    public UnpublishedRepostTests()
+    {
+        _domainConfig = A.Fake<IDomainConfig>();
+        A.CallTo(() => _domainConfig.MaxAllowedDailyPublicationsByUser).Returns((ushort) 5);
+    }
+
     [Fact]
     public void GivenValidParameters_WhenInstantiatingUnpublishedRepostEntity_ThenSucceed()
     {
         var author = A.Fake<IUser>();
         var originalPost = A.Fake<IPost>();
-        var unpublishedRepost = new UnpublishedRepost(author, originalPost);
+        var unpublishedRepost = new UnpublishedRepost(author, originalPost, _domainConfig);
 
         Assert.Equal(author, unpublishedRepost.Author);
         Assert.Equal(originalPost, unpublishedRepost.OriginalPost);
+        Assert.Equal(_domainConfig, unpublishedRepost.DomainConfig);
     }
 
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
     [Fact]
     public void GivenNullAuthor_WhenInstantiatingUnpublishedRepostEntity_ThenThrowException()
     {
-        Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(null, A.Fake<IPost>()));
+        Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(null, A.Fake<IPost>(), _domainConfig));
     }
 
     [Fact]
     public void GivenNullOriginalPost_WhenInstantiatingUnpublishedRepostEntity_ThenThrowException()
     {
-        Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(A.Fake<IUser>(), null));
+        Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(A.Fake<IUser>(), null, _domainConfig));
+    }
+
+    [Fact]
+    public void GivenNullDomainConfig_WhenInstantiatingUnpublishedRepostEntity_ThenThrowException()
+    {
+        Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(A.Fake<IUser>(), A.Fake<IPost>(), null));
     }
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
@@ -37,7 +52,7 @@ public class UnpublishedRepostTests
     {
         var author = A.Fake<IUser>();
         var originalPost = A.Fake<IPost>();
-        var unpublishedRepost = new UnpublishedRepost(author, originalPost);
+        var unpublishedRepost = new UnpublishedRepost(author, originalPost, _domainConfig);
         var now = DateTime.UtcNow;
 
         var domainPersistencePort = A.Fake<IDomainPersistencePort>();
@@ -55,11 +70,11 @@ public class UnpublishedRepostTests
     public async Task GivenUserHasReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenThrowException()
     {
         var author = A.Fake<IUser>();
-        var unpublishedRepost = new UnpublishedRepost(author, A.Fake<IPost>());
+        var unpublishedRepost = new UnpublishedRepost(author, A.Fake<IPost>(), _domainConfig);
 
         var domainPersistencePort = A.Fake<IDomainPersistencePort>();
         A.CallTo(() => domainPersistencePort.AmountOfPublicationsMadeTodayBy(author))
-            .Returns(Task.FromResult<ushort>(UnpublishedRepost.MAX_ALLOWED_DAILY_PUBLICATIONS_BY_USER));
+            .Returns(Task.FromResult(_domainConfig.MaxAllowedDailyPublicationsByUser));
 
         await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(
             () => unpublishedRepost.Publish(domainPersistencePort)

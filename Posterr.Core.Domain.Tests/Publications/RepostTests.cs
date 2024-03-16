@@ -27,19 +27,13 @@ public class RepostTests
     [Fact]
     public void GivenNullAuthor_WhenInstantiatingRepostEntity_ThenThrowException()
     {
-        var originalPost = Post.Builder()
-            .WithId(1)
-            .WithAuthor(A.Fake<IUser>())
-            .WithPublicationDate(DateTime.UtcNow)
-            .WithContent("content")
-            .Build();
-        Assert.Throws<ArgumentNullException>(() => new Repost(null, originalPost, DateTime.UtcNow));
+        Assert.Throws<ArgumentNullException>(() => new Repost(null, A.Fake<IPost>(), DateTime.UtcNow));
     }
 
     [Fact]
     public void GivenNullOriginalPost_WhenInstantiatingRepostEntity_ThenThrowException()
     {
-        Assert.Throws<ArgumentNullException>(() => new Repost(new User("username"), null, DateTime.UtcNow));
+        Assert.Throws<ArgumentNullException>(() => new Repost(A.Fake<IUser>(), null, DateTime.UtcNow));
     }
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 }

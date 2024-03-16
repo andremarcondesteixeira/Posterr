@@ -4,21 +4,21 @@ namespace Posterr.Core.Domain.Publications;
 
 public sealed record PostContent
 {
-    public const int MAX_LENGTH = 777;
-
     public string Value { get; }
 
-    public PostContent(string content)
+    public PostContent(string content, IDomainConfig domainConfig)
     {
+        ArgumentNullException.ThrowIfNull(domainConfig, nameof(domainConfig));
+
         if (string.IsNullOrWhiteSpace(content))
         {
             throw new EmptyPostContentException("The post content must not be empty.");
         }
 
-        if (content.Length > MAX_LENGTH)
+        if (content.Length > domainConfig.MaxPostLength)
         {
             throw new MaxPostContentLengthExceededException(
-                $"The post content is limited to {MAX_LENGTH} characters. Got {content.Length} instead."
+                $"The post content is limited to {domainConfig.MaxPostLength} characters. Got {content.Length} instead."
             );
         }
 

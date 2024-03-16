@@ -9,32 +9,32 @@ namespace Posterr.Core.Domain.Publications;
 // and because of this, I don't see one as being a subtype of the other
 public sealed record UnpublishedPost : IUnpublishedPost
 {
-    // This doesn't feel like the appropriate place for this const
-    public const ushort MAX_ALLOWED_DAILY_PUBLICATIONS_BY_USER = 5;
-
     private readonly PostContent _content;
     public string Content { get => _content.Value; }
     public IUser Author { get; }
+    public IDomainConfig DomainConfig { get; }
 
     // Here, I decided to get an User entity instead of just the author name.
     // That's because I understand that checking if the User exists is an Application Business Rule.
     // Therefore, the Application layer should pass the Domain layer an already verified user.
-    public UnpublishedPost(IUser author, string content)
+    public UnpublishedPost(IUser author, string content, IDomainConfig domainConfig)
     {
         ArgumentNullException.ThrowIfNull(author);
+        ArgumentNullException.ThrowIfNull(domainConfig);
 
         // Again, validation is done in constructors to enforce illegal states to be unrepresentable.
         // In this case, PostContent is checking if the rules about the post content are being applied.
-        _content = new PostContent(content);
+        _content = new PostContent(content, domainConfig);
         Author = author;
+        DomainConfig = domainConfig;
     }
 
     public async Task<IPost> Publish(IDomainPersistencePort persistencePort)
     {
-        if (await persistencePort.AmountOfPublicationsMadeTodayBy(Author) >= MAX_ALLOWED_DAILY_PUBLICATIONS_BY_USER)
+        if (await persistencePort.AmountOfPublicationsMadeTodayBy(Author) >= DomainConfig.MaxAllowedDailyPublicationsByUser)
         {
             throw new MaxAllowedDailyPublicationsByUserExceededException(
-                $"The user {Author.Username} is not allowed to make more than {MAX_ALLOWED_DAILY_PUBLICATIONS_BY_USER} publications in a single day."
+                $"The user {Author.Username} is not allowed to make more than {DomainConfig.MaxAllowedDailyPublicationsByUser} publications in a single day."
             );
         }
 

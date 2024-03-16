@@ -8,14 +8,24 @@ namespace Posterr.Core.Domain.Tests.Publications;
 
 public class UnpublishedPostTests
 {
+    private readonly IDomainConfig _domainConfig;
+
+    public UnpublishedPostTests()
+    {
+        _domainConfig = A.Fake<IDomainConfig>();
+        A.CallTo(() => _domainConfig.MaxAllowedDailyPublicationsByUser).Returns((ushort) 5);
+        A.CallTo(() => _domainConfig.MaxPostLength).Returns((uint) 7);
+    }
+
     [Fact]
     public void GivenValidParameters_WhenInstantiatingUnpublishedPostEntity_ThenSucceed()
     {
         var user = A.Fake<IUser>();
         var content = "content";
-        var unpublishedPost = new UnpublishedPost(user, content);
+        var unpublishedPost = new UnpublishedPost(user, content, _domainConfig);
         Assert.Equal(user, unpublishedPost.Author);
         Assert.Equal(content, unpublishedPost.Content);
+        Assert.Equal(_domainConfig, unpublishedPost.DomainConfig);
     }
 
 #pragma warning disable CS8604 // Possible null reference argument.
@@ -23,7 +33,13 @@ public class UnpublishedPostTests
     [Fact]
     public void GivenNullAuthor_WhenInstantiatingUnpublishedPostEntity_ThenThrowException()
     {
-        Assert.Throws<ArgumentNullException>(() => new UnpublishedPost(null, "content"));
+        Assert.Throws<ArgumentNullException>(() => new UnpublishedPost(null, "content", _domainConfig));
+    }
+
+    [Fact]
+    public void GivenNullDomainConfig_WhenInstantiatingUnpublishedPostEntity_ThenThrowException()
+    {
+        Assert.Throws<ArgumentNullException>(() => new UnpublishedPost(A.Fake<IUser>(), "content", null));
     }
 
     [Theory]
@@ -32,7 +48,7 @@ public class UnpublishedPostTests
     [InlineData(" ")]
     public void GivenEmptyPostContent_WhenInstantiatingUnpublishedPostEntity_ThenThrowException(string? content)
     {
-        Assert.Throws<EmptyPostContentException>(() => new UnpublishedPost(A.Fake<IUser>(), content));
+        Assert.Throws<EmptyPostContentException>(() => new UnpublishedPost(A.Fake<IUser>(), content, _domainConfig));
     }
 #pragma warning restore CS8604 // Possible null reference argument.
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
@@ -42,7 +58,7 @@ public class UnpublishedPostTests
     {
         var user = A.Fake<IUser>();
         var content = "content";
-        var unpublishedPost = new UnpublishedPost(user, content);
+        var unpublishedPost = new UnpublishedPost(user, content, _domainConfig);
         var now = DateTime.UtcNow;
 
         // No, this test it not useless and is not testing only mockery.
@@ -55,6 +71,7 @@ public class UnpublishedPostTests
             .WithAuthor(user)
             .WithPublicationDate(now)
             .WithContent(content)
+            .WithDomainConfig(_domainConfig)
             .Build()
         );
 
@@ -70,11 +87,11 @@ public class UnpublishedPostTests
     public async Task GivenUserHasReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenThrowException()
     {
         var user = new User("username");
-        var unpublishedPost = new UnpublishedPost(user, "content");
+        var unpublishedPost = new UnpublishedPost(user, "content", _domainConfig);
 
         var persistencePort = A.Fake<IDomainPersistencePort>();
         A.CallTo(() => persistencePort.AmountOfPublicationsMadeTodayBy(user))
-            .Returns(UnpublishedPost.MAX_ALLOWED_DAILY_PUBLICATIONS_BY_USER);
+            .Returns(_domainConfig.MaxAllowedDailyPublicationsByUser);
 
         await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(
             () => unpublishedPost.Publish(persistencePort)
