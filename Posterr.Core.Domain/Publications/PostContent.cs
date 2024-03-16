@@ -12,14 +12,12 @@ public sealed record PostContent
 
         if (string.IsNullOrWhiteSpace(content))
         {
-            throw new EmptyPostContentException("The post content must not be empty.");
+            throw new EmptyPostContentException();
         }
 
         if (content.Length > domainConfig.MaxPostLength)
         {
-            throw new MaxPostContentLengthExceededException(
-                $"The post content is limited to {domainConfig.MaxPostLength} characters. Got {content.Length} instead."
-            );
+            throw new MaxPostContentLengthExceededException(content.Length, domainConfig);
         }
 
         Value = content;

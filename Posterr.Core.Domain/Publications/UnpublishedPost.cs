@@ -1,4 +1,4 @@
-﻿using Posterr.Core.Domain.Exceptions;
+﻿using Posterr.Core.Domain.Publications.Exceptions;
 using Posterr.Core.Domain.Users;
 
 namespace Posterr.Core.Domain.Publications;
@@ -22,7 +22,7 @@ public sealed record UnpublishedPost : IUnpublishedPost
         ArgumentNullException.ThrowIfNull(author);
         ArgumentNullException.ThrowIfNull(domainConfig);
 
-        // Again, validation is done in constructors to enforce illegal states to be unrepresentable.
+        // Again, validation is done in constructors to make illegal states unrepresentable.
         // In this case, PostContent is checking if the rules about the post content are being applied.
         _content = new PostContent(content, domainConfig);
         Author = author;
@@ -33,9 +33,7 @@ public sealed record UnpublishedPost : IUnpublishedPost
     {
         if (await persistencePort.AmountOfPublicationsMadeTodayBy(Author) >= DomainConfig.MaxAllowedDailyPublicationsByUser)
         {
-            throw new MaxAllowedDailyPublicationsByUserExceededException(
-                $"The user {Author.Username} is not allowed to make more than {DomainConfig.MaxAllowedDailyPublicationsByUser} publications in a single day."
-            );
+            throw new MaxAllowedDailyPublicationsByUserExceededException(Author, DomainConfig);
         }
 
         return await persistencePort.PublishNewPost(this);

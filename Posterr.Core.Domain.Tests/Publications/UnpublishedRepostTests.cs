@@ -1,6 +1,6 @@
 ﻿using FakeItEasy;
-using Posterr.Core.Domain.Exceptions;
 using Posterr.Core.Domain.Publications;
+using Posterr.Core.Domain.Publications.Exceptions;
 using Posterr.Core.Domain.Users;
 
 namespace Posterr.Core.Domain.Tests.Publications;

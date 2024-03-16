@@ -2,6 +2,9 @@
 
 namespace Posterr.Core.Domain.Publications.Exceptions;
 
-public sealed class MaxPostContentLengthExceededException(string message) : DomainValidationException(message)
+public sealed class MaxPostContentLengthExceededException(int contentLength, IDomainConfig DomainConfig)
+    : DomainValidationException(
+        $"The post content is limited to {DomainConfig.MaxPostLength} characters. Got {contentLength} instead."
+    )
 {
 }

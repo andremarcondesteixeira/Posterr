@@ -15,9 +15,7 @@ public partial record Username
 
         if (string.IsNullOrWhiteSpace(value) || !regex.IsMatch(value))
         {
-            throw new InvalidUsernameException(
-                $"Username must be not empty and contain only alphanumeric characters. Got \"{value}\", instead."
-            );
+            throw new InvalidUsernameException(value);
         }
 
         Value = value;

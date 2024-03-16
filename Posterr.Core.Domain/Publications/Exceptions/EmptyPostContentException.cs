@@ -2,6 +2,6 @@
 
 namespace Posterr.Core.Domain.Publications.Exceptions;
 
-public sealed class EmptyPostContentException(string message) : DomainValidationException(message)
+public sealed class EmptyPostContentException() : DomainValidationException("The post content must not be empty.")
 {
 }
