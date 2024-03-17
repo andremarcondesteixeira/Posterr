@@ -6,13 +6,6 @@ namespace Posterr.Core.Application.Tests;
 
 static class Helpers
 {
-    public static IUser MakeDummyUser(string username)
-    {
-        var user = A.Fake<IUser>();
-        A.CallTo(() => user.Username).Returns(username);
-        return user;
-    }
-
     public static IPost MakeDummyPost(long postId, IUser user, DateTime now, string content)
     {
         var post = A.Fake<IPost>();
@@ -33,5 +26,23 @@ static class Helpers
         A.CallTo(() => unpublishedPost.Content).Returns(content);
 
         return unpublishedPost;
+    }
+
+    public static IUser MakeDummyUser(string username)
+    {
+        var user = A.Fake<IUser>();
+        A.CallTo(() => user.Username).Returns(username);
+        return user;
+    }
+
+    public static IRepost MakeDummyRepost(IUser author, DateTime publicationDate, IPost originalPost)
+    {
+        var repost = A.Fake<IRepost>();
+
+        A.CallTo(() => repost.Author).Returns(author);
+        A.CallTo(() => repost.PublicationDate).Returns(publicationDate);
+        A.CallTo(() => repost.OriginalPost).Returns(originalPost);
+
+        return repost;
     }
 }
