@@ -3,7 +3,6 @@ using Posterr.Core.Application.CreateNewPost;
 using Posterr.Core.Application.Interfaces;
 using Posterr.Core.Domain;
 using Posterr.Core.Domain.Publications;
-using Posterr.Core.Domain.Users;
 
 namespace Posterr.Core.Application.Tests.CreateNewPost;
 
@@ -26,12 +25,11 @@ public class CreateNewPostUseCaseTests
     [Fact]
     public async Task GivenCorrectParametersAndRequirements_WhenCreatingNewPost_ThenSucceed()
     {
-        var content = "content";
-        var username = "username";
+        string content = "content", username = "username";
         var now = DateTime.UtcNow;
-        var user = MakeDummyUser(username);
-        var post = MakeDummyPost(1, user, now, content);
-        var unpublishedPost = MakeDummyUnpublishedPost(user, content);
+        var user = Helpers.MakeDummyUser(username);
+        var post = Helpers.MakeDummyPost(1, user, now, content);
+        var unpublishedPost = Helpers.MakeDummyUnpublishedPost(user, content);
         A.CallTo(() => _userRepository.FindByUsername(username)).Returns(user);
         A.CallTo(() => _domainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(user)).Returns((ushort) 0);
         A.CallTo(() => _domainPersistenceAdapter.PublishNewPost(
@@ -46,34 +44,5 @@ public class CreateNewPostUseCaseTests
         Assert.Equal(username, response.AuthorUsername);
         Assert.Equal(now, response.PublicationDate);
         Assert.Equal(content, response.PostContent);
-    }
-
-    private static IUser MakeDummyUser(string username)
-    {
-        var user = A.Fake<IUser>();
-        A.CallTo(() => user.Username).Returns(username);
-        return user;
-    }
-
-    private static IPost MakeDummyPost(long postId, IUser user, DateTime now, string content)
-    {
-        var post = A.Fake<IPost>();
-
-        A.CallTo(() => post.Id).Returns(postId);
-        A.CallTo(() => post.Author).Returns(user);
-        A.CallTo(() => post.PublicationDate).Returns(now);
-        A.CallTo(() => post.Content).Returns(content);
-
-        return post;
-    }
-
-    private static IUnpublishedPost MakeDummyUnpublishedPost(IUser author, string content)
-    {
-        var unpublishedPost = A.Fake<IUnpublishedPost>();
-
-        A.CallTo(() => unpublishedPost.Author).Returns(author);
-        A.CallTo(() => unpublishedPost.Content).Returns(content);
-        
-        return unpublishedPost;
     }
 }
