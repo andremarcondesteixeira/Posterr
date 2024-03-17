@@ -7,7 +7,7 @@ using Posterr.Core.Domain.Publications;
 using Posterr.Core.Domain.Publications.Exceptions;
 using Posterr.Core.Domain.Users;
 
-namespace Posterr.Core.Application.Tests.CreateNewPost;
+namespace Posterr.Core.Application.Tests;
 
 public class CreateNewPostUseCaseTests
 {
@@ -24,8 +24,8 @@ public class CreateNewPostUseCaseTests
         _domainPersistenceAdapter = A.Fake<IDomainPersistencePort>();
 
         _domainConfig = A.Fake<IDomainConfig>();
-        A.CallTo(() => _domainConfig.MaxPostLength).Returns((uint) 7);
-        A.CallTo(() => _domainConfig.MaxAllowedDailyPublicationsByUser).Returns((ushort) 5);
+        A.CallTo(() => _domainConfig.MaxPostLength).Returns((uint)7);
+        A.CallTo(() => _domainConfig.MaxAllowedDailyPublicationsByUser).Returns((ushort)5);
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class CreateNewPostUseCaseTests
         var post = Helpers.MakeDummyPost(1, user, now, CONTENT);
         var unpublishedPost = Helpers.MakeDummyUnpublishedPost(user, CONTENT);
         A.CallTo(() => _userRepository.FindByUsername(USERNAME)).Returns(user);
-        A.CallTo(() => _domainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(user)).Returns((ushort) 0);
+        A.CallTo(() => _domainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(user)).Returns((ushort)0);
         A.CallTo(() => _domainPersistenceAdapter.PublishNewPost(
             A<IUnpublishedPost>.That.Matches(x => x.Author.Username == USERNAME && x.Content == CONTENT)
         )).Returns(post);
