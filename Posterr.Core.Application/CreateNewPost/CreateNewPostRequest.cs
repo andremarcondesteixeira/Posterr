@@ -2,14 +2,14 @@
 
 public sealed record CreateNewPostRequest
 {
-    public string Content { get; }
     public string Username { get; }
+    public string Content { get; }
 
-    public CreateNewPostRequest(string content, string username)
+    public CreateNewPostRequest(string username, string content)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(content, nameof(content));
         ArgumentException.ThrowIfNullOrWhiteSpace(username, nameof(username));
-        Content = content;
+        ArgumentException.ThrowIfNullOrWhiteSpace(content, nameof(content));
         Username = username;
+        Content = content;
     }
 }
