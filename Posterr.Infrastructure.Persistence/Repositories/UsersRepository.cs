@@ -1,9 +1,9 @@
 ﻿using Posterr.Core.Application.Interfaces;
-using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
+using Posterr.Core.Domain.Boundaries.Persistence;
 
 namespace Posterr.Infrastructure.Persistence.Repositories;
 
-public class UserRepository : IUserRepository
+public class UsersRepository : IUsersRepository
 {
     public Task<IUser?> FindByUsername(string username)
     {
