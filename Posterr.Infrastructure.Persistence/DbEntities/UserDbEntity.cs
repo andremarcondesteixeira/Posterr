@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Posterr.Core.Domain.Boundaries.Persistence;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Posterr.Infrastructure.Persistence.DbEntities;
@@ -8,5 +9,9 @@ namespace Posterr.Infrastructure.Persistence.DbEntities;
 public class UserDbEntity : BaseDbEntity
 {
     public required string Username { get; set; }
+
+    public IUser ToIUser() => new User(Username);
+
+    public record User(string Username) : IUser;
 }
 

@@ -1,6 +1,7 @@
 ﻿using Posterr.Core.Application.Interfaces;
 using Posterr.Core.Domain.Boundaries.Persistence;
 using System.Net;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Posterr.Infrastructure.Persistence.Repositories;
 
@@ -37,7 +38,14 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
 
     public Task<IPost?> FindPostById(long originalPostId)
     {
-        throw new NotImplementedException();
+        var postDbEntity = dbContext.Posts.Where(post => post.Id == originalPostId).First();
+
+        if (postDbEntity is null)
+        {
+            return Task.FromResult<IPost?>(null);
+        }
+
+        return Task.FromResult<IPost?>(postDbEntity.ToIPost());
     }
 
     public Task<IList<IPublication>> Paginate(int lastSeenRow, ushort pageSize)

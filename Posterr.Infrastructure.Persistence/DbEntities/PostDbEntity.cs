@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Posterr.Core.Domain.Boundaries.Persistence;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Posterr.Infrastructure.Persistence.DbEntities;
 
@@ -10,5 +11,9 @@ public class PostDbEntity : BaseDbEntity
 
     [ForeignKey(nameof(UserId))]
     public required UserDbEntity User { get; set; }
+
+    public IPost ToIPost() => new Post(Id, User.ToIUser(), CreatedAt, Content);
+    
+    public record Post(long Id, IUser Author, DateTime PublicationDate, string Content) : IPost;
 }
 
