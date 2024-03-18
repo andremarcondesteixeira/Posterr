@@ -6,6 +6,7 @@ builder.Services.ConfigureUseCases();
 builder.Services.ConfigureControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IDomainConfig, DomainConfig>();
 
 var app = builder.Build();
 
