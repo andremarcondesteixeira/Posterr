@@ -18,3 +18,8 @@ if (app.Environment.IsDevelopment())
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+
+public partial class Program
+{
+    // this is here only to allow integration tests to be able to reference the Program class
+}
