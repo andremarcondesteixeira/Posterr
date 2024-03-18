@@ -4,15 +4,15 @@ using Posterr.Core.Domain;
 using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 using Posterr.Core.Domain.Publications;
 
-namespace Posterr.Core.Application.CreateNewPost;
+namespace Posterr.Core.Application.UseCases.CreateNewPost;
 
 public sealed class CreateNewPostUseCase(
-    IUserRepository userRepository,
+    IUsersRepository userRepository,
     IDomainPersistencePort domainPersistenceAdapter,
     IDomainConfig domainConfig
-)
+) : IUseCase<CreateNewPostRequest, CreateNewPostResponse>
 {
-    public IUserRepository UserRepository { get; } = userRepository
+    public IUsersRepository UserRepository { get; } = userRepository
         ?? throw new ArgumentNullException(nameof(userRepository));
 
     public IDomainPersistencePort DomainPersistenceAdapter { get; } = domainPersistenceAdapter

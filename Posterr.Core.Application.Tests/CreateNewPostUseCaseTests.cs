@@ -1,7 +1,7 @@
 ﻿#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
-using Posterr.Core.Application.CreateNewPost;
 using Posterr.Core.Application.Exceptions;
+using Posterr.Core.Application.UseCases.CreateNewPost;
 using Posterr.Core.Domain.Publications.Exceptions;
 
 namespace Posterr.Core.Application.Tests;

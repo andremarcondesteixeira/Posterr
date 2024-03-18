@@ -1,4 +1,4 @@
-﻿namespace Posterr.Core.Application.CreateNewPost;
+﻿namespace Posterr.Core.Application.UseCases.CreateNewPost;
 
 public sealed record CreateNewPostRequest
 {

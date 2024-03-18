@@ -37,7 +37,7 @@ static class The
         return post;
     }
 
-    public static IPublicationRepository PublicationRepository() => A.Fake<IPublicationRepository>(x => x.Strict());
+    public static IPublicationsRepository PublicationRepository() => A.Fake<IPublicationsRepository>(x => x.Strict());
 
     public static IRepost Repost(IUser author, DateTime publicationDate, IPost originalPost)
     {
@@ -77,5 +77,5 @@ static class The
         return user;
     }
 
-    public static IUserRepository UserRepository() => A.Fake<IUserRepository>(x => x.Strict());
+    public static IUsersRepository UserRepository() => A.Fake<IUsersRepository>(x => x.Strict());
 }

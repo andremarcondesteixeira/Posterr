@@ -4,19 +4,19 @@ using Posterr.Core.Domain;
 using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 using Posterr.Core.Domain.Publications;
 
-namespace Posterr.Core.Application.CreateNewRepost;
+namespace Posterr.Core.Application.UseCases.CreateNewRepost;
 
 public sealed class CreateNewRepostUseCase(
-    IUserRepository _userRepository,
-    IPublicationRepository _publicationRepository,
+    IUsersRepository _userRepository,
+    IPublicationsRepository _publicationRepository,
     IDomainPersistencePort _domainPersistenceAdapter,
     IDomainConfig _domainConfig
-)
+) : IUseCase<CreateNewRepostRequest, CreateNewRepostResponse>
 {
-    private readonly IUserRepository _userRepository = _userRepository
+    private readonly IUsersRepository _userRepository = _userRepository
         ?? throw new ArgumentNullException(nameof(_userRepository));
 
-    private readonly IPublicationRepository _publicationRepository = _publicationRepository
+    private readonly IPublicationsRepository _publicationRepository = _publicationRepository
         ?? throw new ArgumentNullException(nameof(_publicationRepository));
 
     private readonly IDomainPersistencePort _domainPersistenceAdapter = _domainPersistenceAdapter

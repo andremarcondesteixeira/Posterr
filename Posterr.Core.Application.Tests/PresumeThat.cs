@@ -6,8 +6,8 @@ using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 namespace Posterr.Core.Application.Tests;
 
 record PresumeThat(
-    IUserRepository UserRepository,
-    IPublicationRepository PublicationRepository,
+    IUsersRepository UserRepository,
+    IPublicationsRepository PublicationRepository,
     IDomainPersistencePort DomainPersistenceAdapter,
     IDomainConfig DomainConfig
 )
