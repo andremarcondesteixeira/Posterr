@@ -1,7 +1,7 @@
 ﻿using Posterr.Core.Application.Interfaces;
 using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 
-namespace Posterr.Infrastructure.Persistence;
+namespace Posterr.Infrastructure.Persistence.Repositories;
 
 public class UserRepository : IUserRepository
 {
