@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- The property bellow will enforce the rule where all interactions with
+    the core domain should be made through a use case -->
+    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Posterr.Core.Application\Posterr.Core.Application.csproj" />
+  </ItemGroup>
+
+</Project>
