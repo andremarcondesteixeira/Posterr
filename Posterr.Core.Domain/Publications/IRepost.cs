@@ -1,12 +1,6 @@
-﻿using Posterr.Core.Domain.Users;
+﻿namespace Posterr.Core.Domain.Publications;
 
-namespace Posterr.Core.Domain.Publications;
-
-public interface IRepost
+public interface IRepost : IPublication
 {
-    IUser Author { get; }
-
     IPost OriginalPost { get; }
-
-    DateTime PublicationDate { get; }
 }
