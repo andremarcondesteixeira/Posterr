@@ -55,7 +55,7 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
     public Task<IPost> PublishNewPost(IUnpublishedPost unpublishedPost)
     {
         var user = dbContext.Users.Where(user => user.Username == unpublishedPost.Author.Username).First()
-            ?? throw new NullReferenceException($"User not found with username \"{unpublishedPost.Author.Username}\"");
+            ?? throw new NullReferenceException($"No User was found with username \"{unpublishedPost.Author.Username}\"");
         
         var postDbEntity = new PostDbEntity()
         {
@@ -73,6 +73,23 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
 
     public Task<IRepost> PublishNewRepost(IUnpublishedRepost unpublishedRepost)
     {
-        throw new NotImplementedException();
+        var user = dbContext.Users.Where(user => user.Username == unpublishedRepost.Author.Username).First()
+            ?? throw new NullReferenceException($"No user was found with username \"{unpublishedRepost.Author.Username}\"");
+
+        var post = dbContext.Posts.Find(unpublishedRepost.OriginalPost.Id)
+            ?? throw new NullReferenceException($"No post was found with id {unpublishedRepost.OriginalPost.Id}");
+
+        var repostDbEntity = new RepostDbEntity()
+        {
+            User = user,
+            UserId = user.Id,
+            Post = post,
+            PostId = post.Id,
+        };
+
+        var repostDbEntry = dbContext.Reposts.Add(repostDbEntity);
+        dbContext.SaveChanges();
+
+        return Task.FromResult(repostDbEntity.ToIRepost());
     }
 }
