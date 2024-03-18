@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+using Posterr.Core.Application.UseCases;
 
 namespace Posterr.Core.Application;
 
@@ -8,18 +8,15 @@ public static class DependencyInjection
     // This will automatically register all use cases in the DI Container
     public static void ConfigureUseCases(this IServiceCollection services)
     {
-        var useCases = typeof(DependencyInjection).Assembly
+        typeof(DependencyInjection)
+            .Assembly
             .GetTypes()
             .Where(type =>
-                !type.GetTypeInfo().IsInterface
-                && !type.GetTypeInfo().IsAbstract
-                && type != typeof(DependencyInjection)
-                && type.Namespace != nameof(Exceptions)
-             );
-
-        foreach (var useCase in useCases)
-        {
-            services.AddTransient(useCase);
-        }
+                !type.IsInterface
+                && (type?.FullName?.Contains(typeof(DependencyInjection).Namespace!) ?? true)
+                && (type?.IsAssignableTo(typeof(IUseCaseRegisteredInDependencyInjectionContainer)) ?? false)
+            )
+            .ToList()
+            .ForEach(useCase => services.AddTransient(useCase));
     }
 }
