@@ -14,8 +14,8 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
         base.OnModelCreating(modelBuilder ?? throw new ArgumentNullException(nameof(modelBuilder)));
 
         modelBuilder.Entity<UserDbEntity>()
-            .Property(nameof(UserDbEntity.Username))
-            .HasColumnType("VARCHAR(20)");
+                    .Property(nameof(UserDbEntity.Username))
+                    .HasColumnType("VARCHAR(20)");
 
         modelBuilder.Entity<UserDbEntity>().HasData(
             new UserDbEntity { Id = 1, CreatedAt = DateTime.UtcNow, Username = "simba" },
@@ -29,31 +29,31 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
             if (entityType.ClrType.IsSubclassOf(typeof(BaseDbEntity)))
             {
                 modelBuilder.Entity(entityType.ClrType)
-                    .Property(nameof(BaseDbEntity.CreatedAt))
-                    .HasDefaultValueSql("GETDATE()");
+                            .Property(nameof(BaseDbEntity.CreatedAt))
+                            .HasDefaultValueSql("GETDATE()");
             }
         }
 
         modelBuilder.Entity<PostDbEntity>()
-            .HasOne(post => post.User)
-            .WithMany()
-            .HasForeignKey(x => x.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+                    .HasOne(post => post.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<RepostDbEntity>()
-            .Property(nameof(RepostDbEntity.CreatedAt))
-            .HasDefaultValueSql("GETDATE()");
+                    .Property(nameof(RepostDbEntity.CreatedAt))
+                    .HasDefaultValueSql("GETDATE()");
 
         modelBuilder.Entity<RepostDbEntity>()
-            .HasOne(repost => repost.User)
-            .WithMany()
-            .HasForeignKey(x => x.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+                    .HasOne(repost => repost.User)
+                    .WithMany()
+                    .HasForeignKey(x => x.UserId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<RepostDbEntity>()
-            .HasOne(repost => repost.Post)
-            .WithMany()
-            .HasForeignKey(x => x.PostId)
-            .OnDelete(DeleteBehavior.Restrict);
+                    .HasOne(repost => repost.Post)
+                    .WithMany()
+                    .HasForeignKey(x => x.PostId)
+                    .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -5,7 +5,7 @@ namespace Posterr.Core.Application.Interfaces;
 
 public interface IPublicationsRepository
 {
-    Task<ushort> CountPublicationsByUser(IUser author);
+    Task<ushort> CountPublicationsByUserBetween(IUser author, DateTime startInclusive, DateTime endInclusive);
     Task<IPost?> FindPostById(long originalPostId);
     Task<IList<IPublication>> Paginate(int lastSeenRow, ushort pageSize);
     Task<IPost> PublishNewPost(IUnpublishedPost unpublishedPost);

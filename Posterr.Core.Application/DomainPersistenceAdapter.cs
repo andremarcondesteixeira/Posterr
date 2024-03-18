@@ -7,7 +7,9 @@ namespace Posterr.Core.Application;
 public sealed class DomainPersistenceAdapter(IPublicationsRepository publicationsRepository) : IDomainPersistencePort
 {
     public Task<ushort> AmountOfPublicationsMadeTodayBy(IUser author) =>
-        publicationsRepository.CountPublicationsByUser(author);
+        publicationsRepository.CountPublicationsByUserBetween(author,
+                                                              DateTime.UtcNow.Date,
+                                                              DateTime.UtcNow.Date.AddDays(1).AddTicks(-1));
 
     public Task<IPost> PublishNewPost(IUnpublishedPost unpublishedPost) =>
         publicationsRepository.PublishNewPost(unpublishedPost);
