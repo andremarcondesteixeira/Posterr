@@ -1,4 +1,4 @@
-﻿namespace Posterr.Core.Domain;
+﻿namespace Posterr.Core.Domain.Boundaries.Configuration;
 
 public interface IDomainConfig
 {
