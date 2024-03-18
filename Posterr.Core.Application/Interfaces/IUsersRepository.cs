@@ -2,7 +2,7 @@
 
 namespace Posterr.Core.Application.Interfaces;
 
-public interface IUserRepository
+public interface IUsersRepository
 {
     Task<IUser?> FindByUsername(string username);
 }
