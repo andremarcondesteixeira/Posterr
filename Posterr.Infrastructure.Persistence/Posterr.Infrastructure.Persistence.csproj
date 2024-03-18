@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Posterr.Core.Application\Posterr.Core.Application.csproj" />
-    <ProjectReference Include="..\Posterr.Core.Domain.PersistenceBoundaryInterfaces\Posterr.Core.Domain.PersistenceBoundaryInterfaces.csproj" />
+    <ProjectReference Include="..\Posterr.Core.Domain.Boundaries.Persistence\Posterr.Core.Domain.Boundaries.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

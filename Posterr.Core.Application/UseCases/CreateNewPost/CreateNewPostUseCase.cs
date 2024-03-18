@@ -2,7 +2,7 @@
 using Posterr.Core.Application.Interfaces;
 using Posterr.Core.Domain;
 using Posterr.Core.Domain.Boundaries.Configuration;
-using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
+using Posterr.Core.Domain.Boundaries.Persistence;
 using Posterr.Core.Domain.Publications;
 
 namespace Posterr.Core.Application.UseCases.CreateNewPost;

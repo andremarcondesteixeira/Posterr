@@ -1,5 +1,5 @@
 ﻿using FakeItEasy;
-using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
+using Posterr.Core.Domain.Boundaries.Persistence;
 using Posterr.Core.Domain.Publications;
 
 namespace Posterr.Core.Domain.Tests.Publications;

@@ -1,4 +1,4 @@
-﻿namespace Posterr.Core.Domain.PersistenceBoundaryInterfaces;
+﻿namespace Posterr.Core.Domain.Boundaries.Persistence;
 
 public interface IPublication
 {

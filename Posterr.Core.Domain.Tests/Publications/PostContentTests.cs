@@ -1,4 +1,5 @@
 ﻿using FakeItEasy;
+using Posterr.Core.Domain.Boundaries.Configuration;
 using Posterr.Core.Domain.Publications;
 using Posterr.Core.Domain.Publications.Exceptions;
 

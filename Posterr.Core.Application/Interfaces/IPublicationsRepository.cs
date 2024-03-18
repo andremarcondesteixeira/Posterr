@@ -1,5 +1,5 @@
 ﻿
-using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
+using Posterr.Core.Domain.Boundaries.Persistence;
 
 namespace Posterr.Core.Application.Interfaces;
 
