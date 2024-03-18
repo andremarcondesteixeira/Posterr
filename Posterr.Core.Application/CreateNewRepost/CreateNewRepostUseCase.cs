@@ -6,7 +6,7 @@ using Posterr.Core.Domain.Users;
 
 namespace Posterr.Core.Application.CreateNewRepost;
 
-public class CreateNewRepostUseCase(
+public sealed class CreateNewRepostUseCase(
     IUserRepository _userRepository,
     IPublicationRepository _publicationRepository,
     IDomainPersistencePort _domainPersistenceAdapter,

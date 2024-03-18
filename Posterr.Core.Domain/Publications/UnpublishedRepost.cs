@@ -3,7 +3,7 @@ using Posterr.Core.Domain.Users;
 
 namespace Posterr.Core.Domain.Publications;
 
-public record UnpublishedRepost(IUser Author, IPost OriginalPost, IDomainConfig DomainConfig) : IUnpublishedRepost
+public sealed record UnpublishedRepost(IUser Author, IPost OriginalPost, IDomainConfig DomainConfig) : IUnpublishedRepost
 {
     public IUser Author { get; } = Author ?? throw new ArgumentNullException(nameof(Author));
 

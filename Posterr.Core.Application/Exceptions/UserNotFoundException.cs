@@ -2,7 +2,7 @@
 
 namespace Posterr.Core.Application.Exceptions;
 
-public class UserNotFoundException(string username)
+public sealed class UserNotFoundException(string username)
     : DomainValidationException($"No user was found with the username \"{username}\".")
 {
 }
