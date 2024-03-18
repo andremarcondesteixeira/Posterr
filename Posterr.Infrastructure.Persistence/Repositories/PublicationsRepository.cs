@@ -1,7 +1,6 @@
 ﻿using Posterr.Core.Application.Interfaces;
 using Posterr.Core.Domain.Boundaries.Persistence;
-using System.Net;
-using System.Reflection.Metadata.Ecma335;
+using Posterr.Infrastructure.Persistence.DbEntities;
 
 namespace Posterr.Infrastructure.Persistence.Repositories;
 
@@ -55,7 +54,21 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
 
     public Task<IPost> PublishNewPost(IUnpublishedPost unpublishedPost)
     {
-        throw new NotImplementedException();
+        var user = dbContext.Users.Where(user => user.Username == unpublishedPost.Author.Username).First()
+            ?? throw new NullReferenceException($"User not found with username \"{unpublishedPost.Author.Username}\"");
+        
+        var postDbEntity = new PostDbEntity()
+        {
+            UserId = user.Id,
+            User = user,
+            Content = unpublishedPost.Content
+        };
+        
+        var postDbEntry = dbContext.Posts.Add(postDbEntity);
+        dbContext.SaveChanges();
+
+        return Task.FromResult(postDbEntity.ToIPost());
+
     }
 
     public Task<IRepost> PublishNewRepost(IUnpublishedRepost unpublishedRepost)
