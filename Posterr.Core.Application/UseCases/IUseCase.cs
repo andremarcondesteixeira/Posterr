@@ -1,6 +1,8 @@
 ﻿namespace Posterr.Core.Application.UseCases;
 
-public interface IUseCase<INPUT, OUTPUT>
+public interface IUseCaseRegisteredInDependencyInjectionContainer;
+
+public interface IUseCase<INPUT, OUTPUT> : IUseCaseRegisteredInDependencyInjectionContainer
 {
     Task<OUTPUT> Run(INPUT input);
 }
