@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Application", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Core.Application.Tests", "Posterr.Core.Application.Tests\Posterr.Core.Application.Tests.csproj", "{FDFECD45-278B-4C07-BF02-A932ABE0A5A4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{56A90EE5-8BF2-4A1A-B59E-157F40303F3B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8A3514DC-E890-48E0-9AFB-1F9E66819E03} = {56A90EE5-8BF2-4A1A-B59E-157F40303F3B}
+		{45014639-0669-4376-9115-B54FB655134E} = {56A90EE5-8BF2-4A1A-B59E-157F40303F3B}
+		{D3C6A742-E91D-4936-B1B0-5531A71159AB} = {56A90EE5-8BF2-4A1A-B59E-157F40303F3B}
+		{FDFECD45-278B-4C07-BF02-A932ABE0A5A4} = {56A90EE5-8BF2-4A1A-B59E-157F40303F3B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B5164CE-30C8-4B8B-B6A5-54D77B5EF4B9}
