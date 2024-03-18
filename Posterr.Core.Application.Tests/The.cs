@@ -1,8 +1,7 @@
 ﻿using FakeItEasy;
 using Posterr.Core.Application.Interfaces;
 using Posterr.Core.Domain;
-using Posterr.Core.Domain.Publications;
-using Posterr.Core.Domain.Users;
+using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 
 namespace Posterr.Core.Application.Tests;
 

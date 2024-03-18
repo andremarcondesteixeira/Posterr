@@ -1,4 +1,4 @@
-﻿using Posterr.Core.Domain.Users;
+﻿using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 
 namespace Posterr.Core.Application.Interfaces;
 

@@ -1,7 +1,10 @@
-﻿using FakeItEasy;
+﻿#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+
+using FakeItEasy;
+using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 using Posterr.Core.Domain.Publications;
 using Posterr.Core.Domain.Publications.Exceptions;
-using Posterr.Core.Domain.Users;
 
 namespace Posterr.Core.Domain.Tests.Publications;
 
@@ -27,8 +30,6 @@ public class UnpublishedPostTests
         Assert.Equal(_domainConfig, unpublishedPost.DomainConfig);
     }
 
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
     [Fact]
     public void GivenNullAuthor_WhenInstantiatingUnpublishedPostEntity_ThenThrowException()
     {
@@ -49,8 +50,6 @@ public class UnpublishedPostTests
     {
         Assert.Throws<EmptyPostContentException>(() => new UnpublishedPost(A.Fake<IUser>(), content, _domainConfig));
     }
-#pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
     [Fact]
     public async Task GivenUserHasNotReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenSucceed()
@@ -85,7 +84,7 @@ public class UnpublishedPostTests
     [Fact]
     public async Task GivenUserHasReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenThrowException()
     {
-        var user = new User("username");
+        var user = A.Fake<IUser>();
         var unpublishedPost = new UnpublishedPost(user, "content", _domainConfig);
 
         var persistencePort = A.Fake<IDomainPersistencePort>();

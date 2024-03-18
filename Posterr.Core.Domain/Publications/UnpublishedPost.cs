@@ -1,5 +1,5 @@
-﻿using Posterr.Core.Domain.Publications.Exceptions;
-using Posterr.Core.Domain.Users;
+﻿using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
+using Posterr.Core.Domain.Publications.Exceptions;
 
 namespace Posterr.Core.Domain.Publications;
 

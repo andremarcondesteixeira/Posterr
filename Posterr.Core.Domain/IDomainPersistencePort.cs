@@ -1,5 +1,4 @@
-﻿using Posterr.Core.Domain.Publications;
-using Posterr.Core.Domain.Users;
+﻿using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 
 namespace Posterr.Core.Domain;
 

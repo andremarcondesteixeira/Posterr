@@ -1,4 +1,4 @@
-﻿namespace Posterr.Core.Domain.Publications;
+﻿namespace Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 
 public interface IRepost : IPublication
 {

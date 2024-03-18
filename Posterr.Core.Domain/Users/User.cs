@@ -1,4 +1,6 @@
-﻿namespace Posterr.Core.Domain.Users;
+﻿using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
+
+namespace Posterr.Core.Domain.Users;
 
 // When seeing things from the domain model perspective, a User could be perfectly identified by it's unique username.
 // Because of this, I decided not to create a BaseEntity record with an Id and other commons fields such as CreatedDate.

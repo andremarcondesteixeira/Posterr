@@ -1,8 +1,8 @@
 ﻿using Posterr.Core.Application.Exceptions;
 using Posterr.Core.Application.Interfaces;
 using Posterr.Core.Domain;
+using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 using Posterr.Core.Domain.Publications;
-using Posterr.Core.Domain.Users;
 
 namespace Posterr.Core.Application.CreateNewRepost;
 

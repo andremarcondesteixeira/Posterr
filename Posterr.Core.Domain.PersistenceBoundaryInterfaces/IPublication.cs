@@ -1,6 +1,4 @@
-﻿using Posterr.Core.Domain.Users;
-
-namespace Posterr.Core.Domain.Publications;
+﻿namespace Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 
 public interface IPublication
 {

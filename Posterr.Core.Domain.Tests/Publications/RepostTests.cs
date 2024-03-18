@@ -1,6 +1,6 @@
 ﻿using FakeItEasy;
+using Posterr.Core.Domain.PersistenceBoundaryInterfaces;
 using Posterr.Core.Domain.Publications;
-using Posterr.Core.Domain.Users;
 
 namespace Posterr.Core.Domain.Tests.Publications;
 

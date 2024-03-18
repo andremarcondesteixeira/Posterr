@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Posterr.Core.Domain.PersistenceBoundaryInterfaces\Posterr.Core.Domain.PersistenceBoundaryInterfaces.csproj" />
+  </ItemGroup>
+
 </Project>
