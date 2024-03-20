@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Posterr.Core.Application.Interfaces;
+using Posterr.Core.Application.Boundaries.Persistence;
 using Posterr.Infrastructure.Persistence.Repositories;
 
 namespace Posterr.Infrastructure.Persistence;
