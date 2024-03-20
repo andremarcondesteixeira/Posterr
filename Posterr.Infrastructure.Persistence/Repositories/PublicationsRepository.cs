@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Posterr.Core.Application.Interfaces;
+using Posterr.Core.Application.Boundaries.Persistence;
 using Posterr.Core.Domain.Boundaries.Persistence;
 using Posterr.Infrastructure.Persistence.DbEntities;
 using System.Data.Common;

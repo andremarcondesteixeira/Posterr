@@ -1,5 +1,5 @@
 ﻿using FakeItEasy;
-using Posterr.Core.Application.Interfaces;
+using Posterr.Core.Application.Boundaries.Persistence;
 using Posterr.Core.Domain;
 using Posterr.Core.Domain.Boundaries.Configuration;
 using Posterr.Core.Domain.Boundaries.Persistence;

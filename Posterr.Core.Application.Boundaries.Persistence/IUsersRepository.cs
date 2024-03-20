@@ -1,6 +1,6 @@
 ﻿using Posterr.Core.Domain.Boundaries.Persistence;
 
-namespace Posterr.Core.Application.Interfaces;
+namespace Posterr.Core.Application.Boundaries.Persistence;
 
 public interface IUsersRepository
 {

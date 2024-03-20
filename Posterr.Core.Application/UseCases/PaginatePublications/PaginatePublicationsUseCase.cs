@@ -1,4 +1,4 @@
-﻿using Posterr.Core.Application.Interfaces;
+﻿using Posterr.Core.Application.Boundaries.Persistence;
 using Posterr.Core.Domain.Boundaries.Persistence;
 
 namespace Posterr.Core.Application.UseCases.PaginatePublications;
