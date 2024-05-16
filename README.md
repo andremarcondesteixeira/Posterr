@@ -46,9 +46,9 @@ Apart from the basic CRUD operations, those are the business rules I identified,
 - Publications cannot be deleted (or only Posts? I will consider both)
 - Restrictions when posting:
 	- A User cannot make more than 5 Publications a day (Posts or Reposts)
-	- Post content content size is limited to 777 characters
+	- Post content size is limited to 777 characters
 - Restrictions when reposting:
-	- Posts can be reposted once by User
+	- Posts can be reposted only once by User
 	- User cannot repost their own Posts
 	- Reposts cannot be reposted
 - Publications (Posts or Reposts) should be paginated together
@@ -56,11 +56,11 @@ Apart from the basic CRUD operations, those are the business rules I identified,
 	- When sorting by "trending", list most reposted Posts first (If I get it, "trending" filters Reposts out? I guess so)
 - Search Posts by content
 	- Use exact text search string match
-	- Reposts are filtered out)
+	- Reposts are filtered out
 
 # The Application Business Rules
 
-It is debatable whether the rule about showing 15 Publications in the first page and 20 in the subsequent pages is a Application Business Rule, because the "Business" here is the Application itself.
+It is debatable whether the rule about showing 15 Publications in the first page and 20 in the subsequent pages is an Application Business Rule, because the "Business" here is the Application itself.
 
 But I prefer to not think too much about this and proceed with the test considering it as an Application Business Rule.
 
