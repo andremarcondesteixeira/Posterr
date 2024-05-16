@@ -1,6 +1,6 @@
-# Posterr Backend - André Teixeira's Technical Evalulation
+# Posterr Backend - AndrÃ© Teixeira's Technical Evalulation
 
-For this test, I decided to borrow some concepts from Clean Architecture and Domain Driven Design.
+For this test, I decided to borrow some concepts from Clean Architecture and some design patterns commonly used when applying Domain Driven Design.
 
 I'll start developing the Core Domain layer (Entities layer in Clean Architecture) using TDD and then proceed to the outermost layers.
 
