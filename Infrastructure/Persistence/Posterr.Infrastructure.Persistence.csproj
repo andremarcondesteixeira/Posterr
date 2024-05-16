@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- The property bellow will enforce the rule where all interactions with
+    the core domain should be made through a use case -->
+    <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Application\UseCases\Posterr.Core.Application.UseCases.csproj" />
+    <ProjectReference Include="..\..\Core\Boundaries\EntitiesInterfaces\Posterr.Core.Boundaries.EntitiesInterfaces.csproj" />
+    <ProjectReference Include="..\..\Core\Boundaries\Persistence\Posterr.Core.Boundaries.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

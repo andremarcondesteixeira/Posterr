@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Boundaries\Configuration\Posterr.Core.Boundaries.Configuration.csproj" />
+    <ProjectReference Include="..\..\Boundaries\EntitiesInterfaces\Posterr.Core.Boundaries.EntitiesInterfaces.csproj" />
+    <ProjectReference Include="..\..\Boundaries\Persistence\Posterr.Core.Boundaries.Persistence.csproj" />
+    <ProjectReference Include="..\..\Domain\Entities\Posterr.Core.Domain.Entities.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+</Project>
