@@ -8,7 +8,7 @@ I'll try to use comments in the code to explain my thought process.
 
 First thing I did was to map the functional requisites and the domain entities, so that I had a plan to follow.
 
-## The Domain Entities
+## The Domain Entities (Back End)
 
 I decided to use the type system in my favor, so I created different types for different states of the same entity (the book "Domain Modeling Made Functional" is a good reference on this topic).
 
@@ -33,7 +33,15 @@ This is the list of the base domain entities I identified:
 	- User
 	- Original Post
 - User
-	- Username 
+	- Username
+
+## The Domain Entities (Front End)
+
+In the front end side, I decided to not enforce validation rules for the domain entities, since those will be enforced by the backend. Since the front end size will consume the back end, it can trust to the back end this responsibility.
+
+Validation in the front end side will be done only to provide a better user experience, but they will not be enforced by the type system. The validation will only be performed when filling up the forms to create new posts.
+
+This decision will also allow me to develop the front end side quicker.
 
 ## The Core Business Rules
 
