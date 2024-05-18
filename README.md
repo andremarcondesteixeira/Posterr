@@ -1,80 +1,78 @@
-# Posterr - André Teixeira's Full Stack Technical Evalulation
+# Posterr - André Teixeira's Full Stack Technical Evaluation
 
-For this test, I decided to borrow some concepts from Clean Architecture and some design patterns commonly used when applying Domain Driven Design.
+For this evaluation, I've integrated principles from Clean Architecture and common design patterns associated with Domain Driven Design.
 
-I'll start developing the Core Domain layer (Entities layer in Clean Architecture) using TDD and then proceed to the outermost layers.
+I'll start by developing the Core Domain layer (equivalent to the Entities layer in Clean Architecture) using Test-Driven Development (TDD), and then move on to implementing the outer layers.
 
-I'll try to use comments in the code to explain my thought process.
+Throughout the process, I'll be adding comments within the codebase to shed light on my decision-making process.
 
-First thing I did was to map the functional requisites and the domain entities, so that I had a plan to follow.
+To kick things off, I began by mapping out the functional requirements and outlining domain entities, setting a solid foundation for development.
 
-## The Domain Entities (Back End)
+## Domain Entities (Back End)
 
-I decided to use the type system in my favor, so I created different types for different states of the same entity (the book "Domain Modeling Made Functional" is a good reference on this topic).
+To make the most of the type system, I introduced distinct types to represent various states of the same entity, drawing inspiration from the principles discussed in the book "Domain Modeling Made Functional."
 
-Also, I borrow from DDD the concept to map the domain as closely as possible in the code.
+Additionally, I've closely followed Domain Driven Design (DDD) principles to ensure alignment between the code representation and the domain.
 
-For example: The way I see it, a Post and a Repost are different things from the domain point of view.
+For instance, within the domain context, I've made a clear distinction between a Post and a Repost as separate entities.
 
-This is the list of the base domain entities I identified:
+Here's the breakdown of the core domain entities:
 
 - Post
-	- User
-	- Publication Date
-	- Content
+    - User
+    - Publication Date
+    - Content
 - Repost
-	- User
-	- Publication Date
-	- Original Post
-- UnpublishedPost (used when creating new posts)
-	- User
-	- Content
-- UnpublishedRepost (used when creating new reposts)
-	- User
-	- Original Post
+    - User
+    - Publication Date
+    - Original Post
+- UnpublishedPost (utilized during new post creation)
+    - User
+    - Content
+- UnpublishedRepost (utilized during new repost creation)
+    - User
+    - Original Post
 - User
-	- Username
+    - Username
 
-## The Domain Entities (Front End)
+## Domain Entities (Front End)
 
-In the front end side, I decided to not enforce validation rules for the domain entities, since those will be enforced by the backend. Since the front end size will consume the back end, it can trust to the back end this responsibility.
+On the front-end side, I've decided not to strictly enforce domain rules, delegating this responsibility to the backend.
 
-Validation in the front end side will be done only to provide a better user experience, but they will not be enforced by the type system. The validation will only be performed when filling up the forms to create new posts.
+Validation on the front end will primarily focus on enhancing the user experience, without imposing strict enforcement by the type system. Validation will only occur during form submissions for creating new posts.
 
-This decision will also allow me to develop the front end side quicker.
+This approach will expedite the development of the front end.
 
-## The Core Business Rules
+## Core Business Rules
 
-A.K.A Enterprise Business Rules in Clean Architecture.
+Following principles from Clean Architecture, I've identified the following Enterprise Business Rules:
 
-Apart from the basic CRUD operations, those are the business rules I identified, in the way I interpreted them, sorted and grouped in a way that makes sense for me:
+- Usernames must be unique and alphanumeric (ensured at the database level)
+- Posts are restricted to text content
+- Publications cannot be deleted (applies to both Posts and Reposts)
+- Posting restrictions include:
+    - A user may not exceed five publications (Posts or Reposts) per day
+    - Post content is limited to 777 characters
+- Reposting restrictions include:
+    - Posts may only be reposted once by a user
+    - Users cannot repost their own posts
+    - Reposts cannot be reposted
+- Publications (Posts or Reposts) should be paginated together, sorted as follows:
+    - When sorted by "latest," older publications appear first
+    - When sorted by "trending," the most reposted Posts are prioritized
+- Search functionality for Posts by content, with the following specifications:
+    - Exact text search string match
+    - Reposts are excluded from search results
 
-- Usernames are unique (alphanumeric) (This will be guaranteed only at database level, because this test asks not to make a Users CRUD)
-- Posts are text only
-- Publications cannot be deleted (or only Posts? I will consider both)
-- Restrictions when posting:
-	- A User cannot make more than 5 Publications a day (Posts or Reposts)
-	- Post content size is limited to 777 characters
-- Restrictions when reposting:
-	- Posts can be reposted only once by User
-	- User cannot repost their own Posts
-	- Reposts cannot be reposted
-- Publications (Posts or Reposts) should be paginated together
-	- When sorting by "latest", list older Publications first
-	- When sorting by "trending", list most reposted Posts first (If I get it, "trending" filters Reposts out? I guess so)
-- Search Posts by content
-	- Use exact text search string match
-	- Reposts are filtered out
+# Application Business Rules
 
-# The Application Business Rules
+The pagination guideline, stipulating 15 Publications on the first page and 20 on subsequent pages, could be considered an Application Business Rule, albeit subject to interpretation. For this assessment's purposes, I'll treat it as such.
 
-It is debatable whether the rule about showing 15 Publications in the first page and 20 in the subsequent pages is an Application Business Rule, because the "Business" here is the Application itself.
+Here are the application business rules:
 
-But I prefer to not think too much about this and proceed with the test considering it as an Application Business Rule.
-
-- Pagination with infinite scroll (first page shows 15 Publications, other pages show 20)
-- Show complete Post information (user, publication date, content)
-- No auth
-- No users CRUD
+- Pagination with infinite scroll (first page displays 15 Publications, subsequent pages display 20)
+- Comprehensive display of Post information (user, publication date, content)
+- No authentication mechanism
+- Absence of users CRUD operations
 - Configurable default user
-- Confirm repost intention
+- Confirmation prompt for reposting actions
