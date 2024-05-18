@@ -1,4 +1,4 @@
-# Posterr Backend - André Teixeira's Technical Evalulation
+# Posterr - André Teixeira's Full Stack Technical Evalulation
 
 For this test, I decided to borrow some concepts from Clean Architecture and some design patterns commonly used when applying Domain Driven Design.
 
