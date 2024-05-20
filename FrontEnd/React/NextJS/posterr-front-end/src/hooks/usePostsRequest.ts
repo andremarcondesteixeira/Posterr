@@ -1,5 +1,5 @@
-import { Publication } from "@/core/domain/entities/Publication";
-import { ApiEndpoint } from "@/core/services/apiEndpointsService";
+import { Publication } from "@Core/Domain/Entities/Publication";
+import { ApiEndpoint } from "@Core/Services/ApiEndpointsService";
 import { useApiEndpoint } from "./useApiEndpoint";
 
 export type PostRequestResponse = {
