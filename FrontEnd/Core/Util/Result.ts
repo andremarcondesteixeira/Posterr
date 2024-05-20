@@ -18,12 +18,12 @@ export class Result<OK_TYPE, ERROR_TYPE extends Error = Error> {
     this.#errorValue = errorValue;
   }
 
-  static Ok<T>(okValue: T) {
-    return new Result(okValue, null, PRIVATE_KEY);
+  static Ok<RESPONSE_TYPE>(okValue: RESPONSE_TYPE) {
+    return new Result<RESPONSE_TYPE>(okValue, null, PRIVATE_KEY);
   }
 
-  static Error<T extends Error = Error>(errorValue: T) {
-    return new Result(null, errorValue, PRIVATE_KEY);
+  static Error<RESPONSE_TYPE, ERROR_TYPE extends Error = Error>(errorValue: ERROR_TYPE) {
+    return new Result<RESPONSE_TYPE>(null, errorValue, PRIVATE_KEY);
   }
 
   get isOk() {
