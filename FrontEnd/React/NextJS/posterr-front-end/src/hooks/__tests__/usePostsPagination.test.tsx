@@ -15,11 +15,11 @@ describe("usePostsPage", () => {
   });
 
   test("Given request is in loading state, then return loading state", () => {
-    spy.mockImplementationOnce(() => ({
+    spy.mockReturnValueOnce({
       data: undefined,
       error: undefined,
       isLoading: true,
-    }));
+    });
     const result = usePostsPagination(1);
     expect(result.isLoadingPosts).toBe(true);
     expect(result.posts).not.toBeDefined();
@@ -67,11 +67,11 @@ describe("usePostsPage", () => {
   });
 
   test("Given request was not successful, then make the error available", () => {
-    spy.mockImplementationOnce(() => ({
+    spy.mockReturnValueOnce({
       data: undefined,
       error: new Error("error"),
       isLoading: false,
-    }));
+    });
 
     const result = usePostsPagination(1);
 
