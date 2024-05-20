@@ -4,7 +4,7 @@ export async function makeRequest<RESPONSE_TYPE>(url: string, init?: RequestInit
     try {
         const requestResponse = await fetch(url, init);
         const responseAsJson = await requestResponse.json();
-        return Result.Ok(responseAsJson);
+        return Result.Ok<RESPONSE_TYPE>(responseAsJson);
     } catch(error) {
         if (error instanceof Error) {
             return Result.Error<RESPONSE_TYPE>(error);
