@@ -5,7 +5,11 @@ import { Result } from "@Core/Util/Result";
 
 export type GetPostsPageUseCaseResponse = Promise<Result<Publication[], Error>>;
 
-export async function getPostsPage(page: number): GetPostsPageUseCaseResponse {
+export function PostsPageUrl(page: number) {
   const pageSize = page === 1 ? 15 : 20;
-  return makeRequest<Publication[]>(`${ApiEndpoint.posts}?page=${page}&pageSize=${pageSize}`);
+  return `${ApiEndpoint.posts}?page=${page}&pageSize=${pageSize}`;
+}
+
+export async function GetPostsPageUseCase(page: number): GetPostsPageUseCaseResponse {
+  return makeRequest<Publication[]>(PostsPageUrl(page));
 }

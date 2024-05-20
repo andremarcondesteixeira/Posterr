@@ -1,0 +1,1 @@
+export { GetPostsPageUseCase } from "./GetPostsPageUseCase";
