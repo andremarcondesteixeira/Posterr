@@ -14,7 +14,10 @@ export default function Home() {
         )}
         {posts && posts.map(post => (
           <li key={`${post.postId}-${post.repostId ?? 'original'}`}>
-            {post.publicationDate.toLocaleDateString()} - {post.authorUsername} - {post.content}
+            <span>ID: {post.postId}</span>
+            <span>Author: {post.authorUsername}</span>
+            <span>Published on {post.publicationDate.toLocaleDateString()}</span>
+            <span>{post.content}</span>
           </li>
         ))}
         {errorLoadingPosts && (
