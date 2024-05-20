@@ -7,7 +7,7 @@ export default function Home() {
 
   return (
     <main>
-      <h1>Home</h1>
+      <h1>Posterr</h1>
       <ul>
         {isLoadingPosts && (
           <span>Loading posts...</span>
