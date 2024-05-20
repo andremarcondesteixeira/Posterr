@@ -14,6 +14,6 @@ export async function makeRequest<RESPONSE_TYPE>(url: string, init?: RequestInit
             return Result.Error<RESPONSE_TYPE>(new Error(error));
         }
 
-        return Result.Error(new Error(`Error when making http request to url: ${url}`, { cause: error }))
+        return Result.Error<RESPONSE_TYPE>(new Error(`Error when making http request to url: ${url}`, { cause: error }))
     }
 }
