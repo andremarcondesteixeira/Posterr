@@ -19,11 +19,11 @@
       }
     ],
     "paths": {
-      "@Core/*": ["../../../Core/*"],
+      "@Core/*": ["../../Core/*"],
       "@/*": ["./src/*"]
     },
     "forceConsistentCasingInFileNames": true,
-    "rootDirs": ["src", "../../../Core"]
+    "rootDirs": ["src", "../../Core"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "vitest.config.mts", "../../../Core/**/*.ts"],
   "exclude": ["node_modules"]
