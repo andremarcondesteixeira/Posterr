@@ -1,9 +1,9 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import { usePostsPagination } from "@/hooks/usePostsPagination";
+import { usePostsRequest } from "@/hooks/usePostsRequest";
 
 export default function Home() {
-  const { isLoading, posts, error, nextPage } = usePostsPagination();
+  const { isLoading, posts, error } = usePostsRequest(1);
 
   return (
     <main>
