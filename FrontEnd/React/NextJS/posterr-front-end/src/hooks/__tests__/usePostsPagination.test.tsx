@@ -1,5 +1,5 @@
 import { afterAll, afterEach, describe, expect, test, vi } from "vitest";
-import { usePostsPage } from "../usePostsPage";
+import { usePostsPagination } from "../usePostsPagination";
 import * as useHttpRequestHook from "../useHttpRequest";
 import { Publication } from "@Core/Domain/Entities/Publication";
 
@@ -20,7 +20,7 @@ describe("usePostsPage", () => {
       error: undefined,
       isLoading: true,
     }));
-    const result = usePostsPage(1);
+    const result = usePostsPagination(1);
     expect(result.isLoadingPosts).toBe(true);
     expect(result.posts).not.toBeDefined();
     expect(result.errorLoadingPosts).not.toBeDefined();
@@ -49,7 +49,7 @@ describe("usePostsPage", () => {
       isLoading: false,
     });
 
-    const result = usePostsPage(1);
+    const result = usePostsPagination(1);
     expect(result.isLoadingPosts).toBe(false);
     expect(result.posts?.length).toBe(2);
     expect(result.posts?.[0].postId).toBe(1);
@@ -73,7 +73,7 @@ describe("usePostsPage", () => {
       isLoading: false,
     }));
 
-    const result = usePostsPage(1);
+    const result = usePostsPagination(1);
 
     expect(result.isLoadingPosts).toBe(false);
     expect(result.posts).not.toBeDefined();
@@ -89,7 +89,7 @@ describe("usePostsPage", () => {
     1.23,
   ])("Given page number is not an integer bigger than or equal to 1, then return error state", (pageNumber) => {
     expect(() => {
-      usePostsPage(pageNumber as unknown as number);
+      usePostsPagination(pageNumber as unknown as number);
     }).toThrowError(new Error("Page number must be a positive integer"));
   });
 });

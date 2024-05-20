@@ -1,9 +1,9 @@
 "use client"
 
-import { usePostsPage } from "@/hooks/usePostsPage";
+import { usePostsPagination } from "@/hooks/usePostsPagination";
 
 export default function Home() {
-  const { isLoadingPosts, posts, errorLoadingPosts } = usePostsPage(1);
+  const { isLoadingPosts, posts, errorLoadingPosts } = usePostsPagination(1);
 
   return (
     <main>
