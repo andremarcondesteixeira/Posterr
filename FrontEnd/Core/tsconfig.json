@@ -7,6 +7,9 @@
     "allowUnreachableCode": false,
     "alwaysStrict": true,
     "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "paths": {
+      "@Core/*": ["./*"]
+    }
   },
 }
