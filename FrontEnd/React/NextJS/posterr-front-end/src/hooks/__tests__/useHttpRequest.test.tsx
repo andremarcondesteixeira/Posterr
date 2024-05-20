@@ -12,6 +12,8 @@ describe("useHttpRequest", () => {
     render(<Page id="loading" />);
     expect(screen.getByText("is loading")).toBeInTheDocument();
     expect(screen.queryByText("is not loading")).toBeNull();
+    expect(screen.queryByText("response")).toBeNull();
+    expect(screen.queryByText("error")).toBeNull();
   });
 
   test("It should quit loading state after response is received", async () => {
