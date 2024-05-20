@@ -1,8 +1,8 @@
 import { Result } from "../Util/Result";
 
-export async function makeRequest<RESPONSE_TYPE>(url: string): Promise<Result<RESPONSE_TYPE>> {
+export async function makeRequest<RESPONSE_TYPE>(url: string, init?: RequestInit): Promise<Result<RESPONSE_TYPE>> {
     try {
-        const requestResponse = await fetch(url);
+        const requestResponse = await fetch(url, init);
         const responseAsJson = await requestResponse.json();
         return Result.Ok(responseAsJson);
     } catch(error) {
