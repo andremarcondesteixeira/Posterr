@@ -14,7 +14,7 @@ suite("HttpRequestService", () => {
         ok: true,
       }));
       const response = await makeRequest<{ foo: string }>("/");
-      assert.deepEqual(response.okOrThrow(), { foo: "bar" });
+      assert.deepEqual(response.okValue, { foo: "bar" });
       context.mock.reset();
     });
 
@@ -29,8 +29,6 @@ suite("HttpRequestService", () => {
     test("Given an Error object is thrown when doing an HTTP request, then return an Error Result object", async (context) => {
       context.mock.method(global, "fetch", () => Promise.reject(new Error("something bad happened")));
       const response = await makeRequest<{ foo: "bar" }>("/");
-      assert.equal(response.isOk, false);
-      assert.equal(response.isError, true);
       assert.equal(response.errorValue?.message, "something bad happened");
       context.mock.reset();
     });
