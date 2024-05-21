@@ -28,6 +28,14 @@ export class Result<OK_TYPE, ERROR_TYPE extends Error = Error> {
     return new Result<RESPONSE_TYPE>(false, null, errorValue, PRIVATE_KEY);
   }
 
+  get okValue() {
+    return this.#okValue;
+  }
+
+  get errorValue() {
+    return this.#errorValue;
+  }
+
   get isOk() {
     return this.#isOk;
   }
