@@ -1,6 +1,10 @@
 {
+  "buildOptions": {
+    "incremental": true
+  },
   "compilerOptions": {
-    "module": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "ES2022",
     "strict": true,
     "allowJs": false,
