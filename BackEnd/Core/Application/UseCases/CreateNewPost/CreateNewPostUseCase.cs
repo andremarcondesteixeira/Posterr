@@ -11,7 +11,7 @@ public sealed class CreateNewPostUseCase(
     IUsersRepository userRepository,
     IDomainPersistencePort domainPersistenceAdapter,
     IDomainConfig domainConfig
-) : IUseCase<CreateNewPostRequestDTO, CreateNewPostResponse>
+) : IUseCase<CreateNewPostRequestDTO, CreateNewPostResponseDTO>
 {
     public IUsersRepository UserRepository { get; } = userRepository
         ?? throw new ArgumentNullException(nameof(userRepository));
@@ -22,7 +22,7 @@ public sealed class CreateNewPostUseCase(
     public IDomainConfig DomainConfig { get; } = domainConfig
         ?? throw new ArgumentNullException(nameof(domainConfig));
 
-    public async Task<CreateNewPostResponse> Run(CreateNewPostRequestDTO request)
+    public async Task<CreateNewPostResponseDTO> Run(CreateNewPostRequestDTO request)
     {
         ArgumentNullException.ThrowIfNull(nameof(request));
 
@@ -32,7 +32,7 @@ public sealed class CreateNewPostUseCase(
         var unpublishedPost = new UnpublishedPost(user, request.Content, DomainConfig);
         var publishedPost = await unpublishedPost.Publish(DomainPersistenceAdapter);
 
-        return new CreateNewPostResponse()
+        return new CreateNewPostResponseDTO()
         {
             PostId = publishedPost.Id,
             AuthorUsername = publishedPost.Author.Username,
