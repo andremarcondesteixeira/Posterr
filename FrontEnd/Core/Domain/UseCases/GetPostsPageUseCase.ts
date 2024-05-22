@@ -1,7 +1,7 @@
-import { Publication } from "@Core/Domain/Entities/Publication";
-import { ApiEndpoint } from "@Core/Services/ApiEndpointsService";
-import { makeRequest } from "@Core/Services/HttpRequestService";
-import { Result } from "@Core/Util/Result";
+import { ApiEndpoint } from "../../Services/ApiEndpointsService";
+import { makeRequest } from "../../Services/HttpRequestService";
+import { Result } from "../../Util/Result";
+import { Publication } from "../Entities/Publication";
 
 export type GetPostsPageUseCaseResponse = Promise<Result<Publication[], Error>>;
 
@@ -10,6 +10,10 @@ export function PostsPageUrl(page: number) {
   return `${ApiEndpoint.posts}?page=${page}&pageSize=${pageSize}`;
 }
 
-export async function GetPostsPageUseCase(page: number): GetPostsPageUseCaseResponse {
+export function GetPostsPageUseCase(page: number): GetPostsPageUseCaseResponse {
+  if (!Number.isInteger(page) || page < 1) {
+    throw new Error(`Tried to use invalid page number ${page} when calling GetPostsPageUseCase`);
+  }
+
   return makeRequest<Publication[]>(PostsPageUrl(page));
 }
