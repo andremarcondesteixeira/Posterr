@@ -1,4 +1,5 @@
 version: '3.9'
+name: posterr-andre-teixeira
 
 services:
 
@@ -10,10 +11,10 @@ services:
       MSSQL_SA_PASSWORD: Secr3t!!
       MSSQL_DB_NAME: posterr
     volumes:
-       - andre-teixeira-posterr:/var/opt/mssql
+       - db:/var/opt/mssql
     ports:
        - 1433:1433
 
 volumes:
-  andre-teixeira-posterr:
+  db:
   
