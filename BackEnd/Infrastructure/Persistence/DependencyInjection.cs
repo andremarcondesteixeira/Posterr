@@ -11,7 +11,7 @@ public static class DependencyInjection
     {
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseSqlServer(connectionString, options => options.EnableRetryOnFailure());
+            options.UseNpgsql(connectionString, options => options.EnableRetryOnFailure());
         });
         services.AddScoped<IUsersRepository, UsersRepository>();
         services.AddScoped<IPublicationsRepository, PublicationsRepository>();

@@ -2,8 +2,8 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Posterr.Infrastructure.Persistence;
 
 #nullable disable
@@ -17,10 +17,10 @@ namespace Posterr.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "8.0.4")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Posterr.Infrastructure.Persistence.DbEntities.PostDbEntity", b =>
                 {
@@ -28,15 +28,15 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<long>("UserId")
@@ -59,7 +59,7 @@ namespace Posterr.Infrastructure.Persistence.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("UserId", "PostId");
@@ -75,11 +75,11 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
+                        .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Username")
@@ -97,25 +97,25 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedAt = new DateTime(2024, 3, 18, 8, 58, 42, 914, DateTimeKind.Utc).AddTicks(1402),
+                            CreatedAt = new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4058),
                             Username = "simba"
                         },
                         new
                         {
                             Id = 2L,
-                            CreatedAt = new DateTime(2024, 3, 18, 8, 58, 42, 914, DateTimeKind.Utc).AddTicks(1403),
+                            CreatedAt = new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4060),
                             Username = "nala"
                         },
                         new
                         {
                             Id = 3L,
-                            CreatedAt = new DateTime(2024, 3, 18, 8, 58, 42, 914, DateTimeKind.Utc).AddTicks(1404),
+                            CreatedAt = new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4061),
                             Username = "timon"
                         },
                         new
                         {
                             Id = 4L,
-                            CreatedAt = new DateTime(2024, 3, 18, 8, 58, 42, 914, DateTimeKind.Utc).AddTicks(1405),
+                            CreatedAt = new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4062),
                             Username = "pumbaa"
                         });
                 });

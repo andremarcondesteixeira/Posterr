@@ -4,17 +4,17 @@ name: posterr-andre-teixeira
 services:
 
   db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: postgres:16.3
     restart: always
+    shm_size: 128mb
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: Secr3t!!
-      MSSQL_DB_NAME: posterr
+      POSTGRES_USER: posterr_admin
+      POSTGRES_PASSWORD: Secr3t!!
+      POSTGRES_DB: posterr
     volumes:
-       - db:/var/opt/mssql
+       - db:/var/lib/postgresql/data
     ports:
-       - 1433:1433
+       - 5432:5432
 
 volumes:
   db:
-  
