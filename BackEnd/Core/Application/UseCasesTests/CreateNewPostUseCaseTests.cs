@@ -28,7 +28,7 @@ public class CreateNewPostUseCaseTests
         presumeThat.UserHasNotMadePublicationsToday(user);
         presumeThat.DomainPersistencePortSuccessfullyPublishesPost(unpublishedPost, post);
 
-        var request = new CreateNewPostRequest(user.Username, post.Content);
+        var request = new CreateNewPostRequestDTO(user.Username, post.Content);
         var response = await useCase.Run(request);
 
         Assert.Equal(1, response.PostId);
@@ -41,7 +41,7 @@ public class CreateNewPostUseCaseTests
     public async Task GivenUserIsNotFound_WhenCreatingNewPost_ThenThrowException()
     {
         presumeThat.UserDoesNotExist(The.Username);
-        var request = new CreateNewPostRequest(The.Username, The.Content);
+        var request = new CreateNewPostRequestDTO(The.Username, The.Content);
         await Assert.ThrowsAsync<UserNotFoundException>(() => useCase.Run(request));
     }
 
@@ -52,7 +52,7 @@ public class CreateNewPostUseCaseTests
         presumeThat.UserExists(user);
         presumeThat.UserHasReachedMaxAllowedDailyPublications(user);
 
-        var request = new CreateNewPostRequest(user.Username, The.Content);
+        var request = new CreateNewPostRequestDTO(user.Username, The.Content);
 
         await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(() => useCase.Run(request));
     }

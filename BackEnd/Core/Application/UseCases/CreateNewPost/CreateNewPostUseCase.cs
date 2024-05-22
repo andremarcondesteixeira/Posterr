@@ -11,7 +11,7 @@ public sealed class CreateNewPostUseCase(
     IUsersRepository userRepository,
     IDomainPersistencePort domainPersistenceAdapter,
     IDomainConfig domainConfig
-) : IUseCase<CreateNewPostRequest, CreateNewPostResponse>
+) : IUseCase<CreateNewPostRequestDTO, CreateNewPostResponse>
 {
     public IUsersRepository UserRepository { get; } = userRepository
         ?? throw new ArgumentNullException(nameof(userRepository));
@@ -22,7 +22,7 @@ public sealed class CreateNewPostUseCase(
     public IDomainConfig DomainConfig { get; } = domainConfig
         ?? throw new ArgumentNullException(nameof(domainConfig));
 
-    public async Task<CreateNewPostResponse> Run(CreateNewPostRequest request)
+    public async Task<CreateNewPostResponse> Run(CreateNewPostRequestDTO request)
     {
         ArgumentNullException.ThrowIfNull(nameof(request));
 

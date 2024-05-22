@@ -1,11 +1,11 @@
 ﻿namespace Posterr.Core.Application.UseCases.CreateNewPost;
 
-public sealed record CreateNewPostRequest
+public sealed record CreateNewPostRequestDTO
 {
     public string Username { get; }
     public string Content { get; }
 
-    public CreateNewPostRequest(string username, string content)
+    public CreateNewPostRequestDTO(string username, string content)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(username, nameof(username));
         ArgumentException.ThrowIfNullOrWhiteSpace(content, nameof(content));
