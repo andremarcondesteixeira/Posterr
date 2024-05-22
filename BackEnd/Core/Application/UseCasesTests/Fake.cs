@@ -6,7 +6,7 @@ using Posterr.Core.Domain.Entities;
 
 namespace Posterr.Core.Application.UseCasesTests;
 
-static class The
+static class Fake
 {
     public const string Content = "content";
     public static readonly DateTime CurrentTimeUTC = DateTime.UtcNow;

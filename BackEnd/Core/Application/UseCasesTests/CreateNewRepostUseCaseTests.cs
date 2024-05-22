@@ -22,12 +22,12 @@ public class CreateNewRepostUseCaseTests
     [Fact]
     public async Task GivenCorrectParametersAndRequirements_WhenCreatingNewRepost_ThenSucceed()
     {
-        var yesterday = The.CurrentTimeUTC.AddDays(-1);
-        var originalPostAuthor = The.User(The.OriginalPostAuthorUsername);
-        var originalPost = The.Post(1, originalPostAuthor, yesterday, The.Content);
-        var repostAuthor = The.User(The.RepostAuthorUsername);
-        var unpublishedRepost = The.UnpublishedRepost(repostAuthor, originalPost);
-        var publishedRepost = The.Repost(unpublishedRepost.Author, The.CurrentTimeUTC, unpublishedRepost.OriginalPost);
+        var yesterday = Fake.CurrentTimeUTC.AddDays(-1);
+        var originalPostAuthor = Fake.User(Fake.OriginalPostAuthorUsername);
+        var originalPost = Fake.Post(1, originalPostAuthor, yesterday, Fake.Content);
+        var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
+        var unpublishedRepost = Fake.UnpublishedRepost(repostAuthor, originalPost);
+        var publishedRepost = Fake.Repost(unpublishedRepost.Author, Fake.CurrentTimeUTC, unpublishedRepost.OriginalPost);
         presumeThat.UserExists(repostAuthor);
         presumeThat.UserHasNotMadePublicationsToday(repostAuthor);
         presumeThat.PostExists(originalPost);
@@ -36,26 +36,26 @@ public class CreateNewRepostUseCaseTests
         var createNewRepostRequest = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
         var response = await useCase.Run(createNewRepostRequest);
 
-        Assert.Equal(The.RepostAuthorUsername, response.RepostAuthorUsername);
-        Assert.Equal(The.CurrentTimeUTC, response.RepostPublicationDate);
+        Assert.Equal(Fake.RepostAuthorUsername, response.RepostAuthorUsername);
+        Assert.Equal(Fake.CurrentTimeUTC, response.RepostPublicationDate);
         Assert.Equal(1, response.OriginalPost.Id);
-        Assert.Equal(The.OriginalPostAuthorUsername, response.OriginalPost.AuthorUsername);
+        Assert.Equal(Fake.OriginalPostAuthorUsername, response.OriginalPost.AuthorUsername);
         Assert.Equal(yesterday, response.OriginalPost.PublicationDate);
-        Assert.Equal(The.Content, response.OriginalPost.Content);
+        Assert.Equal(Fake.Content, response.OriginalPost.Content);
     }
 
     [Fact]
     public async Task GivenRepostAuthorUsernameDoesNotBelongToAnyRegisteredUser_WhenCreatingNewRepost_ThenThrowException()
     {
-        presumeThat.UserDoesNotExist(The.Username);
-        var request = new CreateNewRepostRequestDTO(The.Username, 1);
+        presumeThat.UserDoesNotExist(Fake.Username);
+        var request = new CreateNewRepostRequestDTO(Fake.Username, 1);
         await Assert.ThrowsAsync<UserNotFoundException>(() => useCase.Run(request));
     }
 
     [Fact]
     public async Task GivenOriginalPostNotFound_WhenCreatingNewRepost_ThenThrowException()
     {
-        var repostAuthor = The.User(The.Username);
+        var repostAuthor = Fake.User(Fake.Username);
         presumeThat.UserExists(repostAuthor);
         presumeThat.PostDoesNotExist(1);
 
@@ -67,10 +67,10 @@ public class CreateNewRepostUseCaseTests
     [Fact]
     public async Task GivenUserHasReachedMaxAllowedDailyPublications_WhenCreatingNewRepost_ThenThrowException()
     {
-        var yesterday = The.CurrentTimeUTC.AddDays(-1);
-        var originalPostAuthor = The.User(The.OriginalPostAuthorUsername);
-        var originalPost = The.Post(1, originalPostAuthor, yesterday, The.Content);
-        var repostAuthor = The.User(The.RepostAuthorUsername);
+        var yesterday = Fake.CurrentTimeUTC.AddDays(-1);
+        var originalPostAuthor = Fake.User(Fake.OriginalPostAuthorUsername);
+        var originalPost = Fake.Post(1, originalPostAuthor, yesterday, Fake.Content);
+        var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
         presumeThat.UserExists(repostAuthor);
         presumeThat.PostExists(originalPost);
         presumeThat.UserHasReachedMaxAllowedDailyPublications(repostAuthor);
@@ -86,31 +86,31 @@ public class CreateNewRepostUseCaseTests
     public void GivenNullUserRepository_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException() =>
         Assert.Throws<ArgumentNullException>(() =>
             new CreateNewRepostUseCase(null,
-                                       The.PublicationRepository(),
-                                       The.DomainPersistenceAdapter(),
-                                       The.DomainConfigForTests()));
+                                       Fake.PublicationRepository(),
+                                       Fake.DomainPersistenceAdapter(),
+                                       Fake.DomainConfigForTests()));
 
     [Fact]
     public void GivenNullPublicationRepository_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException() =>
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewRepostUseCase(The.UserRepository(),
+            new CreateNewRepostUseCase(Fake.UserRepository(),
                                       null,
-                                      The.DomainPersistenceAdapter(),
-                                      The.DomainConfigForTests()));
+                                      Fake.DomainPersistenceAdapter(),
+                                      Fake.DomainConfigForTests()));
 
     [Fact]
     public void GivenNullDomainPersistenceAdapter_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException() =>
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewRepostUseCase(The.UserRepository(),
-                                       The.PublicationRepository(),
+            new CreateNewRepostUseCase(Fake.UserRepository(),
+                                       Fake.PublicationRepository(),
                                        null,
-                                       The.DomainConfigForTests()));
+                                       Fake.DomainConfigForTests()));
 
     [Fact]
     public void GivenNullDomainConfig_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException() =>
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewRepostUseCase(The.UserRepository(),
-                                       The.PublicationRepository(),
-                                       The.DomainPersistenceAdapter(),
+            new CreateNewRepostUseCase(Fake.UserRepository(),
+                                       Fake.PublicationRepository(),
+                                       Fake.DomainPersistenceAdapter(),
                                        null));
 }

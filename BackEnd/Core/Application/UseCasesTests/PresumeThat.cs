@@ -13,10 +13,10 @@ record PresumeThat(
     IDomainConfig DomainConfig
 )
 {
-    public static PresumeThat ItWorks() => new(The.UserRepository(),
-                                               The.PublicationRepository(),
-                                               The.DomainPersistenceAdapter(),
-                                               The.DomainConfigForTests());
+    public static PresumeThat ItWorks() => new(Fake.UserRepository(),
+                                               Fake.PublicationRepository(),
+                                               Fake.DomainPersistenceAdapter(),
+                                               Fake.DomainConfigForTests());
 
     public void DomainPersistencePortSuccessfullyPublishesPost(IUnpublishedPost unpublishedPost, IPost post)
     {

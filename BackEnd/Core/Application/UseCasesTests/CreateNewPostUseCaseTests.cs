@@ -21,9 +21,9 @@ public class CreateNewPostUseCaseTests
     [Fact]
     public async Task GivenCorrectParametersAndRequirements_WhenCreatingNewPost_ThenSucceed()
     {
-        var user = The.User(The.Username);
-        var unpublishedPost = The.UnpublishedPost(user, The.Content);
-        var post = The.Post(1, user, The.CurrentTimeUTC, unpublishedPost.Content);
+        var user = Fake.User(Fake.Username);
+        var unpublishedPost = Fake.UnpublishedPost(user, Fake.Content);
+        var post = Fake.Post(1, user, Fake.CurrentTimeUTC, unpublishedPost.Content);
         presumeThat.UserExists(user);
         presumeThat.UserHasNotMadePublicationsToday(user);
         presumeThat.DomainPersistencePortSuccessfullyPublishesPost(unpublishedPost, post);
@@ -32,27 +32,27 @@ public class CreateNewPostUseCaseTests
         var response = await useCase.Run(request);
 
         Assert.Equal(1, response.PostId);
-        Assert.Equal(The.Username, response.AuthorUsername);
-        Assert.Equal(The.CurrentTimeUTC, response.PublicationDate);
-        Assert.Equal(The.Content, response.PostContent);
+        Assert.Equal(Fake.Username, response.AuthorUsername);
+        Assert.Equal(Fake.CurrentTimeUTC, response.PublicationDate);
+        Assert.Equal(Fake.Content, response.PostContent);
     }
 
     [Fact]
     public async Task GivenUserIsNotFound_WhenCreatingNewPost_ThenThrowException()
     {
-        presumeThat.UserDoesNotExist(The.Username);
-        var request = new CreateNewPostRequestDTO(The.Username, The.Content);
+        presumeThat.UserDoesNotExist(Fake.Username);
+        var request = new CreateNewPostRequestDTO(Fake.Username, Fake.Content);
         await Assert.ThrowsAsync<UserNotFoundException>(() => useCase.Run(request));
     }
 
     [Fact]
     public async Task GivenUserHasReachedMaxAllowedDailyPublications_WhenCreatingNewPost_ThenThrowException()
     {
-        var user = The.User(The.Username);
+        var user = Fake.User(Fake.Username);
         presumeThat.UserExists(user);
         presumeThat.UserHasReachedMaxAllowedDailyPublications(user);
 
-        var request = new CreateNewPostRequestDTO(user.Username, The.Content);
+        var request = new CreateNewPostRequestDTO(user.Username, Fake.Content);
 
         await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(() => useCase.Run(request));
     }
@@ -60,15 +60,15 @@ public class CreateNewPostUseCaseTests
     [Fact]
     public void GivenNullUserRepository_WhenInstantiatingCreateNewPostUseCase_ThenThrowException() =>
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewPostUseCase(null, The.DomainPersistenceAdapter(), The.DomainConfigForTests()));
+            new CreateNewPostUseCase(null, Fake.DomainPersistenceAdapter(), Fake.DomainConfigForTests()));
 
     [Fact]
     public void GivenNullDomainPersistenceAdapter_WhenInstantiatingCreateNewPostUseCase_ThenThrowException() =>
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewPostUseCase(The.UserRepository(), null, The.DomainConfigForTests()));
+            new CreateNewPostUseCase(Fake.UserRepository(), null, Fake.DomainConfigForTests()));
 
     [Fact]
     public void GivenNullDomainConfig_WhenInstantiatingCreateNewPostUseCase_ThenThrowException() =>
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewPostUseCase(The.UserRepository(), The.DomainPersistenceAdapter(), null));
+            new CreateNewPostUseCase(Fake.UserRepository(), Fake.DomainPersistenceAdapter(), null));
 }
