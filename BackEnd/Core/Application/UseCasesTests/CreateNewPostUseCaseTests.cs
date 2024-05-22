@@ -4,7 +4,7 @@ using Posterr.Core.Application.UseCases.Exceptions;
 using Posterr.Core.Application.UseCases.CreateNewPost;
 using Posterr.Core.Domain.Entities.Publications.Exceptions;
 
-namespace Posterr.Core.Application.UseCaseTests;
+namespace Posterr.Core.Application.UseCasesTests;
 
 public class CreateNewPostUseCaseTests
 {

@@ -4,7 +4,7 @@ using Posterr.Core.Boundaries.Configuration;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Core.Domain.Entities;
 
-namespace Posterr.Core.Application.UseCaseTests;
+namespace Posterr.Core.Application.UseCasesTests;
 
 record PresumeThat(
     IUsersRepository UserRepository,
