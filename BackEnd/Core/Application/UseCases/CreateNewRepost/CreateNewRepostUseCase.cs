@@ -12,7 +12,7 @@ public sealed class CreateNewRepostUseCase(
     IPublicationsRepository _publicationRepository,
     IDomainPersistencePort _domainPersistenceAdapter,
     IDomainConfig _domainConfig
-) : IUseCase<CreateNewRepostRequestDTO, CreateNewRepostResponse>
+) : IUseCase<CreateNewRepostRequestDTO, CreateNewRepostResponseDTO>
 {
     private readonly IUsersRepository _userRepository = _userRepository
         ?? throw new ArgumentNullException(nameof(_userRepository));
@@ -26,7 +26,7 @@ public sealed class CreateNewRepostUseCase(
     private readonly IDomainConfig _domainConfig = _domainConfig
         ?? throw new ArgumentNullException(nameof(_domainConfig));
 
-    public async Task<CreateNewRepostResponse> Run(CreateNewRepostRequestDTO request)
+    public async Task<CreateNewRepostResponseDTO> Run(CreateNewRepostRequestDTO request)
     {
         ArgumentNullException.ThrowIfNull(nameof(request));
 
@@ -39,11 +39,11 @@ public sealed class CreateNewRepostUseCase(
         var unpublishedRepost = new UnpublishedRepost(user, originalPost, _domainConfig);
         var publishedRepost = await unpublishedRepost.Publish(_domainPersistenceAdapter);
 
-        return new CreateNewRepostResponse()
+        return new CreateNewRepostResponseDTO()
         {
             RepostAuthorUsername = publishedRepost.Author.Username,
             RepostPublicationDate = publishedRepost.PublicationDate,
-            OriginalPost = new CreateNewRepostResponse.Original()
+            OriginalPost = new CreateNewRepostResponseDTO.OriginalPostData()
             {
                 Id = publishedRepost.OriginalPost.Id,
                 AuthorUsername = publishedRepost.OriginalPost.Author.Username,

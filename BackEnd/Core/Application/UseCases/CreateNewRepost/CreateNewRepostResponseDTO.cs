@@ -1,12 +1,12 @@
 ﻿namespace Posterr.Core.Application.UseCases.CreateNewRepost;
 
-public sealed record CreateNewRepostResponse
+public sealed record CreateNewRepostResponseDTO
 {
     public required string RepostAuthorUsername { get; init; }
     public required DateTime RepostPublicationDate { get; init; }
-    public required Original OriginalPost { get; init; }
+    public required OriginalPostData OriginalPost { get; init; }
 
-    public sealed record Original
+    public sealed record OriginalPostData
     {
         public required long Id { get; init; }
         public required string AuthorUsername { get; init; }

@@ -18,7 +18,7 @@ public class PublicationsController(
         createNewPostUseCase.Run(request);
 
     [HttpPost]
-    public Task<CreateNewRepostResponse> CreateNewRepost([FromBody] CreateNewRepostRequestDTO request) =>
+    public Task<CreateNewRepostResponseDTO> CreateNewRepost([FromBody] CreateNewRepostRequestDTO request) =>
         createNewRepostUseCase.Run(request);
 
     [HttpGet]
