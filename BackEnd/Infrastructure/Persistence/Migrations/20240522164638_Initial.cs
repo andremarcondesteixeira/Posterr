@@ -21,7 +21,7 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Username = table.Column<string>(type: "VARCHAR(20)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "GETDATE()")
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
@@ -36,7 +36,7 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     Content = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "GETDATE()")
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
@@ -55,7 +55,7 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                 {
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     PostId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "GETDATE()")
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()")
                 },
                 constraints: table =>
                 {
@@ -79,10 +79,10 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                 columns: new[] { "Id", "CreatedAt", "Username" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4058), "simba" },
-                    { 2L, new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4060), "nala" },
-                    { 3L, new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4061), "timon" },
-                    { 4L, new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4062), "pumbaa" }
+                    { 1L, new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8858), "simba" },
+                    { 2L, new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8861), "nala" },
+                    { 3L, new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8862), "timon" },
+                    { 4L, new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8863), "pumbaa" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -12,7 +12,7 @@ using Posterr.Infrastructure.Persistence;
 namespace Posterr.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240522150827_Initial")]
+    [Migration("20240522164638_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -40,7 +40,7 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<long>("UserId")
                         .HasColumnType("bigint");
@@ -63,7 +63,7 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasDefaultValueSql("NOW()");
 
                     b.HasKey("UserId", "PostId");
 
@@ -83,7 +83,7 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -100,25 +100,25 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedAt = new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4058),
+                            CreatedAt = new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8858),
                             Username = "simba"
                         },
                         new
                         {
                             Id = 2L,
-                            CreatedAt = new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4060),
+                            CreatedAt = new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8861),
                             Username = "nala"
                         },
                         new
                         {
                             Id = 3L,
-                            CreatedAt = new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4061),
+                            CreatedAt = new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8862),
                             Username = "timon"
                         },
                         new
                         {
                             Id = 4L,
-                            CreatedAt = new DateTime(2024, 5, 22, 15, 8, 25, 921, DateTimeKind.Utc).AddTicks(4062),
+                            CreatedAt = new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8863),
                             Username = "pumbaa"
                         });
                 });

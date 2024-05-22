@@ -30,7 +30,7 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
             {
                 modelBuilder.Entity(entityType.ClrType)
                             .Property(nameof(BaseDbEntity.CreatedAt))
-                            .HasDefaultValueSql("GETDATE()");
+                            .HasDefaultValueSql("NOW()");
             }
         }
 
@@ -42,7 +42,7 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
 
         modelBuilder.Entity<RepostDbEntity>()
                     .Property(nameof(RepostDbEntity.CreatedAt))
-                    .HasDefaultValueSql("GETDATE()");
+                    .HasDefaultValueSql("NOW()");
 
         modelBuilder.Entity<RepostDbEntity>()
                     .HasOne(repost => repost.User)
