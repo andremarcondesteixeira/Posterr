@@ -4,20 +4,21 @@ using Posterr.Core.Boundaries.EntitiesInterfaces;
 namespace Posterr.Core.Application.UseCases.PaginatePublications;
 
 public sealed class PaginatePublicationsUseCase(IPublicationsRepository repository)
-    : IUseCase<PaginatePublicationsRequest, IList<PaginatePublicationsResponseItem>>
+    : IUseCase<PaginatePublicationsRequest, IList<PaginatePublicationsResponseItemDTO>>
 {
-    public async Task<IList<PaginatePublicationsResponseItem>> Run(PaginatePublicationsRequest request)
+    public async Task<IList<PaginatePublicationsResponseItemDTO>> Run(PaginatePublicationsRequest request)
     {
-        var publications = await repository.Paginate(request.LastSeenRow, request.PageSize);
+        int lastSeenRow = request.PageNumber * 20 - 5;
+        var publications = await repository.Paginate(lastSeenRow, request.PageSize);
 
         return publications.Select(p =>
         {
             if (p is IPost post)
             {
-                return new PaginatePublicationsResponseItem()
+                return new PaginatePublicationsResponseItemDTO()
                 {
                     IsRepost = false,
-                    Post = new PaginatePublicationsResponseItem.PostData(
+                    Post = new PaginatePublicationsResponseItemDTO.PostData(
                         post.Id,
                         post.Author.Username,
                         post.PublicationDate,
@@ -29,16 +30,16 @@ public sealed class PaginatePublicationsUseCase(IPublicationsRepository reposito
 
             var repost = (IRepost)p;
 
-            return new PaginatePublicationsResponseItem()
+            return new PaginatePublicationsResponseItemDTO()
             {
                 IsRepost = false,
-                Post = new PaginatePublicationsResponseItem.PostData(
+                Post = new PaginatePublicationsResponseItemDTO.PostData(
                     repost.OriginalPost.Id,
                     repost.OriginalPost.Author.Username,
                     repost.OriginalPost.PublicationDate,
                     repost.OriginalPost.Content
                 ),
-                Repost = new PaginatePublicationsResponseItem.RepostData(repost.Author.Username, repost.PublicationDate)
+                Repost = new PaginatePublicationsResponseItemDTO.RepostData(repost.Author.Username, repost.PublicationDate)
             };
         }).ToList();
     }

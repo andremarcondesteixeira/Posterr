@@ -2,7 +2,7 @@
 
 namespace Posterr.Core.Application.UseCases.PaginatePublications;
 
-public record PaginatePublicationsResponseItem
+public record PaginatePublicationsResponseItemDTO
 {
     public required bool IsRepost { get; init; }
 
