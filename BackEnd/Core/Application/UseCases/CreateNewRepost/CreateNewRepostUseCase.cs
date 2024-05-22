@@ -12,7 +12,7 @@ public sealed class CreateNewRepostUseCase(
     IPublicationsRepository _publicationRepository,
     IDomainPersistencePort _domainPersistenceAdapter,
     IDomainConfig _domainConfig
-) : IUseCase<CreateNewRepostRequest, CreateNewRepostResponse>
+) : IUseCase<CreateNewRepostRequestDTO, CreateNewRepostResponse>
 {
     private readonly IUsersRepository _userRepository = _userRepository
         ?? throw new ArgumentNullException(nameof(_userRepository));
@@ -26,7 +26,7 @@ public sealed class CreateNewRepostUseCase(
     private readonly IDomainConfig _domainConfig = _domainConfig
         ?? throw new ArgumentNullException(nameof(_domainConfig));
 
-    public async Task<CreateNewRepostResponse> Run(CreateNewRepostRequest request)
+    public async Task<CreateNewRepostResponse> Run(CreateNewRepostRequestDTO request)
     {
         ArgumentNullException.ThrowIfNull(nameof(request));
 

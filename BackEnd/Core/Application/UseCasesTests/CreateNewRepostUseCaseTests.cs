@@ -33,7 +33,7 @@ public class CreateNewRepostUseCaseTests
         presumeThat.PostExists(originalPost);
         presumeThat.DomainPersistencePortSuccessfullyPublishesRepost(unpublishedRepost, publishedRepost);
 
-        var createNewRepostRequest = new CreateNewRepostRequest(repostAuthor.Username, originalPost.Id);
+        var createNewRepostRequest = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
         var response = await useCase.Run(createNewRepostRequest);
 
         Assert.Equal(The.RepostAuthorUsername, response.RepostAuthorUsername);
@@ -48,7 +48,7 @@ public class CreateNewRepostUseCaseTests
     public async Task GivenRepostAuthorUsernameDoesNotBelongToAnyRegisteredUser_WhenCreatingNewRepost_ThenThrowException()
     {
         presumeThat.UserDoesNotExist(The.Username);
-        var request = new CreateNewRepostRequest(The.Username, 1);
+        var request = new CreateNewRepostRequestDTO(The.Username, 1);
         await Assert.ThrowsAsync<UserNotFoundException>(() => useCase.Run(request));
     }
 
@@ -59,7 +59,7 @@ public class CreateNewRepostUseCaseTests
         presumeThat.UserExists(repostAuthor);
         presumeThat.PostDoesNotExist(1);
 
-        var request = new CreateNewRepostRequest(repostAuthor.Username, 1);
+        var request = new CreateNewRepostRequestDTO(repostAuthor.Username, 1);
 
         await Assert.ThrowsAsync<PostNotFoundException>(() => useCase.Run(request));
     }
@@ -75,7 +75,7 @@ public class CreateNewRepostUseCaseTests
         presumeThat.PostExists(originalPost);
         presumeThat.UserHasReachedMaxAllowedDailyPublications(repostAuthor);
 
-        var createNewRepostRequest = new CreateNewRepostRequest(repostAuthor.Username, originalPost.Id);
+        var createNewRepostRequest = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
 
         await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(() =>
             useCase.Run(createNewRepostRequest)
