@@ -34,6 +34,14 @@ using (var scope = app.Services.CreateScope())
          .Migrate();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider
+            .GetRequiredService<ApplicationDbContext>()
+            .Database
+            .Migrate();
+}
+
 app.Run();
 
 public partial class Program
