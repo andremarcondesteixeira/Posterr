@@ -6,17 +6,17 @@ using Posterr.Core.Domain.Entities;
 
 namespace Posterr.Core.Application.UseCasesTests;
 
-record PresumeThat(
+record Pretend(
     IUsersRepository UserRepository,
     IPublicationsRepository PublicationRepository,
     IDomainPersistencePort DomainPersistenceAdapter,
     IDomainConfig DomainConfig
 )
 {
-    public static PresumeThat ItWorks() => new(Fake.UserRepository(),
-                                               Fake.PublicationRepository(),
-                                               Fake.DomainPersistenceAdapter(),
-                                               Fake.DomainConfigForTests());
+    public static Pretend Make() => new(Fake.UserRepository(),
+                                        Fake.PublicationRepository(),
+                                        Fake.DomainPersistenceAdapter(),
+                                        Fake.DomainConfigForTests());
 
     public void DomainPersistencePortSuccessfullyPublishesPost(IUnpublishedPost unpublishedPost, IPost post)
     {
@@ -54,7 +54,7 @@ record PresumeThat(
     {
         A.CallTo(() => UserRepository.FindByUsername(username)).Returns(Task.FromResult<IUser?>(null));
     }
-    
+
     public void UserExists(IUser user)
     {
         A.CallTo(() => UserRepository.FindByUsername(user.Username)).Returns(user);

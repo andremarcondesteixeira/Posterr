@@ -8,15 +8,15 @@ namespace Posterr.Core.Application.UseCasesTests;
 
 public class CreateNewRepostUseCaseTests
 {
-    private readonly PresumeThat presumeThat = PresumeThat.ItWorks();
+    private readonly Pretend pretend = Pretend.Make();
     private readonly CreateNewRepostUseCase useCase;
 
     public CreateNewRepostUseCaseTests()
     {
-        useCase = new CreateNewRepostUseCase(presumeThat.UserRepository,
-                                              presumeThat.PublicationRepository,
-                                              presumeThat.DomainPersistenceAdapter,
-                                              presumeThat.DomainConfig);
+        useCase = new CreateNewRepostUseCase(pretend.UserRepository,
+                                             pretend.PublicationRepository,
+                                             pretend.DomainPersistenceAdapter,
+                                             pretend.DomainConfig);
     }
 
     [Fact]
@@ -28,10 +28,10 @@ public class CreateNewRepostUseCaseTests
         var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
         var unpublishedRepost = Fake.UnpublishedRepost(repostAuthor, originalPost);
         var publishedRepost = Fake.Repost(unpublishedRepost.Author, Fake.CurrentTimeUTC, unpublishedRepost.OriginalPost);
-        presumeThat.UserExists(repostAuthor);
-        presumeThat.UserHasNotMadePublicationsToday(repostAuthor);
-        presumeThat.PostExists(originalPost);
-        presumeThat.DomainPersistencePortSuccessfullyPublishesRepost(unpublishedRepost, publishedRepost);
+        pretend.UserExists(repostAuthor);
+        pretend.UserHasNotMadePublicationsToday(repostAuthor);
+        pretend.PostExists(originalPost);
+        pretend.DomainPersistencePortSuccessfullyPublishesRepost(unpublishedRepost, publishedRepost);
 
         var createNewRepostRequest = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
         var response = await useCase.Run(createNewRepostRequest);
@@ -47,7 +47,7 @@ public class CreateNewRepostUseCaseTests
     [Fact]
     public async Task GivenRepostAuthorUsernameDoesNotBelongToAnyRegisteredUser_WhenCreatingNewRepost_ThenThrowException()
     {
-        presumeThat.UserDoesNotExist(Fake.Username);
+        pretend.UserDoesNotExist(Fake.Username);
         var request = new CreateNewRepostRequestDTO(Fake.Username, 1);
         await Assert.ThrowsAsync<UserNotFoundException>(() => useCase.Run(request));
     }
@@ -56,8 +56,8 @@ public class CreateNewRepostUseCaseTests
     public async Task GivenOriginalPostNotFound_WhenCreatingNewRepost_ThenThrowException()
     {
         var repostAuthor = Fake.User(Fake.Username);
-        presumeThat.UserExists(repostAuthor);
-        presumeThat.PostDoesNotExist(1);
+        pretend.UserExists(repostAuthor);
+        pretend.PostDoesNotExist(1);
 
         var request = new CreateNewRepostRequestDTO(repostAuthor.Username, 1);
 
@@ -71,9 +71,9 @@ public class CreateNewRepostUseCaseTests
         var originalPostAuthor = Fake.User(Fake.OriginalPostAuthorUsername);
         var originalPost = Fake.Post(1, originalPostAuthor, yesterday, Fake.Content);
         var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
-        presumeThat.UserExists(repostAuthor);
-        presumeThat.PostExists(originalPost);
-        presumeThat.UserHasReachedMaxAllowedDailyPublications(repostAuthor);
+        pretend.UserExists(repostAuthor);
+        pretend.PostExists(originalPost);
+        pretend.UserHasReachedMaxAllowedDailyPublications(repostAuthor);
 
         var createNewRepostRequest = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
 

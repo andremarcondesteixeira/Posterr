@@ -8,14 +8,14 @@ namespace Posterr.Core.Application.UseCasesTests;
 
 public class CreateNewPostUseCaseTests
 {
-    private readonly PresumeThat presumeThat = PresumeThat.ItWorks();
+    private readonly Pretend pretend = Pretend.Make();
     private readonly CreateNewPostUseCase useCase;
 
     public CreateNewPostUseCaseTests()
     {
-        useCase = new CreateNewPostUseCase(presumeThat.UserRepository,
-                                           presumeThat.DomainPersistenceAdapter,
-                                           presumeThat.DomainConfig);
+        useCase = new CreateNewPostUseCase(pretend.UserRepository,
+                                           pretend.DomainPersistenceAdapter,
+                                           pretend.DomainConfig);
     }
 
     [Fact]
@@ -24,9 +24,9 @@ public class CreateNewPostUseCaseTests
         var user = Fake.User(Fake.Username);
         var unpublishedPost = Fake.UnpublishedPost(user, Fake.Content);
         var post = Fake.Post(1, user, Fake.CurrentTimeUTC, unpublishedPost.Content);
-        presumeThat.UserExists(user);
-        presumeThat.UserHasNotMadePublicationsToday(user);
-        presumeThat.DomainPersistencePortSuccessfullyPublishesPost(unpublishedPost, post);
+        pretend.UserExists(user);
+        pretend.UserHasNotMadePublicationsToday(user);
+        pretend.DomainPersistencePortSuccessfullyPublishesPost(unpublishedPost, post);
 
         var request = new CreateNewPostRequestDTO(user.Username, post.Content);
         var response = await useCase.Run(request);
@@ -40,7 +40,7 @@ public class CreateNewPostUseCaseTests
     [Fact]
     public async Task GivenUserIsNotFound_WhenCreatingNewPost_ThenThrowException()
     {
-        presumeThat.UserDoesNotExist(Fake.Username);
+        pretend.UserDoesNotExist(Fake.Username);
         var request = new CreateNewPostRequestDTO(Fake.Username, Fake.Content);
         await Assert.ThrowsAsync<UserNotFoundException>(() => useCase.Run(request));
     }
@@ -49,8 +49,8 @@ public class CreateNewPostUseCaseTests
     public async Task GivenUserHasReachedMaxAllowedDailyPublications_WhenCreatingNewPost_ThenThrowException()
     {
         var user = Fake.User(Fake.Username);
-        presumeThat.UserExists(user);
-        presumeThat.UserHasReachedMaxAllowedDailyPublications(user);
+        pretend.UserExists(user);
+        pretend.UserHasReachedMaxAllowedDailyPublications(user);
 
         var request = new CreateNewPostRequestDTO(user.Username, Fake.Content);
 
