@@ -1,6 +1,6 @@
 ﻿namespace Posterr.Core.Application.UseCases.CreateNewPost;
 
-public sealed record CreateNewPostResponse
+public sealed record CreateNewPostResponseDTO
 {
     public required long PostId { get; init; }
     public required string AuthorUsername { get; init; }
