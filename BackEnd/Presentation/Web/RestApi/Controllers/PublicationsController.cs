@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Posterr.Core.Application.UseCases.CreateNewPost;
 using Posterr.Core.Application.UseCases.CreateNewRepost;
 using Posterr.Core.Application.UseCases.PaginatePublications;
@@ -22,6 +22,6 @@ public class PublicationsController(
         createNewRepostUseCase.Run(request);
 
     [HttpGet]
-    public Task<IList<PaginatePublicationsResponseItemDTO>> ListPosts([FromBody] PaginatePublicationsRequest request) =>
+    public Task<IList<PaginatePublicationsResponseItemDTO>> ListPosts([FromBody] PaginatePublicationsRequestDTO request) =>
         paginatePublicationsUseCase.Run(request);
 }

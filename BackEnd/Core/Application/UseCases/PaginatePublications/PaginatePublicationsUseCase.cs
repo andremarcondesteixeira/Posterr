@@ -4,9 +4,9 @@ using Posterr.Core.Boundaries.EntitiesInterfaces;
 namespace Posterr.Core.Application.UseCases.PaginatePublications;
 
 public sealed class PaginatePublicationsUseCase(IPublicationsRepository repository)
-    : IUseCase<PaginatePublicationsRequest, IList<PaginatePublicationsResponseItemDTO>>
+    : IUseCase<PaginatePublicationsRequestDTO, IList<PaginatePublicationsResponseItemDTO>>
 {
-    public async Task<IList<PaginatePublicationsResponseItemDTO>> Run(PaginatePublicationsRequest request)
+    public async Task<IList<PaginatePublicationsResponseItemDTO>> Run(PaginatePublicationsRequestDTO request)
     {
         int lastSeenRow = request.PageNumber * 20 - 5;
         var publications = await repository.Paginate(lastSeenRow, request.PageSize);
