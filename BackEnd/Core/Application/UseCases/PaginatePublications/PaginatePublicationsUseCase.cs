@@ -11,9 +11,9 @@ public sealed class PaginatePublicationsUseCase(IPublicationsRepository reposito
         int lastSeenRow = request.PageNumber * 20 - 5;
         var publications = await repository.Paginate(lastSeenRow, request.PageSize);
 
-        return publications.Select(p =>
+        return publications.Select(publication =>
         {
-            if (p is IPost post)
+            if (publication is IPost post)
             {
                 return new PaginatePublicationsResponseItemDTO()
                 {
@@ -27,7 +27,7 @@ public sealed class PaginatePublicationsUseCase(IPublicationsRepository reposito
                 };
             }
 
-            var repost = (IRepost)p;
+            var repost = (IRepost)publication;
 
             return new PaginatePublicationsResponseItemDTO()
             {
