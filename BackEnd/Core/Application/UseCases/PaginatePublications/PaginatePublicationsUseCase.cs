@@ -27,7 +27,6 @@ public sealed class PaginatePublicationsUseCase(IPublicationsRepository reposito
                 };
             }
 
-
             var repost = (IRepost)p;
 
             return new PaginatePublicationsResponseItemDTO()
