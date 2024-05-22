@@ -6,7 +6,7 @@ using Posterr.Core.Application.UseCases.PaginatePublications;
 namespace Posterr.Presentation.Web.RestApi.Controllers;
 
 [ApiController]
-[Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
+[Route("api/[controller]")]
 public class PublicationsController(
     CreateNewPostUseCase createNewPostUseCase,
     CreateNewRepostUseCase createNewRepostUseCase,
