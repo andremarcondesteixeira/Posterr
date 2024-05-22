@@ -1,6 +1,6 @@
 import { Result } from "../Util/Result";
 
-export async function makeRequest<RESPONSE_TYPE>(url: string, init?: RequestInit): Promise<Result<RESPONSE_TYPE, Error>> {
+export async function makeRequest<RESPONSE>(url: string, init?: RequestInit): Promise<Result<RESPONSE, Error>> {
     try {
         const requestResponse = await fetch(url, init);
 
@@ -11,9 +11,9 @@ export async function makeRequest<RESPONSE_TYPE>(url: string, init?: RequestInit
         }
 
         const responseAsJson = await requestResponse.json();
-        return Result.Ok<RESPONSE_TYPE>(responseAsJson);
+        return Result.Ok<RESPONSE>(responseAsJson);
     } catch(error: unknown) {
         // Fetch API only throws error objects. This is safe.
-        return Result.Error<RESPONSE_TYPE>(error as Error);
+        return Result.Error(error as Error);
     }
 }

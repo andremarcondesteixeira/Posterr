@@ -1,16 +1,16 @@
 const PRIVATE_KEY = Symbol();
 
-export type ResultMatcher<OK_TYPE, ERROR_TYPE> = {
-  ok: (value: OK_TYPE) => void;
-  error: (value: ERROR_TYPE) => void;
+export type ResultMatcher<OK, ERROR> = {
+  ok: (value: OK) => void;
+  error: (value: ERROR) => void;
 }
 
-export class Result<OK_TYPE, ERROR_TYPE extends Error = Error> {
+export class Result<OK, ERROR> {
   #isOk: boolean;
-  #okValue: OK_TYPE | null;
-  #errorValue: ERROR_TYPE | null;
+  #okValue: OK | null;
+  #errorValue: ERROR | null;
 
-  constructor(isOk: boolean, okValue: OK_TYPE | null, errorValue: ERROR_TYPE | null, key: typeof PRIVATE_KEY) {
+  constructor(isOk: boolean, okValue: OK | null, errorValue: ERROR | null, key: typeof PRIVATE_KEY) {
     if (key !== PRIVATE_KEY) {
       throw new Error("You must use either Result.Ok or Result.Error to create a new Result object");
     }
@@ -20,19 +20,29 @@ export class Result<OK_TYPE, ERROR_TYPE extends Error = Error> {
     this.#errorValue = errorValue;
   }
 
-  static Ok<RESPONSE_TYPE>(okValue: RESPONSE_TYPE) {
-    return new Result<RESPONSE_TYPE>(true, okValue, null, PRIVATE_KEY);
+  static Ok<OK, ERROR = never>(okValue: OK) {
+    return new Result<OK, ERROR>(true, okValue, null, PRIVATE_KEY);
   }
 
-  static Error<RESPONSE_TYPE, ERROR_TYPE extends Error = Error>(errorValue: ERROR_TYPE) {
-    return new Result<RESPONSE_TYPE>(false, null, errorValue, PRIVATE_KEY);
+  static Error<OK, ERROR>(errorValue: ERROR) {
+    return new Result<OK, ERROR>(false, null, errorValue, PRIVATE_KEY);
   }
 
   get okValue() {
+    if (this.isError) {
+      throw new Error("Tried to access okValue of Result object when result is error", {
+        cause: this,
+      });
+    }
     return this.#okValue;
   }
 
   get errorValue() {
+    if (this.isOk) {
+      throw new Error("Tried to access errorValue of Result object when result is ok", {
+        cause: this,
+      });
+    }
     return this.#errorValue;
   }
 
@@ -44,19 +54,29 @@ export class Result<OK_TYPE, ERROR_TYPE extends Error = Error> {
     return !this.isOk;
   }
 
-  match(matcher: ResultMatcher<OK_TYPE, ERROR_TYPE>) {
+  match(matcher: ResultMatcher<OK, ERROR>) {
     if (this.isOk) {
-      matcher.ok(this.#okValue as OK_TYPE);
+      matcher.ok(this.#okValue as OK);
     } else {
-      matcher.error(this.#errorValue as ERROR_TYPE);
+      matcher.error(this.#errorValue as ERROR);
     }
   }
 
-  okOrThrow(): OK_TYPE {
+  okOrDefault(value: OK): OK {
     if (this.isOk) {
-      return this.#okValue as OK_TYPE;
+      return this.#okValue as OK;
     }
 
-    throw this.#errorValue;
+    return value;
+  }
+
+  okOrThrow(message: string): OK {
+    if (this.isOk) {
+      return this.#okValue as OK;
+    }
+
+    throw new Error(message, {
+      cause: this,
+    });
   }
 }
