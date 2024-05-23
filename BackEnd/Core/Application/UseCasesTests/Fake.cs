@@ -38,7 +38,7 @@ static class Fake
         return post;
     }
 
-    public static IPublicationsRepository PublicationRepository() => A.Fake<IPublicationsRepository>(x => x.Strict());
+    public static IPublicationsRepository PublicationsRepository() => A.Fake<IPublicationsRepository>(x => x.Strict());
 
     public static IRepost Repost(IUser author, DateTime publicationDate, IPost originalPost)
     {

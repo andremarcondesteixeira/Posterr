@@ -14,7 +14,7 @@ namespace Posterr.Core.Application.UseCasesTests;
 public class CreateNewRepostUseCaseTests
 {
     private readonly IUsersRepository usersRepository = Fake.UserRepository();
-    private readonly IPublicationsRepository publicationsRepository = Fake.PublicationRepository();
+    private readonly IPublicationsRepository publicationsRepository = Fake.PublicationsRepository();
     private readonly IDomainPersistencePort domainPersistenceAdapter = Fake.DomainPersistenceAdapter();
     private readonly IDomainConfig domainConfig = Fake.DomainConfig();
     private readonly CreateNewRepostUseCase useCase;
@@ -102,7 +102,7 @@ public class CreateNewRepostUseCaseTests
         {
             new CreateNewRepostUseCase(
                 null,
-                Fake.PublicationRepository(),
+                Fake.PublicationsRepository(),
                 Fake.DomainPersistenceAdapter(),
                 Fake.DomainConfig()
             );
@@ -130,7 +130,7 @@ public class CreateNewRepostUseCaseTests
         {
             new CreateNewRepostUseCase(
                 Fake.UserRepository(),
-                Fake.PublicationRepository(),
+                Fake.PublicationsRepository(),
                 null,
                 Fake.DomainConfig()
             );
@@ -144,7 +144,7 @@ public class CreateNewRepostUseCaseTests
         {
             new CreateNewRepostUseCase(
                 Fake.UserRepository(),
-                Fake.PublicationRepository(),
+                Fake.PublicationsRepository(),
                 Fake.DomainPersistenceAdapter(),
                 null
             );
