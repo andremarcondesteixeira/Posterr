@@ -24,7 +24,7 @@ public class CreateNewPostUseCaseTests
         var user = Fake.User(Fake.Username);
         var unpublishedPost = Fake.UnpublishedPost(user, Fake.Content);
         var post = Fake.Post(1, user, Fake.CurrentTimeUTC, unpublishedPost.Content);
-        pretend.UserExists(user);
+        pretend.FindUserByUsernameReturns(user);
         pretend.UserHasNotMadePublicationsToday(user);
         pretend.DomainPersistencePortSuccessfullyPublishesPost(unpublishedPost, post);
 
@@ -49,7 +49,7 @@ public class CreateNewPostUseCaseTests
     public async Task GivenUserHasReachedMaxAllowedDailyPublications_WhenCreatingNewPost_ThenThrowException()
     {
         var user = Fake.User(Fake.Username);
-        pretend.UserExists(user);
+        pretend.FindUserByUsernameReturns(user);
         pretend.UserHasReachedMaxAllowedDailyPublications(user);
 
         var request = new CreateNewPostRequestDTO(user.Username, Fake.Content);

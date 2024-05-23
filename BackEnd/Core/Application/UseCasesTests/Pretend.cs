@@ -59,7 +59,7 @@ record Pretend(
             .Returns(Task.FromResult<IUser?>(null));
     }
 
-    public void UserExists(IUser user)
+    public void FindUserByUsernameReturns(IUser user)
     {
         A.CallTo(() => UserRepository.FindByUsername(user.Username))
             .Returns(user);

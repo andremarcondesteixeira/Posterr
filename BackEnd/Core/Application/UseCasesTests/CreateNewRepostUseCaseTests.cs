@@ -28,7 +28,7 @@ public class CreateNewRepostUseCaseTests
         var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
         var unpublishedRepost = Fake.UnpublishedRepost(repostAuthor, originalPost);
         var publishedRepost = Fake.Repost(unpublishedRepost.Author, Fake.CurrentTimeUTC, unpublishedRepost.OriginalPost);
-        pretend.UserExists(repostAuthor);
+        pretend.FindUserByUsernameReturns(repostAuthor);
         pretend.UserHasNotMadePublicationsToday(repostAuthor);
         pretend.PostExists(originalPost);
         pretend.DomainPersistencePortSuccessfullyPublishesRepost(unpublishedRepost, publishedRepost);
@@ -56,7 +56,7 @@ public class CreateNewRepostUseCaseTests
     public async Task GivenOriginalPostNotFound_WhenCreatingNewRepost_ThenThrowException()
     {
         var repostAuthor = Fake.User(Fake.Username);
-        pretend.UserExists(repostAuthor);
+        pretend.FindUserByUsernameReturns(repostAuthor);
         pretend.PostDoesNotExist(1);
 
         var request = new CreateNewRepostRequestDTO(repostAuthor.Username, 1);
@@ -71,7 +71,7 @@ public class CreateNewRepostUseCaseTests
         var originalPostAuthor = Fake.User(Fake.OriginalPostAuthorUsername);
         var originalPost = Fake.Post(1, originalPostAuthor, yesterday, Fake.Content);
         var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
-        pretend.UserExists(repostAuthor);
+        pretend.FindUserByUsernameReturns(repostAuthor);
         pretend.PostExists(originalPost);
         pretend.UserHasReachedMaxAllowedDailyPublications(repostAuthor);
 
