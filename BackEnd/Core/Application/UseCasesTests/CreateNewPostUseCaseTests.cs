@@ -67,17 +67,29 @@ public class CreateNewPostUseCaseTests
     }
 
     [Fact]
-    public void GivenNullUserRepository_WhenInstantiatingCreateNewPostUseCase_ThenThrowException() =>
+    public void GivenNullUserRepository_WhenInstantiatingCreateNewPostUseCase_ThenThrowException()
+    {
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewPostUseCase(null, Fake.DomainPersistenceAdapter(), Fake.DomainConfig()));
+        {
+            new CreateNewPostUseCase(null, Fake.DomainPersistenceAdapter(), Fake.DomainConfig());
+        });
+    }
 
     [Fact]
-    public void GivenNullDomainPersistenceAdapter_WhenInstantiatingCreateNewPostUseCase_ThenThrowException() =>
+    public void GivenNullDomainPersistenceAdapter_WhenInstantiatingCreateNewPostUseCase_ThenThrowException()
+    {
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewPostUseCase(Fake.UserRepository(), null, Fake.DomainConfig()));
+        {
+            new CreateNewPostUseCase(Fake.UserRepository(), null, Fake.DomainConfig());
+        });
+    }
 
     [Fact]
-    public void GivenNullDomainConfig_WhenInstantiatingCreateNewPostUseCase_ThenThrowException() =>
+    public void GivenNullDomainConfig_WhenInstantiatingCreateNewPostUseCase_ThenThrowException()
+    {
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewPostUseCase(Fake.UserRepository(), Fake.DomainPersistenceAdapter(), null));
+        {
+            new CreateNewPostUseCase(Fake.UserRepository(), Fake.DomainPersistenceAdapter(), null);
+        });
+    }
 }
