@@ -3,19 +3,25 @@
 using Posterr.Core.Application.UseCases.Exceptions;
 using Posterr.Core.Application.UseCases.CreateNewPost;
 using Posterr.Core.Domain.Entities.Publications.Exceptions;
+using Posterr.Core.Boundaries.Persistence;
+using Posterr.Core.Domain.Entities;
+using Posterr.Core.Boundaries.Configuration;
+using FakeItEasy;
+using Posterr.Core.Boundaries.EntitiesInterfaces;
 
 namespace Posterr.Core.Application.UseCasesTests;
 
 public class CreateNewPostUseCaseTests
 {
-    private readonly Pretend pretend = Pretend.Make();
+    private readonly IUsersRepository usersRepository = Fake.UserRepository();
+    private readonly IPublicationsRepository publicationsRepository = Fake.PublicationRepository();
+    private readonly IDomainPersistencePort domainPersistenceAdapter = Fake.DomainPersistenceAdapter();
+    private readonly IDomainConfig domainConfig = Fake.DomainConfig();
     private readonly CreateNewPostUseCase useCase;
 
     public CreateNewPostUseCaseTests()
     {
-        useCase = new CreateNewPostUseCase(pretend.UserRepository,
-                                           pretend.DomainPersistenceAdapter,
-                                           pretend.DomainConfig);
+        useCase = new CreateNewPostUseCase(usersRepository, domainPersistenceAdapter, domainConfig);
     }
 
     [Fact]
@@ -24,9 +30,11 @@ public class CreateNewPostUseCaseTests
         var user = Fake.User(Fake.Username);
         var unpublishedPost = Fake.UnpublishedPost(user, Fake.Content);
         var post = Fake.Post(1, user, Fake.CurrentTimeUTC, unpublishedPost.Content);
-        pretend.FindUserByUsernameReturns(user);
-        pretend.UserHasNotMadePublicationsToday(user);
-        pretend.DomainPersistencePort_PublishNewPost_Succeeds(unpublishedPost, post);
+        A.CallTo(() => usersRepository.FindByUsername(user.Username)).Returns(user);
+        A.CallTo(() => domainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(user)).Returns((ushort)0);
+        A.CallTo(() => domainPersistenceAdapter.PublishNewPost(A<IUnpublishedPost>.That.Matches(
+            x => x.Author.Username == unpublishedPost.Author.Username && x.Content == unpublishedPost.Content
+        ))).Returns(post);
 
         var request = new CreateNewPostRequestDTO(user.Username, post.Content);
         var response = await useCase.Run(request);
@@ -40,7 +48,7 @@ public class CreateNewPostUseCaseTests
     [Fact]
     public async Task GivenUserIsNotFound_WhenCreatingNewPost_ThenThrowException()
     {
-        pretend.UserDoesNotExist(Fake.Username);
+        A.CallTo(() => usersRepository.FindByUsername(Fake.Username)).Returns(Task.FromResult<IUser?>(null));
         var request = new CreateNewPostRequestDTO(Fake.Username, Fake.Content);
         await Assert.ThrowsAsync<UserNotFoundException>(() => useCase.Run(request));
     }
@@ -49,8 +57,10 @@ public class CreateNewPostUseCaseTests
     public async Task GivenUserHasReachedMaxAllowedDailyPublications_WhenCreatingNewPost_ThenThrowException()
     {
         var user = Fake.User(Fake.Username);
-        pretend.FindUserByUsernameReturns(user);
-        pretend.UserHasReachedMaxAllowedDailyPublications(user);
+        A.CallTo(() => usersRepository.FindByUsername(user.Username)).Returns(user);
+        A.CallTo(() => domainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(user)).Returns(
+            domainConfig.MaxAllowedDailyPublicationsByUser
+        );
 
         var request = new CreateNewPostRequestDTO(user.Username, Fake.Content);
 

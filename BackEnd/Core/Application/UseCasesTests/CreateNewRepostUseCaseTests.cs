@@ -3,20 +3,25 @@
 using Posterr.Core.Application.UseCases.Exceptions;
 using Posterr.Core.Application.UseCases.CreateNewRepost;
 using Posterr.Core.Domain.Entities.Publications.Exceptions;
+using FakeItEasy;
+using Posterr.Core.Boundaries.Persistence;
+using Posterr.Core.Domain.Entities;
+using Posterr.Core.Boundaries.Configuration;
+using Posterr.Core.Boundaries.EntitiesInterfaces;
 
 namespace Posterr.Core.Application.UseCasesTests;
 
 public class CreateNewRepostUseCaseTests
 {
-    private readonly Pretend pretend = Pretend.Make();
+    private readonly IUsersRepository usersRepository = Fake.UserRepository();
+    private readonly IPublicationsRepository publicationsRepository = Fake.PublicationRepository();
+    private readonly IDomainPersistencePort domainPersistenceAdapter = Fake.DomainPersistenceAdapter();
+    private readonly IDomainConfig domainConfig = Fake.DomainConfig();
     private readonly CreateNewRepostUseCase useCase;
 
     public CreateNewRepostUseCaseTests()
     {
-        useCase = new CreateNewRepostUseCase(pretend.UserRepository,
-                                             pretend.PublicationRepository,
-                                             pretend.DomainPersistenceAdapter,
-                                             pretend.DomainConfig);
+        useCase = new CreateNewRepostUseCase(usersRepository, publicationsRepository, domainPersistenceAdapter, domainConfig);
     }
 
     [Fact]
@@ -28,10 +33,16 @@ public class CreateNewRepostUseCaseTests
         var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
         var unpublishedRepost = Fake.UnpublishedRepost(repostAuthor, originalPost);
         var publishedRepost = Fake.Repost(unpublishedRepost.Author, Fake.CurrentTimeUTC, unpublishedRepost.OriginalPost);
-        pretend.FindUserByUsernameReturns(repostAuthor);
-        pretend.UserHasNotMadePublicationsToday(repostAuthor);
-        pretend.PostExists(originalPost);
-        pretend.DomainPersistencePort_PublishNewRepost_Succeeds(unpublishedRepost, publishedRepost);
+        A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
+        A.CallTo(() => publicationsRepository.FindPostById(originalPost.Id)).Returns(originalPost);
+        A.CallTo(() => domainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(repostAuthor)).Returns((ushort)0);
+        A.CallTo(() => domainPersistenceAdapter.PublishNewRepost(A<IUnpublishedRepost>.That.Matches(r =>
+            r.Author.Username == unpublishedRepost.Author.Username
+            && r.OriginalPost.Id == unpublishedRepost.OriginalPost.Id
+            && r.OriginalPost.Author.Username == unpublishedRepost.OriginalPost.Author.Username
+            && r.OriginalPost.PublicationDate == unpublishedRepost.OriginalPost.PublicationDate
+            && r.OriginalPost.Content == unpublishedRepost.OriginalPost.Content
+        ))).Returns(publishedRepost);
 
         var dto = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
         var response = await useCase.Run(dto);
@@ -47,7 +58,7 @@ public class CreateNewRepostUseCaseTests
     [Fact]
     public async Task GivenRepostAuthorUsernameDoesNotBelongToAnyRegisteredUser_WhenCreatingNewRepost_ThenThrowException()
     {
-        pretend.UserDoesNotExist(Fake.Username);
+        A.CallTo(() => usersRepository.FindByUsername(Fake.Username)).Returns(Task.FromResult<IUser?>(null));
         var request = new CreateNewRepostRequestDTO(Fake.Username, 1);
         await Assert.ThrowsAsync<UserNotFoundException>(() => useCase.Run(request));
     }
@@ -56,8 +67,8 @@ public class CreateNewRepostUseCaseTests
     public async Task GivenOriginalPostNotFound_WhenCreatingNewRepost_ThenThrowException()
     {
         var repostAuthor = Fake.User(Fake.Username);
-        pretend.FindUserByUsernameReturns(repostAuthor);
-        pretend.FindPostById_ReturnsNull(1);
+        A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
+        A.CallTo(() => publicationsRepository.FindPostById(1)).Returns(Task.FromResult<IPost?>(null));
 
         var request = new CreateNewRepostRequestDTO(repostAuthor.Username, 1);
 
@@ -71,9 +82,11 @@ public class CreateNewRepostUseCaseTests
         var originalPostAuthor = Fake.User(Fake.OriginalPostAuthorUsername);
         var originalPost = Fake.Post(1, originalPostAuthor, yesterday, Fake.Content);
         var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
-        pretend.FindUserByUsernameReturns(repostAuthor);
-        pretend.PostExists(originalPost);
-        pretend.UserHasReachedMaxAllowedDailyPublications(repostAuthor);
+        A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
+        A.CallTo(() => publicationsRepository.FindPostById(originalPost.Id)).Returns(originalPost);
+        A.CallTo(() => domainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(repostAuthor)).Returns(
+            domainConfig.MaxAllowedDailyPublicationsByUser
+        );
 
         var createNewRepostRequest = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
 
