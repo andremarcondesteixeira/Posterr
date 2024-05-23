@@ -8,7 +8,10 @@ public sealed class PaginatePublicationsUseCase(IPublicationsRepository reposito
 {
     public async Task<IList<PaginatePublicationsResponseItemDTO>> Run(PaginatePublicationsRequestDTO request)
     {
-        int lastSeenRow = request.PageNumber * 20 - 5;
+        int lastSeenRow = request.PageNumber switch {
+            1 => 0,
+            _ => request.PageNumber * 20 - 25
+        };
         var publications = await repository.Paginate(lastSeenRow, request.PageSize);
 
         return publications.Select(publication =>
@@ -31,7 +34,7 @@ public sealed class PaginatePublicationsUseCase(IPublicationsRepository reposito
 
             return new PaginatePublicationsResponseItemDTO()
             {
-                IsRepost = false,
+                IsRepost = true,
                 Post = new PaginatePublicationsResponseItemDTO.PostData(
                     repost.OriginalPost.Id,
                     repost.OriginalPost.Author.Username,
