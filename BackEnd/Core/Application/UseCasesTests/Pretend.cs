@@ -21,8 +21,9 @@ record Pretend(
     public void DomainPersistencePortSuccessfullyPublishesPost(IUnpublishedPost unpublishedPost, IPost post)
     {
         A.CallTo(() => DomainPersistenceAdapter.PublishNewPost(
-        A<IUnpublishedPost>.That.Matches(
-        x => x.Author.Username == unpublishedPost.Author.Username && x.Content == unpublishedPost.Content
+            A<IUnpublishedPost>.That.Matches(
+                x => x.Author.Username == unpublishedPost.Author.Username
+                && x.Content == unpublishedPost.Content
             )
         )).Returns(post);
     }
@@ -42,27 +43,32 @@ record Pretend(
 
     public void PostDoesNotExist(long postId)
     {
-        A.CallTo(() => PublicationRepository.FindPostById(postId)).Returns(Task.FromResult<IPost?>(null));
+        A.CallTo(() => PublicationRepository.FindPostById(postId))
+            .Returns(Task.FromResult<IPost?>(null));
     }
 
     public void PostExists(IPost post)
     {
-        A.CallTo(() => PublicationRepository.FindPostById(post.Id)).Returns(post);
+        A.CallTo(() => PublicationRepository.FindPostById(post.Id))
+            .Returns(post);
     }
 
     public void UserDoesNotExist(string username)
     {
-        A.CallTo(() => UserRepository.FindByUsername(username)).Returns(Task.FromResult<IUser?>(null));
+        A.CallTo(() => UserRepository.FindByUsername(username))
+            .Returns(Task.FromResult<IUser?>(null));
     }
 
     public void UserExists(IUser user)
     {
-        A.CallTo(() => UserRepository.FindByUsername(user.Username)).Returns(user);
+        A.CallTo(() => UserRepository.FindByUsername(user.Username))
+            .Returns(user);
     }
 
     public void UserHasNotMadePublicationsToday(IUser user)
     {
-        A.CallTo(() => DomainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(user)).Returns((ushort)0);
+        A.CallTo(() => DomainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(user))
+            .Returns((ushort)0);
     }
 
     public void UserHasReachedMaxAllowedDailyPublications(IUser user)
