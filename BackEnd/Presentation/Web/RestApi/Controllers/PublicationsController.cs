@@ -22,6 +22,6 @@ public class PublicationsController(
         createNewRepostUseCase.Run(request);
 
     [HttpGet]
-    public Task<IList<PaginatePublicationsResponseItemDTO>> ListPosts([FromBody] PaginatePublicationsRequestDTO request) =>
+    public Task<IList<PaginatePublicationsResponseItemDTO>> PaginatePosts([FromBody] PaginatePublicationsRequestDTO request) =>
         paginatePublicationsUseCase.Run(request);
 }
