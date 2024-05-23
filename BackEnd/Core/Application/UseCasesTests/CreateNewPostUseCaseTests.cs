@@ -14,7 +14,6 @@ namespace Posterr.Core.Application.UseCasesTests;
 public class CreateNewPostUseCaseTests
 {
     private readonly IUsersRepository usersRepository = Fake.UserRepository();
-    private readonly IPublicationsRepository publicationsRepository = Fake.PublicationRepository();
     private readonly IDomainPersistencePort domainPersistenceAdapter = Fake.DomainPersistenceAdapter();
     private readonly IDomainConfig domainConfig = Fake.DomainConfig();
     private readonly CreateNewPostUseCase useCase;
