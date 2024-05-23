@@ -18,7 +18,7 @@ record Pretend(
                                         Fake.DomainPersistenceAdapter(),
                                         Fake.DomainConfig());
 
-    public void DomainPersistencePortSuccessfullyPublishesPost(IUnpublishedPost unpublishedPost, IPost post)
+    public void DomainPersistencePort_PublishNewPost_Succeeds(IUnpublishedPost unpublishedPost, IPost post)
     {
         A.CallTo(() => DomainPersistenceAdapter.PublishNewPost(
             A<IUnpublishedPost>.That.Matches(

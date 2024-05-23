@@ -26,7 +26,7 @@ public class CreateNewPostUseCaseTests
         var post = Fake.Post(1, user, Fake.CurrentTimeUTC, unpublishedPost.Content);
         pretend.FindUserByUsernameReturns(user);
         pretend.UserHasNotMadePublicationsToday(user);
-        pretend.DomainPersistencePortSuccessfullyPublishesPost(unpublishedPost, post);
+        pretend.DomainPersistencePort_PublishNewPost_Succeeds(unpublishedPost, post);
 
         var request = new CreateNewPostRequestDTO(user.Username, post.Content);
         var response = await useCase.Run(request);
