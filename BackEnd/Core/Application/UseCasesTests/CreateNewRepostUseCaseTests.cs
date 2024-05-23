@@ -90,40 +90,64 @@ public class CreateNewRepostUseCaseTests
 
         var createNewRepostRequest = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
 
-        await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(() =>
-            useCase.Run(createNewRepostRequest)
+        await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(
+            () => useCase.Run(createNewRepostRequest)
         );
     }
 
     [Fact]
-    public void GivenNullUserRepository_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException() =>
+    public void GivenNullUserRepository_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException()
+    {
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewRepostUseCase(null,
-                                       Fake.PublicationRepository(),
-                                       Fake.DomainPersistenceAdapter(),
-                                       Fake.DomainConfig()));
+        {
+            new CreateNewRepostUseCase(
+                null,
+                Fake.PublicationRepository(),
+                Fake.DomainPersistenceAdapter(),
+                Fake.DomainConfig()
+            );
+        });
+    }
 
     [Fact]
-    public void GivenNullPublicationRepository_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException() =>
+    public void GivenNullPublicationRepository_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException()
+    {
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewRepostUseCase(Fake.UserRepository(),
-                                      null,
-                                      Fake.DomainPersistenceAdapter(),
-                                      Fake.DomainConfig()));
+        {
+            new CreateNewRepostUseCase(
+                Fake.UserRepository(),
+                null,
+                Fake.DomainPersistenceAdapter(),
+                Fake.DomainConfig()
+            );
+        });
+    }
 
     [Fact]
-    public void GivenNullDomainPersistenceAdapter_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException() =>
+    public void GivenNullDomainPersistenceAdapter_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException()
+    {
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewRepostUseCase(Fake.UserRepository(),
-                                       Fake.PublicationRepository(),
-                                       null,
-                                       Fake.DomainConfig()));
+        {
+            new CreateNewRepostUseCase(
+                Fake.UserRepository(),
+                Fake.PublicationRepository(),
+                null,
+                Fake.DomainConfig()
+            );
+        });
+    }
 
     [Fact]
-    public void GivenNullDomainConfig_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException() =>
+    public void GivenNullDomainConfig_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException()
+    {
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewRepostUseCase(Fake.UserRepository(),
-                                       Fake.PublicationRepository(),
-                                       Fake.DomainPersistenceAdapter(),
-                                       null));
+        {
+            new CreateNewRepostUseCase(
+                Fake.UserRepository(),
+                Fake.PublicationRepository(),
+                Fake.DomainPersistenceAdapter(),
+                null
+            );
+        });
+    }
 }
