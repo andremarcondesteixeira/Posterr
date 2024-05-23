@@ -33,8 +33,8 @@ public class CreateNewRepostUseCaseTests
         pretend.PostExists(originalPost);
         pretend.DomainPersistencePortSuccessfullyPublishesRepost(unpublishedRepost, publishedRepost);
 
-        var createNewRepostRequest = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
-        var response = await useCase.Run(createNewRepostRequest);
+        var dto = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
+        var response = await useCase.Run(dto);
 
         Assert.Equal(Fake.RepostAuthorUsername, response.RepostAuthorUsername);
         Assert.Equal(Fake.CurrentTimeUTC, response.RepostPublicationDate);
