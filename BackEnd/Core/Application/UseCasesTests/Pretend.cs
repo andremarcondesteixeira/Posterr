@@ -30,7 +30,7 @@ record Pretend(
     public void DomainPersistencePortSuccessfullyPublishesRepost(IUnpublishedRepost unpublishedRepost, IRepost repost)
     {
         A.CallTo(() => DomainPersistenceAdapter.PublishNewRepost(
-        A<IUnpublishedRepost>.That.Matches(r =>
+            A<IUnpublishedRepost>.That.Matches(r =>
                 r.Author.Username == unpublishedRepost.Author.Username
                 && r.OriginalPost.Id == unpublishedRepost.OriginalPost.Id
                 && r.OriginalPost.Author.Username == unpublishedRepost.OriginalPost.Author.Username
