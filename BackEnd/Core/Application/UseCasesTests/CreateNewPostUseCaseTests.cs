@@ -60,12 +60,12 @@ public class CreateNewPostUseCaseTests
     [Fact]
     public void GivenNullUserRepository_WhenInstantiatingCreateNewPostUseCase_ThenThrowException() =>
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewPostUseCase(null, Fake.DomainPersistenceAdapter(), Fake.DomainConfigForTests()));
+            new CreateNewPostUseCase(null, Fake.DomainPersistenceAdapter(), Fake.DomainConfig()));
 
     [Fact]
     public void GivenNullDomainPersistenceAdapter_WhenInstantiatingCreateNewPostUseCase_ThenThrowException() =>
         Assert.Throws<ArgumentNullException>(() =>
-            new CreateNewPostUseCase(Fake.UserRepository(), null, Fake.DomainConfigForTests()));
+            new CreateNewPostUseCase(Fake.UserRepository(), null, Fake.DomainConfig()));
 
     [Fact]
     public void GivenNullDomainConfig_WhenInstantiatingCreateNewPostUseCase_ThenThrowException() =>

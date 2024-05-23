@@ -16,7 +16,7 @@ record Pretend(
     public static Pretend Make() => new(Fake.UserRepository(),
                                         Fake.PublicationRepository(),
                                         Fake.DomainPersistenceAdapter(),
-                                        Fake.DomainConfigForTests());
+                                        Fake.DomainConfig());
 
     public void DomainPersistencePortSuccessfullyPublishesPost(IUnpublishedPost unpublishedPost, IPost post)
     {

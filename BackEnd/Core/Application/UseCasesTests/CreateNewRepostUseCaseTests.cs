@@ -88,7 +88,7 @@ public class CreateNewRepostUseCaseTests
             new CreateNewRepostUseCase(null,
                                        Fake.PublicationRepository(),
                                        Fake.DomainPersistenceAdapter(),
-                                       Fake.DomainConfigForTests()));
+                                       Fake.DomainConfig()));
 
     [Fact]
     public void GivenNullPublicationRepository_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException() =>
@@ -96,7 +96,7 @@ public class CreateNewRepostUseCaseTests
             new CreateNewRepostUseCase(Fake.UserRepository(),
                                       null,
                                       Fake.DomainPersistenceAdapter(),
-                                      Fake.DomainConfigForTests()));
+                                      Fake.DomainConfig()));
 
     [Fact]
     public void GivenNullDomainPersistenceAdapter_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException() =>
@@ -104,7 +104,7 @@ public class CreateNewRepostUseCaseTests
             new CreateNewRepostUseCase(Fake.UserRepository(),
                                        Fake.PublicationRepository(),
                                        null,
-                                       Fake.DomainConfigForTests()));
+                                       Fake.DomainConfig()));
 
     [Fact]
     public void GivenNullDomainConfig_WhenInstantiatingCreateNewRepostUseCase_ThenThrowException() =>

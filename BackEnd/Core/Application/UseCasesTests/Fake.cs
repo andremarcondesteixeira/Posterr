@@ -14,7 +14,7 @@ static class Fake
     public const string RepostAuthorUsername = "repost_author_username";
     public const string Username = "username";
 
-    public static IDomainConfig DomainConfigForTests()
+    public static IDomainConfig DomainConfig()
     {
         var domainConfig = A.Fake<IDomainConfig>(x => x.Strict(StrictFakeOptions.AllowToString));
 
