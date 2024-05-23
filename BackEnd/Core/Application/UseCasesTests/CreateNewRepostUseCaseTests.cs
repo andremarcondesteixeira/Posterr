@@ -57,7 +57,7 @@ public class CreateNewRepostUseCaseTests
     {
         var repostAuthor = Fake.User(Fake.Username);
         pretend.FindUserByUsernameReturns(repostAuthor);
-        pretend.PostDoesNotExist(1);
+        pretend.FindPostById_ReturnsNull(1);
 
         var request = new CreateNewRepostRequestDTO(repostAuthor.Username, 1);
 

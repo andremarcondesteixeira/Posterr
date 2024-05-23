@@ -41,7 +41,7 @@ record Pretend(
         )).Returns(repost);
     }
 
-    public void PostDoesNotExist(long postId)
+    public void FindPostById_ReturnsNull(long postId)
     {
         A.CallTo(() => PublicationRepository.FindPostById(postId))
             .Returns(Task.FromResult<IPost?>(null));
