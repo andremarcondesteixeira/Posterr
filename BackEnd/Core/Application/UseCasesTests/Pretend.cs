@@ -28,7 +28,7 @@ record Pretend(
         )).Returns(post);
     }
 
-    public void DomainPersistencePortSuccessfullyPublishesRepost(IUnpublishedRepost unpublishedRepost, IRepost repost)
+    public void DomainPersistencePort_PublishNewRepost_Succeeds(IUnpublishedRepost unpublishedRepost, IRepost repost)
     {
         A.CallTo(() => DomainPersistenceAdapter.PublishNewRepost(
             A<IUnpublishedRepost>.That.Matches(r =>

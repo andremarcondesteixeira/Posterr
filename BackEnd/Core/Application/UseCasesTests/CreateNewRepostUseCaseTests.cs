@@ -31,7 +31,7 @@ public class CreateNewRepostUseCaseTests
         pretend.FindUserByUsernameReturns(repostAuthor);
         pretend.UserHasNotMadePublicationsToday(repostAuthor);
         pretend.PostExists(originalPost);
-        pretend.DomainPersistencePortSuccessfullyPublishesRepost(unpublishedRepost, publishedRepost);
+        pretend.DomainPersistencePort_PublishNewRepost_Succeeds(unpublishedRepost, publishedRepost);
 
         var dto = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
         var response = await useCase.Run(dto);
