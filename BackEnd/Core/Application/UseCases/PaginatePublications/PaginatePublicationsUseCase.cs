@@ -8,6 +8,11 @@ public sealed class PaginatePublicationsUseCase(IPublicationsRepository reposito
 {
     public async Task<IList<PaginatePublicationsResponseItemDTO>> Run(PaginatePublicationsRequestDTO request)
     {
+        if (request.PageNumber < 1)
+        {
+            throw new InvalidPageNumberException(request.PageNumber);
+        }
+
         int lastSeenRow = request.PageNumber switch {
             1 => 0,
             _ => request.PageNumber * 20 - 25

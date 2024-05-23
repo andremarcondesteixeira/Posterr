@@ -46,4 +46,14 @@ public class PaginatePublicationsUseCaseTests
         Assert.Equal(Fake.Content, publications[1].Post.Content);
         Assert.Null(publications[1].Repost);
     }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task GivenAnInvalidPageNumber_ThenThrowException(int pageNumber)
+    {
+        await Assert.ThrowsAsync<InvalidPageNumberException>(
+            () => useCase.Run(new PaginatePublicationsRequestDTO(pageNumber, 20))
+        );
+    }
 }
