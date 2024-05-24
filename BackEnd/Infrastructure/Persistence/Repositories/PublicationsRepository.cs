@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Posterr.Core.Boundaries.Persistence;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Infrastructure.Persistence.DbEntities;
@@ -116,8 +116,8 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
                     UsersRepost.Username AS RepostUsername,
                     UsersRepost.CreatedAt as RepostUserCreatedAt,
                     Combined.RepostCreatedAt,
-                    Combined.OrderReference,
-                    ROW_NUMBER() OVER (ORDER BY Combined.OrderReference DESC) AS RowNumber
+                    Combined.PublicationCreatedAt,
+                    ROW_NUMBER() OVER (ORDER BY Combined.PublicationCreatedAt DESC) AS RowNumber
                 FROM (
                     SELECT
                         Id AS PostId,
@@ -127,7 +127,7 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
                         CAST(0 AS BIT) AS IsRepost,
                         NULL AS RepostUserId,
                         NULL AS RepostCreatedAt,
-                        CreatedAt AS OrderReference
+                        CreatedAt AS PublicationCreatedAt
                     FROM Posts
     
                     UNION ALL
@@ -140,7 +140,7 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
                         CAST(1 AS BIT) AS IsRepost,
                         r.UserId AS RepostUserId,
                         r.CreatedAt AS RepostCreatedAt,
-                        r.CreatedAt AS OrderReference
+                        r.CreatedAt AS PublicationCreatedAt
                     FROM Reposts AS r
                     INNER JOIN Posts AS p ON p.Id = r.PostId
                 ) AS Combined
@@ -148,7 +148,7 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
                 LEFT JOIN Users AS UsersRepost ON Combined.RepostUserId = UsersRepost.Id
             ) AS SubQuery
             WHERE RowNumber > @lastSeenRowNumber
-            ORDER BY OrderReference DESC
+            ORDER BY PublicationCreatedAt DESC
             OFFSET 0 ROWS FETCH FIRST @pageSize ROWS ONLY;
     ";
 
