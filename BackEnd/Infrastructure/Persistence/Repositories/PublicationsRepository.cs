@@ -103,53 +103,53 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
     }
 
     private const string POSTS_PAGINATION_QUERY = @"
-            SELECT * FROM (
+        SELECT * FROM (
+            SELECT
+                Combined.PostId,
+                Combined.PostUserId,
+                UsersPost.""Username"" AS PostUsername,
+                UsersPost.""CreatedAt"" AS PostUserCreatedAt,
+                Combined.PostContent,
+                Combined.PostCreatedAt,
+                Combined.IsRepost,
+                Combined.RepostUserId,
+                UsersRepost.""Username"" AS RepostUsername,
+                UsersRepost.""CreatedAt"" as RepostUserCreatedAt,
+                Combined.RepostCreatedAt,
+                Combined.PublicationCreatedAt,
+                ROW_NUMBER() OVER (ORDER BY Combined.PublicationCreatedAt DESC) AS RowNumber
+            FROM (
                 SELECT
-                    Combined.PostId,
-                    Combined.PostUserId,
-                    UsersPost.Username AS PostUsername,
-                    UsersPost.CreatedAt AS PostUserCreatedAt,
-                    Combined.PostContent,
-                    Combined.PostCreatedAt,
-                    Combined.IsRepost,
-                    Combined.RepostUserId,
-                    UsersRepost.Username AS RepostUsername,
-                    UsersRepost.CreatedAt as RepostUserCreatedAt,
-                    Combined.RepostCreatedAt,
-                    Combined.PublicationCreatedAt,
-                    ROW_NUMBER() OVER (ORDER BY Combined.PublicationCreatedAt DESC) AS RowNumber
-                FROM (
-                    SELECT
-                        Id AS PostId,
-                        UserId AS PostUserId,
-                        Content AS PostContent, 
-                        CreatedAt AS PostCreatedAt,
-                        CAST(0 AS BIT) AS IsRepost,
-                        NULL AS RepostUserId,
-                        NULL AS RepostCreatedAt,
-                        CreatedAt AS PublicationCreatedAt
-                    FROM Posts
-    
-                    UNION ALL
-    
-                    SELECT
-                        p.Id AS PostId,
-                        p.UserId AS PostUserId,
-                        p.Content AS PostContent,
-                        p.CreatedAt AS PostCreatedAt,
-                        CAST(1 AS BIT) AS IsRepost,
-                        r.UserId AS RepostUserId,
-                        r.CreatedAt AS RepostCreatedAt,
-                        r.CreatedAt AS PublicationCreatedAt
-                    FROM Reposts AS r
-                    INNER JOIN Posts AS p ON p.Id = r.PostId
-                ) AS Combined
-                LEFT JOIN Users AS UsersPost ON Combined.PostUserId = UsersPost.Id
-                LEFT JOIN Users AS UsersRepost ON Combined.RepostUserId = UsersRepost.Id
-            ) AS SubQuery
-            WHERE RowNumber > @lastSeenRowNumber
-            ORDER BY PublicationCreatedAt DESC
-            OFFSET 0 ROWS FETCH FIRST @pageSize ROWS ONLY;
+                    ""Id"" AS PostId,
+                    ""UserId"" AS PostUserId,
+                    ""Content"" AS PostContent, 
+                    ""CreatedAt"" AS PostCreatedAt,
+                    CAST(0 AS BIT) AS IsRepost,
+                    NULL AS RepostUserId,
+                    NULL AS RepostCreatedAt,
+                    ""CreatedAt"" AS PublicationCreatedAt
+                FROM ""Posts""
+
+                UNION ALL
+
+                SELECT
+                    p.""Id"" AS PostId,
+                    p.""UserId"" AS PostUserId,
+                    p.""Content"" AS PostContent,
+                    p.""CreatedAt"" AS PostCreatedAt,
+                    CAST(1 AS BIT) AS IsRepost,
+                    r.""UserId"" AS RepostUserId,
+                    r.""CreatedAt"" AS RepostCreatedAt,
+                    r.""CreatedAt"" AS PublicationCreatedAt
+                FROM ""Reposts"" AS r
+                INNER JOIN ""Posts"" AS p ON p.""Id"" = r.""PostId""
+            ) AS Combined
+            LEFT JOIN ""Users"" AS UsersPost ON Combined.PostUserId = UsersPost.""Id""
+            LEFT JOIN ""Users"" AS UsersRepost ON Combined.RepostUserId = UsersRepost.""Id""
+        ) AS SubQuery
+        WHERE RowNumber > @lastSeenRowNumber
+        ORDER BY PublicationCreatedAt DESC
+        OFFSET 0 ROWS FETCH FIRST @pageSize ROWS ONLY;
     ";
 
     private static void AddQueryParams(int lastSeenRowNumber, short pageSize, DbCommand command)
