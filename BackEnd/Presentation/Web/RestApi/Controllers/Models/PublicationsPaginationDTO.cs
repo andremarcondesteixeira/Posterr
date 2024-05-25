@@ -1,4 +1,4 @@
-using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS;
+using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers.Models;
 

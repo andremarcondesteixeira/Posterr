@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 using Posterr.Core.Application.UseCases.PaginatePublications;
-using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS;
+using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers.Models;
 

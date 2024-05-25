@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
+using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
 using System.Reflection;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers;
@@ -16,6 +17,10 @@ public static class DependencyInjection
         Assembly assembly = typeof(DependencyInjection).Assembly;
         AssemblyPart part = new(assembly);
         services.AddControllers()
-            .ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
+                .ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part))
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new LinksConverter());
+                });
     }
 }
