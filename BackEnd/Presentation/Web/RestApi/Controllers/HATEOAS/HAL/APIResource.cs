@@ -15,5 +15,5 @@ public abstract class APIResource
 }
 
 public abstract class APIResource<EMBEDDED> : APIResource where EMBEDDED : APIResource {
-    public required Dictionary<string, List<EMBEDDED>> Embedded { get; init; }
+    public Dictionary<string, IList<EMBEDDED>> Embedded { get; } = [];
 }
