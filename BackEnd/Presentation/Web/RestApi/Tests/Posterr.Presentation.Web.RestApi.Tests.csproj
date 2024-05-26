@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EntryPoint\Posterr.Presentation.Web.RestApi.EntryPoint.csproj" />
+    <ProjectReference Include="..\Controllers\Posterr.Presentation.Web.RestApi.Controllers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
