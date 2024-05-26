@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Presentation.Web.Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Presentation.Web.RestApi.EntryPoint", "Presentation\Web\RestApi\EntryPoint\Posterr.Presentation.Web.RestApi.EntryPoint.csproj", "{FC20107A-5754-46FB-A4B6-8383A37B9092}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Presentation.Web.RestApi.IntegrationTests", "Presentation\Web\RestApi\IntegrationTests\Posterr.Presentation.Web.RestApi.IntegrationTests.csproj", "{1B683C1C-ED89-4F01-96DD-BBD1E2F3F3FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Presentation.Web.RestApi.Tests", "Presentation\Web\RestApi\Tests\Posterr.Presentation.Web.RestApi.Tests.csproj", "{1B683C1C-ED89-4F01-96DD-BBD1E2F3F3FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
