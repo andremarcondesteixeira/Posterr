@@ -48,9 +48,9 @@ public class PublicationsController(
         catch (InvalidPageNumberException ex)
         {
             return Problem(
-                detail: ex.Message,
-                statusCode: StatusCodes.Status400BadRequest,
                 title: "Invalid page number",
+                statusCode: StatusCodes.Status400BadRequest,
+                detail: ex.Message,
                 instance: $"{baseUrl}&pageNumber={pageNumber}"
             );
         }
