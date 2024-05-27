@@ -31,14 +31,14 @@ public class PublicationsController(
     {
         short pageSize = pageNumber == 1 ? domainConfig.Pagination.FirstPageSize
                                          : domainConfig.Pagination.NextPagesSize;
-        var request = new PaginatePublicationsRequestDTO(pageNumber, pageSize);
-        IList<PaginatePublicationsResponseItemDTO> publications = await paginatePublicationsUseCase.Run(request);
+        var dto = new PaginatePublicationsRequestDTO(pageNumber, pageSize);
+        IList<PaginatePublicationsResponseItemDTO> publications = await paginatePublicationsUseCase.Run(dto);
 
         IList<PublicationDTO> publicationDTOs = publications.Select(
             PublicationDTO.FromPaginatePublicationsResponseItemDTO
         ).ToList();
 
         var baseUrl = linkGenerator.GetUriByAction(HttpContext);
-        return new PublicationsPaginationDTO(publicationDTOs, request.PageNumber, pageSize, baseUrl!);
+        return new PublicationsPaginationDTO(publicationDTOs, dto.PageNumber, pageSize, baseUrl!);
     }
 }
