@@ -30,7 +30,7 @@ public class PublicationsController(
     [HttpGet]
     public async Task<IActionResult> PaginatePublications([FromQuery] int pageNumber)
     {
-        var baseUrl = linkGenerator.GetUriByAction(HttpContext);
+        string? baseUrl = linkGenerator.GetUriByAction(HttpContext);
 
         try
         {
