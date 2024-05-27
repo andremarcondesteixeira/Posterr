@@ -3,23 +3,49 @@ using System.Text.Json.Serialization;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
 
-public class LinksConverter : JsonConverter<Dictionary<string, List<APIResourceLinkDTO>>>
+public class LinksConverter : JsonConverter<IDictionary<string, IList<APIResourceLinkDTO>>>
 {
-    public override Dictionary<string, List<APIResourceLinkDTO>>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override IDictionary<string, IList<APIResourceLinkDTO>>? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         throw new NotImplementedException();
     }
 
-    public override void Write(Utf8JsonWriter writer, Dictionary<string, List<APIResourceLinkDTO>> value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, IDictionary<string, IList<APIResourceLinkDTO>> value, JsonSerializerOptions options)
     {
-        if (value.Count == 0) return;
+        if (value is null || value.Count == 0)
+        {
+            return;
+        }
+
+        var linksDictionary = new Dictionary<string, IList<APIResourceLinkDTO>>();
+
+        foreach(var entry in value)
+        {
+            if (string.IsNullOrWhiteSpace(entry.Key) || entry.Value is null || entry.Value.Count == 0)
+            {
+                continue;
+            }
+
+            var linksList = entry.Value.Where(x =>
+                x is not null && !string.IsNullOrWhiteSpace(x.Href)
+            ).ToList();
+
+            if (linksList.Count > 0)
+            {
+                linksDictionary.Add(entry.Key, linksList);
+            }
+        }
+
+        if (linksDictionary.Count == 0)
+        {
+            return;
+        }
 
         writer.WriteStartObject();
 
-        foreach (var entry in value) {
+        foreach (var entry in linksDictionary)
+        {
             writer.WritePropertyName(entry.Key);
-
-            if (entry.Value.Count == 0) continue;
 
             if (entry.Value.Count == 1)
             {

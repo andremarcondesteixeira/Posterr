@@ -1,35 +1,80 @@
-using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
 
 namespace Posterr.Presentation.Web.RestApi.Tests.Controllers.HATEOAS.HAL;
 
-public class LinksConverterTests {
-    private readonly LinksConverter converter;
-    private readonly Utf8JsonWriter writer;
-    private readonly Stream stream;
+public partial class LinksConverterTests {
+    private readonly JsonSerializerOptions options;
 
     public LinksConverterTests()
     {
-        converter = new();
-        stream = new MemoryStream();
-        writer = new(stream);
+        LinksConverter converter = new();
+        options = new();
+        options.Converters.Add(converter);
     }
 
     [Fact]
-    public void GivenADictionaryWithOneKey_WhenTheValueIsAListWithTwoElements_ThenResultingJSONShouldHaveAnArrayWithTwoElement()
+    public void GivenComplexValueToBeSerialized_ThenResultShouldBeTheExpectedJSON()
     {
-        Dictionary<string, List<APIResourceLinkDTO>> value = [];
-        value.Add("key", [
-            new("foo"),
-            new("bar")
-        ]);
-        converter.Write(writer, value, new());
+        IDictionary<string, IList<APIResourceLinkDTO>> value = new Dictionary<string, IList<APIResourceLinkDTO>>()
+        {
+            // these should be ignored
+            [string.Empty] = [new("http://localhost")],
+            ["null"] = null!,
+            ["empty"] = [],
+            ["null_url"] = [new(null!)],
+            ["empty_url"] = [new(string.Empty)],
+            ["whitespace"] = [new(" ")],
 
-        var bytes = new byte[stream.Length];
-        stream.Read(bytes, 0, bytes.Length);
-        string json = Encoding.UTF8.GetString(bytes);
+            // these should result in a single link, which should not be inside an array
+            ["single_url_1"] = [new("http://localhost")],
+            ["single_url_2"] = [new("http://localhost"), null!],
+            ["single_url_3"] = [new("http://localhost"), new(null!)],
+            ["single_url_4"] = [new("http://localhost"), new(string.Empty)],
+            ["single_url_4"] = [new("http://localhost"), new(" ")],
 
-        Assert.Equal(true, false);
+            // this should result in the links being inside an array
+            ["two_urls"] = [new("http://localhost"), new("http://test")],
+        };
+
+        string actualJSON = JsonSerializer.Serialize(value, options);
+        var expectedJSON = NewLinesAndSpaces().Replace("""
+            {
+                "single_url_1": {
+                    "href": "http://localhost"
+                },
+                "single_url_2": {
+                    "href": "http://localhost"
+                },
+                "single_url_3": {
+                    "href": "http://localhost"
+                },
+                "single_url_4": {
+                    "href": "http://localhost"
+                },
+                "two_urls": [
+                    {
+                        "href": "http://localhost"
+                    },
+                    {
+                        "href": "http://test"
+                    }
+                ]
+            } 
+        """, string.Empty);
+
+        Assert.Equal(expectedJSON, actualJSON);
+    }
+
+    [GeneratedRegex(@"[\r\n\t ]")]
+    private static partial Regex NewLinesAndSpaces();
+
+    [Fact]
+    public void GivenEmptyDictionary_ThenResultShouldBeEmptyString()
+    {
+        IDictionary<string, IList<APIResourceLinkDTO>> value = new Dictionary<string, IList<APIResourceLinkDTO>>();
+        string actualJSON = JsonSerializer.Serialize(value, options);
+        Assert.Equal(string.Empty, actualJSON);
     }
 }
