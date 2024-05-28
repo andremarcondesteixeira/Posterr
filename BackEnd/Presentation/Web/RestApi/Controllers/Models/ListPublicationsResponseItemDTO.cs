@@ -1,10 +1,10 @@
 using Newtonsoft.Json;
-using Posterr.Core.Application.UseCases.PaginatePublications;
+using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers.Models;
 
-public class PublicationDTO : APIResource
+public class ListPublicationsResponseItemDTO : APIResource
 {
     public required bool IsRepost { get; init; }
     required public long PostId { get; init; }
@@ -18,9 +18,9 @@ public class PublicationDTO : APIResource
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public DateTime? RepostPublicationDate { get; init; }
 
-    public static PublicationDTO FromPaginatePublicationsResponseItemDTO(PaginatePublicationsResponseItemDTO dto)
+    public static ListPublicationsResponseItemDTO FromPublicationsPageEntryDTO(PublicationsPageEntryDTO dto)
     {
-        return new PublicationDTO
+        return new ListPublicationsResponseItemDTO
         {
             IsRepost = dto.IsRepost,
             PostAuthorUsername = dto.Post.AuthorUsername,

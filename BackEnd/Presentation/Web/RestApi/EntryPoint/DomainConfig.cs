@@ -16,14 +16,14 @@ public sealed record DomainConfig(IConfiguration Configuration) : IDomainConfig
 
     public sealed record PaginationConfig(IConfiguration Configuration) : IDomainConfig.IPaginationConfig
     {
-        public short FirstPageSize => Configuration.GetRequiredSection("Domain")
+        public ushort FirstPageSize => Configuration.GetRequiredSection("Domain")
                                                    .GetRequiredSection("Pagination")
                                                    .GetRequiredSection("FirstPageSize")
-                                                   .Get<short>();
+                                                   .Get<ushort>();
 
-        public short NextPagesSize => Configuration.GetRequiredSection("Domain")
+        public ushort NextPagesSize => Configuration.GetRequiredSection("Domain")
                                                    .GetRequiredSection("Pagination")
                                                    .GetRequiredSection("NextPagesSize")
-                                                   .Get<short>();
+                                                   .Get<ushort>();
     }
 }

@@ -8,7 +8,7 @@ public interface IDomainConfig
 
     public interface IPaginationConfig
     {
-        short FirstPageSize { get; }
-        short NextPagesSize { get; }
+        ushort FirstPageSize { get; }
+        ushort NextPagesSize { get; }
     }
 }

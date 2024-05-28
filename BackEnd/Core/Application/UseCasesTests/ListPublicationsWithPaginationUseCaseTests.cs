@@ -1,18 +1,20 @@
 using FakeItEasy;
-using Posterr.Core.Application.UseCases.PaginatePublications;
+using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
+using Posterr.Core.Boundaries.Configuration;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Core.Boundaries.Persistence;
 
 namespace Posterr.Core.Application.UseCasesTests;
 
-public class PaginatePublicationsUseCaseTests
+public class ListPublicationsWithPaginationUseCaseTests
 {
-    private readonly PaginatePublicationsUseCase useCase;
+    private readonly ListPublicationsWithPaginationUseCase useCase;
     private readonly IPublicationsRepository publicationsRepository = Fake.PublicationsRepository();
+    private readonly IDomainConfig domainConfig = Fake.DomainConfig();
 
-    public PaginatePublicationsUseCaseTests()
+    public ListPublicationsWithPaginationUseCaseTests()
     {
-        useCase = new PaginatePublicationsUseCase(publicationsRepository);
+        useCase = new(publicationsRepository);
     }
 
     [Fact]
@@ -26,8 +28,7 @@ public class PaginatePublicationsUseCaseTests
         IRepost repost = Fake.Repost(reposterUser, now, post);
         A.CallTo(() => publicationsRepository.Paginate(0, 15)).Returns([repost, post]);
 
-        IList<PaginatePublicationsResponseItemDTO> publications =
-            await useCase.Run(new PaginatePublicationsRequestDTO(1, 15));
+        IList<PublicationsPageEntryDTO> publications = await useCase.Run(new PaginationParameters(1, domainConfig));
 
         Assert.Equal(2, publications.Count);
 
@@ -53,7 +54,7 @@ public class PaginatePublicationsUseCaseTests
     public async Task GivenAnInvalidPageNumber_ThenThrowException(int pageNumber)
     {
         await Assert.ThrowsAsync<InvalidPageNumberException>(
-            () => useCase.Run(new PaginatePublicationsRequestDTO(pageNumber, 20))
+            () => useCase.Run(new PaginationParameters(pageNumber, domainConfig))
         );
     }
 }

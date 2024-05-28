@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Posterr.Core.Application.UseCases.CreateNewPost;
 using Posterr.Core.Application.UseCases.CreateNewRepost;
-using Posterr.Core.Application.UseCases.PaginatePublications;
+using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Core.Boundaries.Configuration;
 using Posterr.Presentation.Web.RestApi.Controllers.Models;
 
@@ -11,13 +11,11 @@ namespace Posterr.Presentation.Web.RestApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PublicationsController(
-    CreateNewPostUseCase createNewPostUseCase,
-    CreateNewRepostUseCase createNewRepostUseCase,
-    PaginatePublicationsUseCase paginatePublicationsUseCase,
-    IDomainConfig domainConfig,
-    LinkGenerator linkGenerator
-) : ControllerBase
+public class PublicationsController(CreateNewPostUseCase createNewPostUseCase,
+                                    CreateNewRepostUseCase createNewRepostUseCase,
+                                    ListPublicationsWithPaginationUseCase listPaginationsUseCase,
+                                    IDomainConfig domainConfig,
+                                    LinkGenerator linkGenerator) : ControllerBase
 {
     [HttpPost]
     public Task<CreateNewPostResponseDTO> CreateNewPost([FromBody] CreateNewPostRequestDTO request) =>
@@ -28,22 +26,20 @@ public class PublicationsController(
         createNewRepostUseCase.Run(request);
 
     [HttpGet]
-    public async Task<IActionResult> PaginatePublications([FromQuery] int pageNumber)
+    public async Task<IActionResult> ListPublications([FromQuery] int pageNumber)
     {
-        string? baseUrl = linkGenerator.GetUriByAction(HttpContext);
+        string baseUrl = linkGenerator.GetUriByAction(HttpContext)!;
 
         try
         {
-            short pageSize = pageNumber == 1 ? domainConfig.Pagination.FirstPageSize
-                                             : domainConfig.Pagination.NextPagesSize;
-            var dto = new PaginatePublicationsRequestDTO(pageNumber, pageSize);
-            IList<PaginatePublicationsResponseItemDTO> publications = await paginatePublicationsUseCase.Run(dto);
+            var paginationParameters = new PaginationParameters(pageNumber, domainConfig);
+            IList<PublicationsPageEntryDTO> publications = await listPaginationsUseCase.Run(paginationParameters);
 
-            IList<PublicationDTO> publicationDTOs = publications.Select(
-                PublicationDTO.FromPaginatePublicationsResponseItemDTO
+            IList<ListPublicationsResponseItemDTO> publicationDTOs = publications.Select(
+                ListPublicationsResponseItemDTO.FromPublicationsPageEntryDTO
             ).ToList();
 
-            return Ok(new PublicationsPaginationDTO(publicationDTOs, dto.PageNumber, pageSize, baseUrl!));
+            return Ok(new ListPublicationsResponseDTO(publicationDTOs, paginationParameters, baseUrl));
         }
         catch (InvalidPageNumberException ex)
         {

@@ -1,22 +1,22 @@
-﻿using Posterr.Core.Application.UseCases.PaginatePublications;
+﻿using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Presentation.Web.RestApi.Controllers.Models;
 
 namespace Posterr.Presentation.Web.RestApi.Tests.Controllers.Models;
 
-public class PublicationDTOTests
+public class ListPublicationsResponseItemDTOTests
 {
     [Fact]
-    public void GivenPaginatePublicationsResponseItemDTOInstance_ThenReturnNewPublicationDTOInstance()
+    public void GivenPublicationsPageEntryDTOInstance_ThenReturnNewListPublicationsResponseItemDTOInstance()
     {
         var postPublicationDate = DateTime.UtcNow.AddDays(-1);
         var repostPublicationDate = DateTime.UtcNow;
-        var from = new PaginatePublicationsResponseItemDTO
+        var from = new PublicationsPageEntryDTO
         {
             IsRepost = true,
             Post = new(1, "original_author", postPublicationDate, "content"),
             Repost = new("reposter", repostPublicationDate)
         };
-        var to = PublicationDTO.FromPaginatePublicationsResponseItemDTO(from);
+        var to = ListPublicationsResponseItemDTO.FromPublicationsPageEntryDTO(from);
 
         Assert.Equal(1, to.PostId);
         Assert.Equal("original_author", to.PostAuthorUsername);
