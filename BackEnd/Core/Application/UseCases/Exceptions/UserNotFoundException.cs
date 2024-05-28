@@ -3,6 +3,6 @@
 namespace Posterr.Core.Application.UseCases.Exceptions;
 
 public sealed class UserNotFoundException(string username)
-    : DomainValidationException($"No user was found with the username \"{username}\".")
+    : DomainValidationException($"No user found with username \"{username}\".")
 {
 }
