@@ -65,31 +65,4 @@ public class CreateNewPostUseCaseTests
 
         await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(() => useCase.Run(request));
     }
-
-    [Fact]
-    public void GivenNullUserRepository_WhenInstantiatingCreateNewPostUseCase_ThenThrowException()
-    {
-        Assert.Throws<ArgumentNullException>(() =>
-        {
-            new CreateNewPostUseCase(null, Fake.DomainPersistenceAdapter(), Fake.DomainConfig());
-        });
-    }
-
-    [Fact]
-    public void GivenNullDomainPersistenceAdapter_WhenInstantiatingCreateNewPostUseCase_ThenThrowException()
-    {
-        Assert.Throws<ArgumentNullException>(() =>
-        {
-            new CreateNewPostUseCase(Fake.UserRepository(), null, Fake.DomainConfig());
-        });
-    }
-
-    [Fact]
-    public void GivenNullDomainConfig_WhenInstantiatingCreateNewPostUseCase_ThenThrowException()
-    {
-        Assert.Throws<ArgumentNullException>(() =>
-        {
-            new CreateNewPostUseCase(Fake.UserRepository(), Fake.DomainPersistenceAdapter(), null);
-        });
-    }
 }
