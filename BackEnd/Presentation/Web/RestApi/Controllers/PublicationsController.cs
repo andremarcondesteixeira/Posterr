@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Posterr.Core.Application.UseCases.CreateNewPost;
-using Posterr.Core.Application.UseCases.CreateNewRepost;
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Core.Boundaries.Configuration;
 using Posterr.Presentation.Web.RestApi.Controllers.Models;
@@ -11,20 +9,11 @@ namespace Posterr.Presentation.Web.RestApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PublicationsController(CreateNewPostUseCase createNewPostUseCase,
-                                    CreateNewRepostUseCase createNewRepostUseCase,
+public class PublicationsController(
                                     ListPublicationsWithPaginationUseCase listPaginationsUseCase,
                                     IDomainConfig domainConfig,
                                     LinkGenerator linkGenerator) : ControllerBase
 {
-    [HttpPost]
-    public Task<CreateNewPostResponseDTO> CreateNewPost([FromBody] CreateNewPostRequestDTO request) =>
-        createNewPostUseCase.Run(request);
-
-    [HttpPost]
-    public Task<CreateNewRepostResponseDTO> CreateNewRepost([FromBody] CreateNewRepostRequestDTO request) =>
-        createNewRepostUseCase.Run(request);
-
     [HttpGet]
     public async Task<IActionResult> ListPublications([FromQuery] int pageNumber)
     {

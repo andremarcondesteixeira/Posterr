@@ -76,7 +76,7 @@ namespace Posterr.Infrastructure.Persistence.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "CreatedAt", "Username" },
+                columns: ["Id", "CreatedAt", "Username"],
                 values: new object[,]
                 {
                     { 1L, new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8858), "simba" },
