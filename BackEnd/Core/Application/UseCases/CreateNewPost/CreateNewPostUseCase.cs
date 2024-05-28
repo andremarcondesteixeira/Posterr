@@ -7,21 +7,10 @@ using Posterr.Core.Domain.Entities.Publications;
 
 namespace Posterr.Core.Application.UseCases.CreateNewPost;
 
-public sealed class CreateNewPostUseCase(
-    IUsersRepository userRepository,
-    IDomainPersistencePort domainPersistenceAdapter,
-    IDomainConfig domainConfig
-) : IUseCase<CreateNewPostRequestDTO, CreateNewPostResponseDTO>
+public sealed class CreateNewPostUseCase(IUsersRepository userRepository,
+                                         IDomainPersistencePort domainPersistenceAdapter,
+                                         IDomainConfig domainConfig) : IUseCase<CreateNewPostRequestDTO, CreateNewPostResponseDTO>
 {
-    public IUsersRepository UserRepository { get; } = userRepository
-        ?? throw new ArgumentNullException(nameof(userRepository));
-
-    public IDomainPersistencePort DomainPersistenceAdapter { get; } = domainPersistenceAdapter
-        ?? throw new ArgumentNullException(nameof(domainPersistenceAdapter));
-
-    public IDomainConfig DomainConfig { get; } = domainConfig
-        ?? throw new ArgumentNullException(nameof(domainConfig));
-
     public async Task<CreateNewPostResponseDTO> Run(CreateNewPostRequestDTO request)
     {
         ArgumentNullException.ThrowIfNull(nameof(request));
@@ -29,8 +18,8 @@ public sealed class CreateNewPostUseCase(
         IUser user = await userRepository.FindByUsername(request.Username)
             ?? throw new UserNotFoundException(request.Username);
 
-        var unpublishedPost = new UnpublishedPost(user, request.Content, DomainConfig);
-        var publishedPost = await unpublishedPost.Publish(DomainPersistenceAdapter);
+        var unpublishedPost = new UnpublishedPost(user, request.Content, domainConfig);
+        var publishedPost = await unpublishedPost.Publish(domainPersistenceAdapter);
 
         return new CreateNewPostResponseDTO()
         {
