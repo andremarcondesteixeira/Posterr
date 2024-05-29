@@ -10,9 +10,11 @@ namespace Posterr.Presentation.Web.RestApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PublicationsController(ListPublicationsWithPaginationUseCase listPaginationsUseCase,
-                                    IDomainConfig domainConfig,
-                                    LinkGenerator linkGenerator) : ControllerBase
+public class PublicationsController(
+    ListPublicationsWithPaginationUseCase listPaginationsUseCase,
+    IDomainConfig domainConfig,
+    LinkGenerator linkGenerator
+) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> ListPublications([FromQuery] int pageNumber)
@@ -24,8 +26,8 @@ public class PublicationsController(ListPublicationsWithPaginationUseCase listPa
             var paginationParameters = new PaginationParameters(pageNumber, domainConfig);
             IList<PublicationsPageEntryDTO> publications = await listPaginationsUseCase.Run(paginationParameters);
 
-            IList<ListPublicationsResponseItemDTO> publicationDTOs = publications.Select(
-                ListPublicationsResponseItemDTO.FromPublicationsPageEntryDTO
+            IList<ListPublicationsResponseItemDTO> publicationDTOs = publications.Select(p =>
+                ListPublicationsResponseItemDTO.FromPublicationsPageEntryDTO(p, baseUrl)
             ).ToList();
 
             return Ok(new ListPublicationsResponseDTO(publicationDTOs, paginationParameters, baseUrl));
