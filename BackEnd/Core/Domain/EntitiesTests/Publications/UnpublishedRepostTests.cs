@@ -58,7 +58,7 @@ public class UnpublishedRepostTests
         var now = DateTime.UtcNow;
 
         var domainPersistencePort = A.Fake<IDomainPersistencePort>();
-        A.CallTo(() => domainPersistencePort.AmountOfPublicationsMadeTodayBy(author)).Returns(Task.FromResult<ushort>(0));
+        A.CallTo(() => domainPersistencePort.AmountOfPublicationsMadeTodayBy(author)).Returns(Task.FromResult(0));
         A.CallTo(() => domainPersistencePort.PublishNewRepost(unpublishedRepost)).Returns(new Repost(author, originalPost, now));
 
         var repost = await unpublishedRepost.Publish(domainPersistencePort);
@@ -76,7 +76,7 @@ public class UnpublishedRepostTests
 
         var domainPersistencePort = A.Fake<IDomainPersistencePort>();
         A.CallTo(() => domainPersistencePort.AmountOfPublicationsMadeTodayBy(author))
-            .Returns(Task.FromResult(_domainConfig.MaxAllowedDailyPublicationsByUser));
+            .Returns(Task.FromResult((int) _domainConfig.MaxAllowedDailyPublicationsByUser));
 
         await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(
             () => unpublishedRepost.Publish(domainPersistencePort)

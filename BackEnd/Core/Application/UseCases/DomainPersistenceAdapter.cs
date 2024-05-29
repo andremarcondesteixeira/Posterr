@@ -6,7 +6,7 @@ namespace Posterr.Core.Application.UseCases;
 
 public sealed class DomainPersistenceAdapter(IPublicationsRepository publicationsRepository) : IDomainPersistencePort
 {
-    public Task<ushort> AmountOfPublicationsMadeTodayBy(IUser author) =>
+    public Task<int> AmountOfPublicationsMadeTodayBy(IUser author) =>
         publicationsRepository.CountPublicationsByUserBetween(author,
                                                               DateTime.UtcNow.Date,
                                                               DateTime.UtcNow.Date.AddDays(1).AddTicks(-1));

@@ -9,7 +9,7 @@ namespace Posterr.Core.Domain.Entities;
 // would allow the persistence layer to have knowledge about the domain layer
 public interface IDomainPersistencePort
 {
-    Task<ushort> AmountOfPublicationsMadeTodayBy(IUser author);
+    Task<int> AmountOfPublicationsMadeTodayBy(IUser author);
     Task<IPost> PublishNewPost(IUnpublishedPost unpublishedPost);
     Task<IRepost> PublishNewRepost(IUnpublishedRepost unpublishedRepost);
 }

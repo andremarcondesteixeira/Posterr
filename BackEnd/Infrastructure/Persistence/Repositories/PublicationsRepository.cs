@@ -8,33 +8,21 @@ namespace Posterr.Infrastructure.Persistence.Repositories;
 
 public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicationsRepository
 {
-    public Task<ushort> CountPublicationsByUserBetween(IUser author, DateTime startInclusive, DateTime endInclusive)
+    public Task<int> CountPublicationsByUserBetween(IUser author, DateTime startInclusive, DateTime endInclusive)
     {
-        var count = (ushort) (
-            from result in
-                (
-                    from post in dbContext.Posts
-                    join user in dbContext.Users on post.UserId equals user.Id
-                    where user.Username == author.Username
-                          && post.CreatedAt >= startInclusive
-                          && post.CreatedAt <= endInclusive
-                    group post by user.Username into posts
-                    select new { Amount = posts.Count(), Of = "posts" }
-                ).Union
-                (
-                    from repost in dbContext.Reposts
-                    join user in dbContext.Users on repost.UserId equals user.Id
-                    where user.Username == author.Username
-                          && repost.CreatedAt >= startInclusive
-                          && repost.CreatedAt <= endInclusive
-                    group repost by user.Username into reposts
-                    select new { Amount = reposts.Count(), Of = "reposts" }
-                )
-            group result by result.Amount into amounts
-            select amounts.Sum(result => result.Amount)
-        ).First();
+        var postsCount = dbContext.Posts.Where(p =>
+            p.User.Username == author.Username &&
+            p.CreatedAt >= startInclusive &&
+            p.CreatedAt <= endInclusive
+        ).Count();
 
-        return Task.FromResult(count);
+        var repostsCount = dbContext.Reposts.Where(r =>
+            r.User.Username == author.Username &&
+            r.CreatedAt >= startInclusive &&
+            r.CreatedAt <= endInclusive
+        ).Count();
+
+        return Task.FromResult(postsCount + repostsCount);
     }
 
     public Task<IPost?> FindPostById(long originalPostId)

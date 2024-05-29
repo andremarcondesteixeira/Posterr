@@ -64,7 +64,7 @@ public class UnpublishedPostTests
         // No, this test it not useless and is not testing only mockery.
         // Actually, it acts as a safeguard that can detect whenever the Publish method changes behavior.
         var persistencePort = A.Fake<IDomainPersistencePort>();
-        A.CallTo(() => persistencePort.AmountOfPublicationsMadeTodayBy(user)).Returns(Task.FromResult<ushort>(0));
+        A.CallTo(() => persistencePort.AmountOfPublicationsMadeTodayBy(user)).Returns(Task.FromResult(0));
         A.CallTo(() => persistencePort.PublishNewPost(unpublishedPost)).Returns(Post
             .Builder()
             .WithId(1)
