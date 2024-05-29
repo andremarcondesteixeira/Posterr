@@ -87,7 +87,7 @@ public sealed record Post : IPost
 
             if (propertiesWithNullValue.Count > 0)
             {
-                throw new ArgumentException(
+                throw new ArgumentNullException(
                     $"The following properties were not set when building a new Post instance: {string.Join(", ", propertiesWithNullValue)}"
                 );
             }
