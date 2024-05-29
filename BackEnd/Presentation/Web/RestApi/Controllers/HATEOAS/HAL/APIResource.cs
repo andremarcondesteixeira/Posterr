@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
 
@@ -6,10 +6,14 @@ namespace Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
 
 public abstract class APIResource
 {
+    [JsonPropertyName("_links")]
     [JsonConverter(typeof(LinksConverter))]
-    public Dictionary<string, List<APIResourceLinkDTO>> Links { get; } = [];
+    public IDictionary<string, IList<APIResourceLinkDTO>> Links { get; } =
+        new Dictionary<string, IList<APIResourceLinkDTO>>();
 }
 
-public abstract class APIResource<EMBEDDED> : APIResource where EMBEDDED : APIResource {
+public abstract class APIResource<EMBEDDED> : APIResource where EMBEDDED : APIResource
+{
+    [JsonPropertyName("_emdedded")]
     public Dictionary<string, IList<EMBEDDED>> Embedded { get; } = [];
 }

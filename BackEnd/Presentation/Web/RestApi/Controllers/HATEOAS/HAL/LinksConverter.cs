@@ -14,6 +14,7 @@ public class LinksConverter : JsonConverter<IDictionary<string, IList<APIResourc
     {
         if (value is null || value.Count == 0)
         {
+            writer.WriteNullValue();
             return;
         }
 
@@ -38,6 +39,7 @@ public class LinksConverter : JsonConverter<IDictionary<string, IList<APIResourc
 
         if (linksDictionary.Count == 0)
         {
+            writer.WriteNullValue();
             return;
         }
 

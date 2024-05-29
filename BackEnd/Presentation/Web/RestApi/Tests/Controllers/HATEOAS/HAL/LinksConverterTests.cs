@@ -71,10 +71,10 @@ public partial class LinksConverterTests {
     private static partial Regex NewLinesAndSpaces();
 
     [Fact]
-    public void GivenEmptyDictionary_ThenResultShouldBeEmptyString()
+    public void GivenEmptyDictionary_ThenResultShouldBeNullJSONValue()
     {
         IDictionary<string, IList<APIResourceLinkDTO>> value = new Dictionary<string, IList<APIResourceLinkDTO>>();
         string actualJSON = JsonSerializer.Serialize(value, options);
-        Assert.Equal(string.Empty, actualJSON);
+        Assert.Equal("null", actualJSON);
     }
 }
