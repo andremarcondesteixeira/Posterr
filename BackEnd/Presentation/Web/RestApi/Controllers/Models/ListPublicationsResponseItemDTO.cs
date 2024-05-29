@@ -18,16 +18,9 @@ public class ListPublicationsResponseItemDTO : APIResource
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public DateTime? RepostPublicationDate { get; init; }
 
-    public ListPublicationsResponseItemDTO(string baseUrl)
+    public static ListPublicationsResponseItemDTO FromPublicationsPageEntryDTO(PublicationsPageEntryDTO dto)
     {
-        // Since the test does not ask for an endpoint for individual posts or reposts,
-        // then I'm not gonna put a "self" link here
-        //Links.Add("self", [new(baseUrl)]);
-    }
-
-    public static ListPublicationsResponseItemDTO FromPublicationsPageEntryDTO(PublicationsPageEntryDTO dto, string baseUrl)
-    {
-        return new ListPublicationsResponseItemDTO(baseUrl)
+        return new ListPublicationsResponseItemDTO
         {
             IsRepost = dto.IsRepost,
             PostAuthorUsername = dto.Post.AuthorUsername,

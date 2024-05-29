@@ -17,6 +17,7 @@
     <ProjectReference Include="..\..\Core\Application\UseCases\Posterr.Core.Application.UseCases.csproj" />
     <ProjectReference Include="..\..\Core\Boundaries\EntitiesInterfaces\Posterr.Core.Boundaries.EntitiesInterfaces.csproj" />
     <ProjectReference Include="..\..\Core\Boundaries\Persistence\Posterr.Core.Boundaries.Persistence.csproj" />
+    <ProjectReference Include="..\..\Core\Shared\Exceptions\Posterr.Core.Shared.Exceptions.csproj" />
   </ItemGroup>
 
 </Project>

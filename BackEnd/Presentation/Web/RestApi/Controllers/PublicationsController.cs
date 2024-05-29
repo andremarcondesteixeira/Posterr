@@ -26,8 +26,8 @@ public class PublicationsController(
             var paginationParameters = new PaginationParameters(pageNumber, domainConfig);
             IList<PublicationsPageEntryDTO> publications = await listPaginationsUseCase.Run(paginationParameters);
 
-            IList<ListPublicationsResponseItemDTO> publicationDTOs = publications.Select(p =>
-                ListPublicationsResponseItemDTO.FromPublicationsPageEntryDTO(p, baseUrl)
+            IList<ListPublicationsResponseItemDTO> publicationDTOs = publications.Select(
+                ListPublicationsResponseItemDTO.FromPublicationsPageEntryDTO
             ).ToList();
 
             return Ok(new ListPublicationsResponseDTO(publicationDTOs, paginationParameters, baseUrl));
