@@ -7,14 +7,14 @@ using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Application.UseCases.CreateNewPost;
 
-public sealed class CreateNewPostUseCase(IUsersRepository userRepository,
-                                         IDomainPersistencePort domainPersistenceAdapter,
-                                         IDomainConfig domainConfig) : IUseCase<CreateNewPostRequestDTO, CreateNewPostResponseDTO>
+public sealed class CreateNewPostUseCase(
+    IUsersRepository userRepository,
+    IDomainPersistencePort domainPersistenceAdapter,
+    IDomainConfig domainConfig
+) : IUseCase<CreateNewPostRequestDTO, CreateNewPostResponseDTO>
 {
     public async Task<CreateNewPostResponseDTO> Run(CreateNewPostRequestDTO request)
     {
-        ArgumentNullException.ThrowIfNull(nameof(request));
-
         IUser user = await userRepository.FindByUsername(request.Username)
             ?? throw new UserNotFoundException(request.Username);
 

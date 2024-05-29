@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Core.Boundaries.Configuration;
+using Posterr.Core.Shared.Exceptions;
 using Posterr.Presentation.Web.RestApi.Controllers.Models;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PublicationsController(
-                                    ListPublicationsWithPaginationUseCase listPaginationsUseCase,
+public class PublicationsController(ListPublicationsWithPaginationUseCase listPaginationsUseCase,
                                     IDomainConfig domainConfig,
                                     LinkGenerator linkGenerator) : ControllerBase
 {
@@ -33,9 +33,9 @@ public class PublicationsController(
         catch (InvalidPageNumberException ex)
         {
             return Problem(
-                title: "Invalid page number",
+                title: ex.Message,
                 statusCode: StatusCodes.Status400BadRequest,
-                detail: ex.Message,
+                detail: ex.Mitigation,
                 instance: $"{baseUrl}&pageNumber={pageNumber}"
             );
         }

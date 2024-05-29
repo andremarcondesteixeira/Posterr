@@ -53,7 +53,6 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         dbContext.SaveChanges();
 
         return Task.FromResult(postDbEntity.ToIPost());
-
     }
 
     public Task<IRepost> PublishNewRepost(IUnpublishedRepost unpublishedRepost)
