@@ -7,27 +7,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{ABA5D98E-6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{93F522A5-4627-440D-B550-A5E43F3B90ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Core.Application.UseCases", "Core\Application\UseCases\Posterr.Core.Application.UseCases.csproj", "{DC402358-071E-4F5D-9534-53497FA665F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Application.UseCases", "Core\Application\UseCases\Posterr.Core.Application.UseCases.csproj", "{DC402358-071E-4F5D-9534-53497FA665F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Core.Application.UseCasesTests", "Core\Application\UseCasesTests\Posterr.Core.Application.UseCasesTests.csproj", "{5626F035-ECB8-4D86-A75B-E16968C7DCA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Application.UseCasesTests", "Core\Application\UseCasesTests\Posterr.Core.Application.UseCasesTests.csproj", "{5626F035-ECB8-4D86-A75B-E16968C7DCA4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Boundaries", "Boundaries", "{80399FD6-419B-4A07-9CCA-934F83D63F39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Core.Boundaries.Configuration", "Core\Boundaries\Configuration\Posterr.Core.Boundaries.Configuration.csproj", "{7089FCA5-6832-4016-BD67-14C7F743F89D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Boundaries.Configuration", "Core\Boundaries\Configuration\Posterr.Core.Boundaries.Configuration.csproj", "{7089FCA5-6832-4016-BD67-14C7F743F89D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Core.Boundaries.EntitiesInterfaces", "Core\Boundaries\EntitiesInterfaces\Posterr.Core.Boundaries.EntitiesInterfaces.csproj", "{E6065B50-364F-4F71-8880-6E6BE8CC5039}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Boundaries.EntitiesInterfaces", "Core\Boundaries\EntitiesInterfaces\Posterr.Core.Boundaries.EntitiesInterfaces.csproj", "{E6065B50-364F-4F71-8880-6E6BE8CC5039}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Core.Boundaries.Persistence", "Core\Boundaries\Persistence\Posterr.Core.Boundaries.Persistence.csproj", "{39B0219A-30B4-4DE3-846B-99F38845AC9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Boundaries.Persistence", "Core\Boundaries\Persistence\Posterr.Core.Boundaries.Persistence.csproj", "{39B0219A-30B4-4DE3-846B-99F38845AC9D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{7FF9EB11-1FBA-4861-A9D4-EB2C8245E8A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Core.Domain.Entities", "Core\Domain\Entities\Posterr.Core.Domain.Entities.csproj", "{A52070FE-2722-4490-B365-110008A75DB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Domain.Entities", "Core\Domain\Entities\Posterr.Core.Domain.Entities.csproj", "{A52070FE-2722-4490-B365-110008A75DB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Core.Domain.EntitiesTests", "Core\Domain\EntitiesTests\Posterr.Core.Domain.EntitiesTests.csproj", "{057672F7-261F-47FC-869F-0096AC906446}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Domain.EntitiesTests", "Core\Domain\EntitiesTests\Posterr.Core.Domain.EntitiesTests.csproj", "{057672F7-261F-47FC-869F-0096AC906446}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{8D9BB058-6372-4E91-996C-BC5C70049560}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Infrastructure.Persistence", "Infrastructure\Persistence\Posterr.Infrastructure.Persistence.csproj", "{B2507968-2139-4584-9BF8-0BC90AB8C4D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Infrastructure.Persistence", "Infrastructure\Persistence\Posterr.Infrastructure.Persistence.csproj", "{B2507968-2139-4584-9BF8-0BC90AB8C4D8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{B6135099-DA20-490F-B7DF-4577D013F532}"
 EndProject
@@ -35,19 +35,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{CD605DC2-9E2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RestApi", "RestApi", "{B45D7B60-CA61-45F7-8C02-4766D881324E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Presentation.Web.RestApi.Controllers", "Presentation\Web\RestApi\Controllers\Posterr.Presentation.Web.RestApi.Controllers.csproj", "{3389043D-040E-40C5-8D5A-0E3D58C79BAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Presentation.Web.RestApi.Controllers", "Presentation\Web\RestApi\Controllers\Posterr.Presentation.Web.RestApi.Controllers.csproj", "{3389043D-040E-40C5-8D5A-0E3D58C79BAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Presentation.Web.RestApi.EntryPoint", "Presentation\Web\RestApi\EntryPoint\Posterr.Presentation.Web.RestApi.EntryPoint.csproj", "{FC20107A-5754-46FB-A4B6-8383A37B9092}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Presentation.Web.RestApi.EntryPoint", "Presentation\Web\RestApi\EntryPoint\Posterr.Presentation.Web.RestApi.EntryPoint.csproj", "{FC20107A-5754-46FB-A4B6-8383A37B9092}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Presentation.Web.RestApi.Tests", "Presentation\Web\RestApi\Tests\Posterr.Presentation.Web.RestApi.Tests.csproj", "{1B683C1C-ED89-4F01-96DD-BBD1E2F3F3FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Presentation.Web.RestApi.Tests", "Presentation\Web\RestApi\Tests\Posterr.Presentation.Web.RestApi.Tests.csproj", "{1B683C1C-ED89-4F01-96DD-BBD1E2F3F3FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Core.Shared.Exceptions", "Core\Shared\Exceptions\Posterr.Core.Shared.Exceptions.csproj", "{9F831404-AFA1-40E8-889D-A26F6E489912}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{EA978C0D-8724-4028-9ED4-2711F84C6C2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{DC402358-071E-4F5D-9534-53497FA665F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -94,6 +95,13 @@ Global
 		{1B683C1C-ED89-4F01-96DD-BBD1E2F3F3FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B683C1C-ED89-4F01-96DD-BBD1E2F3F3FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B683C1C-ED89-4F01-96DD-BBD1E2F3F3FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F831404-AFA1-40E8-889D-A26F6E489912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F831404-AFA1-40E8-889D-A26F6E489912}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F831404-AFA1-40E8-889D-A26F6E489912}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F831404-AFA1-40E8-889D-A26F6E489912}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{93F522A5-4627-440D-B550-A5E43F3B90ED} = {ABA5D98E-656F-471B-89CD-B174648EDE04}
@@ -112,5 +120,10 @@ Global
 		{3389043D-040E-40C5-8D5A-0E3D58C79BAB} = {B45D7B60-CA61-45F7-8C02-4766D881324E}
 		{FC20107A-5754-46FB-A4B6-8383A37B9092} = {B45D7B60-CA61-45F7-8C02-4766D881324E}
 		{1B683C1C-ED89-4F01-96DD-BBD1E2F3F3FA} = {B45D7B60-CA61-45F7-8C02-4766D881324E}
+		{9F831404-AFA1-40E8-889D-A26F6E489912} = {EA978C0D-8724-4028-9ED4-2711F84C6C2B}
+		{EA978C0D-8724-4028-9ED4-2711F84C6C2B} = {ABA5D98E-656F-471B-89CD-B174648EDE04}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2D570F63-58C4-4ED5-837E-DB68145C4342}
 	EndGlobalSection
 EndGlobal

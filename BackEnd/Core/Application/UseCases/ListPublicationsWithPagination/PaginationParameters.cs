@@ -1,4 +1,5 @@
 ﻿using Posterr.Core.Boundaries.Configuration;
+using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 

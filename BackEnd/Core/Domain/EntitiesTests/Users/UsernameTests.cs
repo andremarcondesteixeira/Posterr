@@ -1,7 +1,7 @@
 ﻿#pragma warning disable CS8604 // Possible null reference argument.
 
 using Posterr.Core.Domain.Entities.Users;
-using Posterr.Core.Domain.Entities.Users.Exceptions;
+using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Domain.EntitiesTests.Users;
 

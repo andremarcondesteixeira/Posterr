@@ -1,6 +1,5 @@
 ﻿using Posterr.Core.Boundaries.Configuration;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
-using Posterr.Core.Domain.Entities.Publications.Exceptions;
 
 namespace Posterr.Core.Domain.Entities.Publications;
 
@@ -31,7 +30,7 @@ public sealed record Post : IPost
         IDomainConfig domainConfig
     )
     {
-        ArgumentNullException.ThrowIfNull(author);
+        ArgumentNullException.ThrowIfNull(author, nameof(author));
         Id = id;
         Author = author;
         PublicationDate = publicationDate;
@@ -88,7 +87,9 @@ public sealed record Post : IPost
 
             if (propertiesWithNullValue.Count > 0)
             {
-                throw new PostBuilderStateHadNullValuesOnBuildException(propertiesWithNullValue);
+                throw new ArgumentException(
+                    $"The following properties were not set when building a new Post instance: {string.Join(", ", propertiesWithNullValue)}"
+                );
             }
 
             return new Post((long)Id!, Author!, (DateTime)PublicationDate!, Content!, DomainConfig!);

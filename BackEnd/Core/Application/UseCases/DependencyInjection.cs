@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Posterr.Core.Application.UseCases;
 using Posterr.Core.Domain.Entities;
 
 namespace Posterr.Core.Application.UseCases;

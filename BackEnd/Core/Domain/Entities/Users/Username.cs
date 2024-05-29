@@ -1,4 +1,4 @@
-﻿using Posterr.Core.Domain.Entities.Users.Exceptions;
+﻿using Posterr.Core.Shared.Exceptions;
 using System.Text.RegularExpressions;
 
 namespace Posterr.Core.Domain.Entities.Users;

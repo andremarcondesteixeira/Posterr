@@ -1,5 +1,5 @@
 ﻿using Posterr.Core.Boundaries.Configuration;
-using Posterr.Core.Domain.Entities.Publications.Exceptions;
+using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Domain.Entities.Publications;
 
@@ -13,7 +13,7 @@ public sealed record PostContent
 
         if (string.IsNullOrWhiteSpace(content))
         {
-            throw new EmptyPostContentException();
+            throw new EmptyPostContentException(domainConfig);
         }
 
         if (content.Length > domainConfig.MaxPostLength)
