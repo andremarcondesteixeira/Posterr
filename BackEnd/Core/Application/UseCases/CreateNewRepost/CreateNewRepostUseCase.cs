@@ -14,22 +14,13 @@ public sealed class CreateNewRepostUseCase(
     IDomainConfig _domainConfig
 ) : IUseCase<CreateNewRepostRequestDTO, CreateNewRepostResponseDTO>
 {
-    private readonly IUsersRepository _userRepository = _userRepository
-        ?? throw new ArgumentNullException(nameof(_userRepository));
-
-    private readonly IPublicationsRepository _publicationRepository = _publicationRepository
-        ?? throw new ArgumentNullException(nameof(_publicationRepository));
-
-    private readonly IDomainPersistencePort _domainPersistenceAdapter = _domainPersistenceAdapter
-        ?? throw new ArgumentNullException(nameof(_domainPersistenceAdapter));
-
-    private readonly IDomainConfig _domainConfig = _domainConfig
-        ?? throw new ArgumentNullException(nameof(_domainConfig));
+    private readonly IUsersRepository _userRepository = _userRepository;
+    private readonly IPublicationsRepository _publicationRepository = _publicationRepository;
+    private readonly IDomainPersistencePort _domainPersistenceAdapter = _domainPersistenceAdapter;
+    private readonly IDomainConfig _domainConfig = _domainConfig;
 
     public async Task<CreateNewRepostResponseDTO> Run(CreateNewRepostRequestDTO request)
     {
-        ArgumentNullException.ThrowIfNull(nameof(request));
-
         IUser user = await _userRepository.FindByUsername(request.AuthorUsername)
             ?? throw new UserNotFoundException(request.AuthorUsername);
 
