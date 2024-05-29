@@ -22,8 +22,8 @@ static class Fake
         A.CallTo(() => domainConfig.MaxPostLength).Returns((uint)7);
         A.CallTo(() => domainConfig.MaxAllowedDailyPublicationsByUser).Returns((ushort)5);
         A.CallTo(() => domainConfig.Pagination).Returns(pagination);
-        A.CallTo(() => pagination.FirstPageSize).Returns((ushort)15);
-        A.CallTo(() => pagination.NextPagesSize).Returns((ushort)20);
+        A.CallTo(() => pagination.FirstPageSize).Returns((short)15);
+        A.CallTo(() => pagination.NextPagesSize).Returns((short)20);
 
         return domainConfig;
     }

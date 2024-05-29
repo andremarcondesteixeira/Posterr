@@ -6,7 +6,7 @@ namespace Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 public sealed record PaginationParameters
 {
     public int PageNumber { get; }
-    public ushort PageSize { get; }
+    public short PageSize { get; }
     public int LastRowNumber { get; }
 
     public PaginationParameters(int pageNumber, IDomainConfig domainConfig)

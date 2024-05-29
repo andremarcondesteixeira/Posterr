@@ -77,7 +77,7 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         return Task.FromResult(repostDbEntity.ToIRepost());
     }
 
-    public Task<IList<IPublication>> Paginate(int lastSeenRow, ushort pageSize)
+    public Task<IList<IPublication>> Paginate(int lastSeenRow, short pageSize)
     {
         using DbCommand command = dbContext.Database.GetDbConnection().CreateCommand();
         command.CommandText = POSTS_PAGINATION_QUERY;
@@ -139,7 +139,7 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         OFFSET 0 ROWS FETCH FIRST @pageSize ROWS ONLY;
     ";
 
-    private static void AddQueryParams(int lastSeenRowNumber, ushort pageSize, DbCommand command)
+    private static void AddQueryParams(int lastSeenRowNumber, short pageSize, DbCommand command)
     {
         DbParameter lastSeenRowNumberParam = command.CreateParameter();
         lastSeenRowNumberParam.ParameterName = "@lastSeenRowNumber";

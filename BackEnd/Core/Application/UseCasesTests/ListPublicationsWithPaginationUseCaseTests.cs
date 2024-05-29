@@ -3,6 +3,7 @@ using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Core.Boundaries.Configuration;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Core.Boundaries.Persistence;
+using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Application.UseCasesTests;
 
