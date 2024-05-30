@@ -12,12 +12,12 @@ export default function Home() {
         {isLoadingPosts && (
           <span>Loading posts...</span>
         )}
-        {posts && posts.map(post => (
-          <li key={`${post.postId}-${post.repostId ?? 'original'}`}>
+        {posts && posts._embedded.publications.map(post => (
+          <li key={`${post.postId}-${post.repostAuthorUsername ?? 'original'}`}>
             <span>ID: {post.postId}</span>
-            <span>Author: {post.authorUsername}</span>
-            <span>Published on {post.publicationDate.toLocaleDateString()}</span>
-            <span>{post.content}</span>
+            <span>Author: {post.postAuthorUsername}</span>
+            <span>Published on {new Date(post.postPublicationDate).toLocaleDateString()}</span>
+            <span>{post.postContent}</span>
           </li>
         ))}
         {errorLoadingPosts && (

@@ -1,15 +1,14 @@
-import { Publication } from "@Core/Domain/Entities/Publication";
+import {
+  ListPublicationsWithPaginationUseCase,
+  PostsPageUrl,
+  type ListPublicationsWithPaginationUseCaseResponse
+} from "@Core/Domain/UseCases/ListPublicationsWithPaginationUseCase";
 import { useHttpRequest } from "./useHttpRequest";
-import { PostsPageUrl, GetPostsPageUseCase } from "@Core/Domain/UseCases/GetPostsPageUseCase";
 
 export function usePostsPagination(pageNumber: number) {
-  if (!Number.isInteger(pageNumber) || pageNumber <= 0) {
-    throw new Error("Page number must be a positive integer");
-  }
-
-  const { data, isLoading, error } = useHttpRequest<Publication[]>(
+  const { data, isLoading, error } = useHttpRequest<ListPublicationsWithPaginationUseCaseResponse>(
     PostsPageUrl(pageNumber),
-    () => GetPostsPageUseCase(pageNumber)
+    () => ListPublicationsWithPaginationUseCase(pageNumber)
   );
 
   return {

@@ -4,7 +4,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:slug*",
-        destination: `${process.env.API_SERVER_URL}/:slug*`,
+        destination: `${process.env.API_SERVER_URL}/api/:slug*`,
         permanent: true,
       },
     ];

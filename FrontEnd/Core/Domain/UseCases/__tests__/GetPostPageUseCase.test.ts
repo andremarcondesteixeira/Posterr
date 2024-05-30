@@ -2,7 +2,7 @@ import { strict as assert } from "node:assert";
 import { suite, test } from "node:test";
 import { ApiEndpoint } from "../../../Services/ApiEndpointsService";
 import * as HttpRequestService from "../../../Services/HttpRequestService";
-import { GetPostsPageUseCase } from "../GetPostsPageUseCase";
+import { ListPublicationsWithPaginationUseCase } from "../ListPublicationsWithPaginationUseCase";
 
 // https://github.com/nodejs/node/issues/52015
 fetch;
@@ -15,7 +15,7 @@ suite("GetPostsPageUseCase", () => {
       ok: true,
     }));
     context.mock.method(HttpRequestService, "makeRequest");
-    await GetPostsPageUseCase(1);
+    await ListPublicationsWithPaginationUseCase(1);
     assert.deepStrictEqual((HttpRequestService.makeRequest as any).mock.calls[0].arguments, [`${ApiEndpoint.posts}?page=1&pageSize=15`]);
     context.mock.reset();
   });
@@ -27,16 +27,16 @@ suite("GetPostsPageUseCase", () => {
       ok: true,
     }));
     context.mock.method(HttpRequestService, "makeRequest");
-    await GetPostsPageUseCase(2);
+    await ListPublicationsWithPaginationUseCase(2);
     assert.deepStrictEqual((HttpRequestService.makeRequest as any).mock.calls[0].arguments, [`${ApiEndpoint.posts}?page=2&pageSize=20`]);
     context.mock.reset();
   });
 
   test("Given the requested page number is not an integer bigger than zero, then throw error", () => {
-    assert.throws(() => GetPostsPageUseCase(0), "value was 0");
-    assert.throws(() => GetPostsPageUseCase(-1), "value was -1");
-    assert.throws(() => GetPostsPageUseCase(null as any), "value was null");
-    assert.throws(() => GetPostsPageUseCase(undefined as any), "value was undefined");
-    assert.throws(() => GetPostsPageUseCase("string" as any), "value was 'string'");
+    assert.throws(() => ListPublicationsWithPaginationUseCase(0), "value was 0");
+    assert.throws(() => ListPublicationsWithPaginationUseCase(-1), "value was -1");
+    assert.throws(() => ListPublicationsWithPaginationUseCase(null as any), "value was null");
+    assert.throws(() => ListPublicationsWithPaginationUseCase(undefined as any), "value was undefined");
+    assert.throws(() => ListPublicationsWithPaginationUseCase("string" as any), "value was 'string'");
   });
 });

@@ -9,7 +9,7 @@ Whatever fetching approach is used, it will not impact the application's archite
 export function useHttpRequest<RESPONSE_TYPE>(requestId: string, fetcher: () => Promise<Result<RESPONSE_TYPE, Error>>) {
   const { data, error, isLoading } = useSWR<RESPONSE_TYPE, Error, string>(requestId, async () => {
     const response = await fetcher();
-    return response.okOrThrow();
+    return response.okOrThrow("Error during HTTP request");
   });
 
   return { data, error, isLoading };

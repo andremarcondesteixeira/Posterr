@@ -1,1 +1,1 @@
-export { GetPostsPageUseCase } from "./GetPostsPageUseCase";
+export { ListPublicationsWithPaginationUseCase as GetPostsPageUseCase } from "./ListPublicationsWithPaginationUseCase";

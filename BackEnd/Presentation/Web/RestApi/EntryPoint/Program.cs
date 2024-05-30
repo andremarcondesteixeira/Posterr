@@ -15,6 +15,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDomainConfig, DomainConfig>();
 
+var corsPolicyName = "_allowAll";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: corsPolicyName, policy =>
+    {
+        // I would never do this in a production environment
+        // I'm only doing this because this is just a technical evaluation
+        policy.WithOrigins("*");
+    });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -23,6 +34,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(corsPolicyName);
 app.UseAuthorization();
 app.MapControllers();
 

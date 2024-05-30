@@ -14,6 +14,6 @@ public abstract class APIResource
 
 public abstract class APIResource<EMBEDDED> : APIResource where EMBEDDED : APIResource
 {
-    [JsonPropertyName("_emdedded")]
+    [JsonPropertyName("_embedded")]
     public Dictionary<string, IList<EMBEDDED>> Embedded { get; } = [];
 }
