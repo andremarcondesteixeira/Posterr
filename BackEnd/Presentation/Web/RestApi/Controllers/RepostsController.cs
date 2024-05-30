@@ -32,7 +32,7 @@ public class RepostsController(
                 statusCode: e switch
                 {
                     UserNotFoundException or PostNotFoundException => StatusCodes.Status404NotFound,
-                    MaxAllowedDailyPublicationsByUserExceededException => StatusCodes.Status403Forbidden,
+                    MaxAllowedDailyPublicationsByUserExceededException or DuplicatedRepostException => StatusCodes.Status403Forbidden,
                     _ => StatusCodes.Status500InternalServerError
                 }
             );

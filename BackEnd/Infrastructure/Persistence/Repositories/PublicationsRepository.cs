@@ -65,6 +65,16 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
 
     public Task<IRepost> PublishNewRepost(IUnpublishedRepost unpublishedRepost)
     {
+        bool postWasAlreadyRepostedByThisSameUser = dbContext.Reposts.Where(repost =>
+            repost.User.Username == unpublishedRepost.Author.Username &&
+            repost.PostId == unpublishedRepost.OriginalPost.Id
+        ).Any();
+
+        if (postWasAlreadyRepostedByThisSameUser)
+        {
+            throw new DuplicatedRepostException(unpublishedRepost);
+        }
+
         var userQueryResult = dbContext.Users.Where(user => user.Username == unpublishedRepost.Author.Username);
         if (!userQueryResult.Any())
         {
