@@ -12,18 +12,15 @@
 }
 
 .newPostForm textarea {
-  border: 1px solid #ccc;
   border-radius: 10px;
-
-  width: 100%;
-  min-width: 100%;
-  max-width: 100%;
-
+  border: 1px solid #ccc;
   height: 10rem;
-  min-height: 10rem;
   max-height: 80vh;
-
+  max-width: 100%;
+  min-height: 10rem;
+  min-width: 100%;
   padding: 1rem;
+  width: 100%;
 }
 
 .publicationsList {
@@ -50,10 +47,10 @@
 }
 
 .postAuthor {
-  grid-area: author;
   font-family: "Bebas Neue", sans-serif;
   font-style: normal;
   font-weight: 400;
+  grid-area: author;
   text-transform: uppercase;
 }
 
