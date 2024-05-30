@@ -1,0 +1,43 @@
+.main {
+  padding: 1rem;
+}
+
+.publicationsList {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  list-style-position: inside;
+  list-style-type: none;
+}
+
+.post {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  display: grid;
+  gap: 1rem;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'author publication_date'
+    'post_content post_content';
+  padding: 1rem;
+  width: 30rem;
+}
+
+.postAuthor {
+  grid-area: author;
+  font-family: "Bebas Neue", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.postPublicationDate {
+  grid-area: publication_date;
+  text-align: right;
+}
+
+.postContent {
+  grid-area: post_content;
+}

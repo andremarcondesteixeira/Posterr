@@ -1,23 +1,24 @@
 "use client"
 
 import { usePostsPagination } from "@/hooks/usePostsPagination";
+import styles from "./page.module.css";
 
 export default function Home() {
   const { isLoadingPosts, posts, errorLoadingPosts } = usePostsPagination(1);
 
   return (
-    <main>
-      <h1>Posterr</h1>
-      <ul>
+    <main className={styles.main}>
+      <ul className={styles.publicationsList}>
         {isLoadingPosts && (
           <span>Loading posts...</span>
         )}
         {posts && posts._embedded.publications.map(post => (
           <li key={`${post.postId}-${post.repostAuthorUsername ?? 'original'}`}>
-            <span>ID: {post.postId}</span>
-            <span>Author: {post.postAuthorUsername}</span>
-            <span>Published on {new Date(post.postPublicationDate).toLocaleDateString()}</span>
-            <span>{post.postContent}</span>
+            <article className={styles.post}>
+              <span className={styles.postAuthor}>{post.postAuthorUsername}</span>
+              <span className={styles.postPublicationDate}>{new Date(post.postPublicationDate).toLocaleString()}</span>
+              <span className={styles.postContent}>{post.postContent}</span>
+            </article>
           </li>
         ))}
         {errorLoadingPosts && (
