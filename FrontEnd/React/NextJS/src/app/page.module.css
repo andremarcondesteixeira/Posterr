@@ -12,8 +12,8 @@
 }
 
 .newPostForm textarea {
-  border-radius: 10px;
   border: 1px solid #ccc;
+  border-radius: 10px;
   height: 10rem;
   max-height: 80vh;
   max-width: 100%;
