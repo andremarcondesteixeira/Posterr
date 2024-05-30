@@ -10,6 +10,7 @@ export default function Home() {
     <main className={styles.main}>
       <form method="post" action="/api/posts" className={styles.newPostForm}>
         <textarea placeholder="What are your thoughts?"></textarea>
+        <button>Publish</button>
       </form>
       <ul className={styles.publicationsList}>
         {isLoadingPosts && (

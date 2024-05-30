@@ -8,12 +8,20 @@
 }
 
 .newPostForm {
-  width: 30rem;
+  align-items: flex-end;
+  background-color: #efefef;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  width: 40rem;
 }
 
 .newPostForm textarea {
   border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: calc(1rem - 10px);
   height: 10rem;
   max-height: 80vh;
   max-width: 100%;
