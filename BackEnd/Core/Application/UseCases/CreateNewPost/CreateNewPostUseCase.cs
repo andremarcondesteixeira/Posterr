@@ -11,9 +11,9 @@ public sealed class CreateNewPostUseCase(
     IUsersRepository userRepository,
     IDomainPersistencePort domainPersistenceAdapter,
     IDomainConfig domainConfig
-) : IUseCase<CreateNewPostRequestDTO, CreateNewPostResponseDTO>
+) : IUseCase<CreateNewPostUseCaseInputDTO, CreateNewPostUseCaseOutputDTO>
 {
-    public async Task<CreateNewPostResponseDTO> Run(CreateNewPostRequestDTO request)
+    public async Task<CreateNewPostUseCaseOutputDTO> Run(CreateNewPostUseCaseInputDTO request)
     {
         IUser user = await userRepository.FindByUsername(request.Username)
             ?? throw new UserNotFoundException(request.Username);
@@ -21,12 +21,12 @@ public sealed class CreateNewPostUseCase(
         var unpublishedPost = new UnpublishedPost(user, request.Content, domainConfig);
         var publishedPost = await unpublishedPost.Publish(domainPersistenceAdapter);
 
-        return new CreateNewPostResponseDTO()
+        return new CreateNewPostUseCaseOutputDTO()
         {
-            PostId = publishedPost.Id,
+            Id = publishedPost.Id,
             AuthorUsername = publishedPost.Author.Username,
             PublicationDate = publishedPost.PublicationDate,
-            PostContent = publishedPost.Content
+            Content = publishedPost.Content
         };
     }
 }

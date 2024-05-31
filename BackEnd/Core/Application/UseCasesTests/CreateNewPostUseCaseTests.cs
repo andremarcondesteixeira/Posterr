@@ -34,20 +34,20 @@ public class CreateNewPostUseCaseTests
             x => x.Author.Username == unpublishedPost.Author.Username && x.Content == unpublishedPost.Content
         ))).Returns(post);
 
-        var request = new CreateNewPostRequestDTO(user.Username, post.Content);
+        var request = new CreateNewPostUseCaseInputDTO(user.Username, post.Content);
         var response = await useCase.Run(request);
 
-        Assert.Equal(1, response.PostId);
+        Assert.Equal(1, response.Id);
         Assert.Equal(Fake.Username, response.AuthorUsername);
         Assert.Equal(Fake.CurrentTimeUTC, response.PublicationDate);
-        Assert.Equal(Fake.Content, response.PostContent);
+        Assert.Equal(Fake.Content, response.Content);
     }
 
     [Fact]
     public async Task GivenUserIsNotFound_WhenCreatingNewPost_ThenThrowException()
     {
         A.CallTo(() => usersRepository.FindByUsername(Fake.Username)).Returns(Task.FromResult<IUser?>(null));
-        var request = new CreateNewPostRequestDTO(Fake.Username, Fake.Content);
+        var request = new CreateNewPostUseCaseInputDTO(Fake.Username, Fake.Content);
         await Assert.ThrowsAsync<UserNotFoundException>(() => useCase.Run(request));
     }
 
@@ -60,7 +60,7 @@ public class CreateNewPostUseCaseTests
             domainConfig.MaxAllowedDailyPublicationsByUser
         );
 
-        var request = new CreateNewPostRequestDTO(user.Username, Fake.Content);
+        var request = new CreateNewPostUseCaseInputDTO(user.Username, Fake.Content);
 
         await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(() => useCase.Run(request));
     }

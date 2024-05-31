@@ -14,7 +14,7 @@ public class RepostsController(
 ) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> CreateNewRepost([FromBody] CreateNewRepostRequestDTO request)
+    public async Task<IActionResult> CreateNewRepost([FromBody] CreateNewRepostUseCaseInputDTO request)
     {
         string baseUrl = linkGenerator.GetUriByAction(HttpContext)!;
 

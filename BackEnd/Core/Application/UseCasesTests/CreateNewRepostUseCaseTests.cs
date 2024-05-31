@@ -43,11 +43,11 @@ public class CreateNewRepostUseCaseTests
             && r.OriginalPost.Content == unpublishedRepost.OriginalPost.Content
         ))).Returns(publishedRepost);
 
-        var dto = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
+        var dto = new CreateNewRepostUseCaseInputDTO(repostAuthor.Username, originalPost.Id);
         var response = await useCase.Run(dto);
 
-        Assert.Equal(Fake.RepostAuthorUsername, response.RepostAuthorUsername);
-        Assert.Equal(Fake.CurrentTimeUTC, response.RepostPublicationDate);
+        Assert.Equal(Fake.RepostAuthorUsername, response.AuthorUsername);
+        Assert.Equal(Fake.CurrentTimeUTC, response.PublicationDate);
         Assert.Equal(1, response.OriginalPost.Id);
         Assert.Equal(Fake.OriginalPostAuthorUsername, response.OriginalPost.AuthorUsername);
         Assert.Equal(yesterday, response.OriginalPost.PublicationDate);
@@ -58,7 +58,7 @@ public class CreateNewRepostUseCaseTests
     public async Task GivenRepostAuthorUsernameDoesNotBelongToAnyRegisteredUser_WhenCreatingNewRepost_ThenThrowException()
     {
         A.CallTo(() => usersRepository.FindByUsername(Fake.Username)).Returns(Task.FromResult<IUser?>(null));
-        var request = new CreateNewRepostRequestDTO(Fake.Username, 1);
+        var request = new CreateNewRepostUseCaseInputDTO(Fake.Username, 1);
         await Assert.ThrowsAsync<UserNotFoundException>(() => useCase.Run(request));
     }
 
@@ -68,7 +68,7 @@ public class CreateNewRepostUseCaseTests
         var repostAuthor = Fake.User(Fake.Username);
         A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
         A.CallTo(() => publicationsRepository.FindPostById(1)).Returns(Task.FromResult<IPost?>(null));
-        var request = new CreateNewRepostRequestDTO(repostAuthor.Username, 1);
+        var request = new CreateNewRepostUseCaseInputDTO(repostAuthor.Username, 1);
         await Assert.ThrowsAsync<PostNotFoundException>(() => useCase.Run(request));
     }
 
@@ -85,7 +85,7 @@ public class CreateNewRepostUseCaseTests
             domainConfig.MaxAllowedDailyPublicationsByUser
         );
 
-        var createNewRepostRequest = new CreateNewRepostRequestDTO(repostAuthor.Username, originalPost.Id);
+        var createNewRepostRequest = new CreateNewRepostUseCaseInputDTO(repostAuthor.Username, originalPost.Id);
 
         await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(
             () => useCase.Run(createNewRepostRequest)

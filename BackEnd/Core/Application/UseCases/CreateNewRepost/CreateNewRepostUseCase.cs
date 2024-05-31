@@ -12,14 +12,14 @@ public sealed class CreateNewRepostUseCase(
     IPublicationsRepository _publicationRepository,
     IDomainPersistencePort _domainPersistenceAdapter,
     IDomainConfig _domainConfig
-) : IUseCase<CreateNewRepostRequestDTO, CreateNewRepostResponseDTO>
+) : IUseCase<CreateNewRepostUseCaseInputDTO, CreateNewRepostUseCaseOutputDTO>
 {
     private readonly IUsersRepository _userRepository = _userRepository;
     private readonly IPublicationsRepository _publicationRepository = _publicationRepository;
     private readonly IDomainPersistencePort _domainPersistenceAdapter = _domainPersistenceAdapter;
     private readonly IDomainConfig _domainConfig = _domainConfig;
 
-    public async Task<CreateNewRepostResponseDTO> Run(CreateNewRepostRequestDTO request)
+    public async Task<CreateNewRepostUseCaseOutputDTO> Run(CreateNewRepostUseCaseInputDTO request)
     {
         IUser user = await _userRepository.FindByUsername(request.AuthorUsername)
             ?? throw new UserNotFoundException(request.AuthorUsername);
@@ -30,11 +30,11 @@ public sealed class CreateNewRepostUseCase(
         var unpublishedRepost = new UnpublishedRepost(user, originalPost, _domainConfig);
         var publishedRepost = await unpublishedRepost.Publish(_domainPersistenceAdapter);
 
-        return new CreateNewRepostResponseDTO()
+        return new CreateNewRepostUseCaseOutputDTO()
         {
-            RepostAuthorUsername = publishedRepost.Author.Username,
-            RepostPublicationDate = publishedRepost.PublicationDate,
-            OriginalPost = new CreateNewRepostResponseDTO.OriginalPostData()
+            AuthorUsername = publishedRepost.Author.Username,
+            PublicationDate = publishedRepost.PublicationDate,
+            OriginalPost = new CreateNewRepostUseCaseOutputDTO.OriginalPostData()
             {
                 Id = publishedRepost.OriginalPost.Id,
                 AuthorUsername = publishedRepost.OriginalPost.Author.Username,

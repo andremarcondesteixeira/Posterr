@@ -14,13 +14,13 @@ public class PostsController(
 ) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> CreateNewPost([FromBody] CreateNewPostRequestDTO request)
+    public async Task<IActionResult> CreateNewPost([FromBody] CreateNewPostUseCaseInputDTO request)
     {
         string baseUrl = linkGenerator.GetUriByAction(HttpContext)!;
 
         try
         {
-            var response = await createNewPostUseCase.Run(request);
+            CreateNewPostUseCaseOutputDTO response = await createNewPostUseCase.Run(request);
             return Ok(response);
         }
         catch (PosterrException e)
