@@ -22,7 +22,12 @@ builder.Services.AddCors(options =>
     {
         // I would never do this in a production environment
         // I'm only doing this because this is just a technical evaluation
-        policy.WithOrigins("*");
+        policy
+            .WithOrigins("*")
+            .WithMethods("*")
+            .WithHeaders("*")
+            .WithExposedHeaders("*");
+
     });
 });
 

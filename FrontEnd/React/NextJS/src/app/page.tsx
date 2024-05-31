@@ -1,22 +1,42 @@
 "use client"
 
-import { usePostsPagination } from "@/hooks/usePostsPagination";
+import { Publication } from "@Core/Domain/Entities/Publication";
+import { ApiEndpoint } from "@Core/Services/ApiEndpointsService";
+import { FormEvent, useEffect, useState } from "react";
 import styles from "./page.module.css";
 
+const username = process.env["NEXT_PUBLIC_DEFAULT_USERNAME"] as string;
+
 export default function Home() {
-  const { isLoadingPosts, posts, errorLoadingPosts } = usePostsPagination(1);
+  const [newPostContent, setNewPostContent] = useState("");
+  const [publications, setPublications] = useState<Publication[]>([]);
+
+  useEffect(() => {
+    ApiEndpoint.publications.GET(1).then(response => {
+      response.match({
+        ok: (okValue) => {
+          setPublications(okValue._embedded.publications);
+        },
+        error: (errorValue) => {
+          alert(errorValue.message);
+        },
+      });
+    });
+  }, []);
+
+  const tryCreateNewPost = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    ApiEndpoint.posts.POST({ username, content: newPostContent })
+  };
 
   return (
     <main className={styles.main}>
-      <form method="post" action="/api/posts" className={styles.newPostForm}>
-        <textarea placeholder="What are your thoughts?"></textarea>
+      <form method="post" action="/api/posts" className={styles.newPostForm} onSubmit={tryCreateNewPost}>
+        <textarea placeholder="What are your thoughts?" value={newPostContent} onChange={(event) => setNewPostContent(event.target.value)} />
         <button>Publish</button>
       </form>
       <ul className={styles.publicationsList}>
-        {isLoadingPosts && (
-          <span>Loading posts...</span>
-        )}
-        {posts && posts._embedded.publications.map(post => (
+        {publications && publications.map(post => (
           <li key={`${post.postId}-${post.repostAuthorUsername ?? 'original'}`}>
             <article className={styles.post}>
               <span className={styles.postAuthor}>{post.postAuthorUsername}</span>
@@ -25,9 +45,6 @@ export default function Home() {
             </article>
           </li>
         ))}
-        {errorLoadingPosts && (
-          <span>There was an error when loading the posts: {errorLoadingPosts.message}</span>
-        )}
       </ul>
     </main>
   );
