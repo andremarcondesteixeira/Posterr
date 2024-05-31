@@ -19,4 +19,15 @@ button {
   border-radius: calc(1rem - 10px);
   cursor: pointer;
   padding: 0.2rem 1rem;
+  transition: linear 50ms;
+}
+
+button:hover {
+  transform: scale(1.1);
+  transition: linear 50ms;
+}
+
+button:active {
+  transform: scale(0.9);
+  transition: linear 50ms;
 }
