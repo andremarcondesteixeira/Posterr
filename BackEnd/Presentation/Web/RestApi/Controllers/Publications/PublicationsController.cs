@@ -82,14 +82,14 @@ public class PublicationsController(
         }
     }
 
-    [HttpPost("/posts/{postId}/repost")]
-    public async Task<IActionResult> CreateNewRepost(long postId, [FromBody] CreateNewRepostRequestBodyDTO requestBody)
+    [HttpPost("{publicationId}/repost")]
+    public async Task<IActionResult> CreateNewRepost(long publicationId, [FromBody] CreateNewRepostRequestBodyDTO requestBody)
     {
         string baseUrl = linkGenerator.GetUriByAction(HttpContext)!;
 
         try
         {
-            CreateNewRepostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, postId);
+            CreateNewRepostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, publicationId);
             CreateNewRepostUseCaseOutputDTO useCaseOutput = await createNewRepostUseCase.Run(useCaseInput);
             CreateNewRepostRequestResponseDTO.OriginalPostData originalPostData = new()
             {
