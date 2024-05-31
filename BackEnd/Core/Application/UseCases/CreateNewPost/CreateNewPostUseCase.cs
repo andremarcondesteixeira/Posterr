@@ -13,12 +13,12 @@ public sealed class CreateNewPostUseCase(
     IDomainConfig domainConfig
 ) : IUseCase<CreateNewPostUseCaseInputDTO, CreateNewPostUseCaseOutputDTO>
 {
-    public async Task<CreateNewPostUseCaseOutputDTO> Run(CreateNewPostUseCaseInputDTO request)
+    public async Task<CreateNewPostUseCaseOutputDTO> Run(CreateNewPostUseCaseInputDTO input)
     {
-        IUser user = await userRepository.FindByUsername(request.Username)
-            ?? throw new UserNotFoundException(request.Username);
+        IUser user = await userRepository.FindByUsername(input.AuthorUsername)
+            ?? throw new UserNotFoundException(input.AuthorUsername);
 
-        var unpublishedPost = new UnpublishedPost(user, request.Content, domainConfig);
+        var unpublishedPost = new UnpublishedPost(user, input.Content, domainConfig);
         var publishedPost = await unpublishedPost.Publish(domainPersistenceAdapter);
 
         return new CreateNewPostUseCaseOutputDTO()

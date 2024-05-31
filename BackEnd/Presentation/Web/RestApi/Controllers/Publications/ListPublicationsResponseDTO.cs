@@ -1,15 +1,16 @@
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
 
-namespace Posterr.Presentation.Web.RestApi.Controllers.Models;
+namespace Posterr.Presentation.Web.RestApi.Controllers.Publications;
 
-public class ListPublicationsResponseDTO : APIResource<ListPublicationsResponseItemDTO>
+public record ListPublicationsResponseDTO : APIResource<ListPublicationsResponseItemDTO>
 {
     public int Count { get; set; }
 
-    public ListPublicationsResponseDTO(IList<ListPublicationsResponseItemDTO> publications,
-                                     PaginationParameters paginationParameters,
-                                     string baseUrl)
+    public ListPublicationsResponseDTO(
+        IList<ListPublicationsResponseItemDTO> publications,
+        PaginationParameters paginationParameters,
+        string baseUrl)
     {
         Count = publications.Count;
 

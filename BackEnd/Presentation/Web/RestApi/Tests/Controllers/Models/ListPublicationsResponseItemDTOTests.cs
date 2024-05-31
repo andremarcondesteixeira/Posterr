@@ -1,5 +1,5 @@
 ﻿using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
-using Posterr.Presentation.Web.RestApi.Controllers.Models;
+using Posterr.Presentation.Web.RestApi.Controllers.Publications;
 
 namespace Posterr.Presentation.Web.RestApi.Tests.Controllers.Models;
 

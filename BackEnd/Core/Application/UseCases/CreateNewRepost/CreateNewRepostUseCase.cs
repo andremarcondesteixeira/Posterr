@@ -19,13 +19,13 @@ public sealed class CreateNewRepostUseCase(
     private readonly IDomainPersistencePort _domainPersistenceAdapter = _domainPersistenceAdapter;
     private readonly IDomainConfig _domainConfig = _domainConfig;
 
-    public async Task<CreateNewRepostUseCaseOutputDTO> Run(CreateNewRepostUseCaseInputDTO request)
+    public async Task<CreateNewRepostUseCaseOutputDTO> Run(CreateNewRepostUseCaseInputDTO input)
     {
-        IUser user = await _userRepository.FindByUsername(request.AuthorUsername)
-            ?? throw new UserNotFoundException(request.AuthorUsername);
+        IUser user = await _userRepository.FindByUsername(input.AuthorUsername)
+            ?? throw new UserNotFoundException(input.AuthorUsername);
 
-        IPost originalPost = await _publicationRepository.FindPostById(request.OriginalPostId)
-            ?? throw new PostNotFoundException(request.OriginalPostId);
+        IPost originalPost = await _publicationRepository.FindPostById(input.OriginalPostId)
+            ?? throw new PostNotFoundException(input.OriginalPostId);
 
         var unpublishedRepost = new UnpublishedRepost(user, originalPost, _domainConfig);
         var publishedRepost = await unpublishedRepost.Publish(_domainPersistenceAdapter);
