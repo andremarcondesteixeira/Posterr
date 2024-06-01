@@ -22,12 +22,24 @@ public class PublicationDbEntity : BaseDbEntity
     [ForeignKey(nameof(OriginalPostId))]
     public PublicationDbEntity? OriginalPost { get; set; }
 
-    public IPost ToIPost() => new Post(Id, Author.ToIUser(), PublicationDate, Content);
+    public IPost ToIPost() => new Post(Id, new User(AuthorId, AuthorUsername), PublicationDate, Content);
 
-    public IRepost ToIRepost() => new Repost(Id, Author.ToIUser(), PublicationDate, Content, OriginalPost.ToIPost());
+    public IRepost ToIRepost() => new Repost(
+        Id,
+        new User(AuthorId, AuthorUsername),
+        PublicationDate,
+        Content,
+        new Post(
+            (long) OriginalPostId!,
+            new User((long) OriginalPostAuthorId!, OriginalPostAuthorUsername!),
+            (DateTime) OriginalPostPublicationDate!,
+            OriginalPostContent!
+        )
+    );
     
     public record Post(long Id, IUser Author, DateTime PublicationDate, string Content) : IPost;
 
     public record Repost(long Id, IUser Author, DateTime PublicationDate, string Content, IPost OriginalPost) : IRepost;
-}
 
+    public record User(long Id, string Username) : IUser;
+}
