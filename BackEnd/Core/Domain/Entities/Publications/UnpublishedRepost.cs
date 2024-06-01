@@ -18,8 +18,8 @@ public sealed record UnpublishedRepost(IUser Author, IPost OriginalPost, IDomain
         var now = DateTime.UtcNow;
         int publicationsMadeToday = publicationsRepository.CountPublicationsMadeByUserBetweenDateTimeRange(
             Author,
-            new DateTime(now.Year, now.Month, now.Day, 0, 0, 0),
-            new DateTime(now.Year, now.Month, now.Day, 23, 59, 59)
+            new DateTime(now.Year, now.Month, now.Day, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(now.Year, now.Month, now.Day, 23, 59, 59, DateTimeKind.Utc)
         );
 
         if (publicationsMadeToday >= DomainConfig.MaxAllowedDailyPublicationsByUser)
