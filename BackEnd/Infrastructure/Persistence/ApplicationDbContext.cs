@@ -28,7 +28,11 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
                     .HasOne(publication => publication.Author)
                     .WithMany()
                     .HasForeignKey(x => x.AuthorId)
-                    .OnDelete(DeleteBehavior.Restrict)
+                    .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<PublicationDbEntity>()
+                    .HasOne(publication => publication.OriginalPost)
+                    .WithMany()
                     .HasForeignKey(x => x.OriginalPostId)
                     .OnDelete(DeleteBehavior.Restrict);
 

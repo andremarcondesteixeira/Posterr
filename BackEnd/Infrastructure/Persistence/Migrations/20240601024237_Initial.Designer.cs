@@ -12,7 +12,7 @@ using Posterr.Infrastructure.Persistence;
 namespace Posterr.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240601003727_Initial")]
+    [Migration("20240601024237_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -66,6 +66,8 @@ namespace Posterr.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorId");
+
                     b.HasIndex("OriginalPostId");
 
                     b.ToTable("Publications");
@@ -115,11 +117,13 @@ namespace Posterr.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Posterr.Infrastructure.Persistence.DbEntities.PublicationDbEntity", b =>
                 {
-                    b.HasOne("Posterr.Infrastructure.Persistence.DbEntities.PublicationDbEntity", "OriginalPost")
-                        .WithMany()
-                        .HasForeignKey("OriginalPostId");
-
                     b.HasOne("Posterr.Infrastructure.Persistence.DbEntities.UserDbEntity", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Posterr.Infrastructure.Persistence.DbEntities.PublicationDbEntity", "OriginalPost")
                         .WithMany()
                         .HasForeignKey("OriginalPostId")
                         .OnDelete(DeleteBehavior.Restrict);

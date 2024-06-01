@@ -50,10 +50,11 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                         name: "FK_Publications_Publications_OriginalPostId",
                         column: x => x.OriginalPostId,
                         principalTable: "Publications",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Publications_Users_OriginalPostId",
-                        column: x => x.OriginalPostId,
+                        name: "FK_Publications_Users_AuthorId",
+                        column: x => x.AuthorId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -69,6 +70,11 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                     { 3L, "timon" },
                     { 4L, "pumbaa" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Publications_AuthorId",
+                table: "Publications",
+                column: "AuthorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Publications_OriginalPostId",
