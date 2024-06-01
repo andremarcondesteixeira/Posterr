@@ -5,9 +5,9 @@ namespace Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 
 public sealed class ListPublicationsWithPaginationUseCase(IPublicationsRepository repository) : IUseCase<PaginationParameters, IList<PublicationsPageEntryDTO>>
 {
-    public async Task<IList<PublicationsPageEntryDTO>> Run(PaginationParameters paginationParameters)
+    public IList<PublicationsPageEntryDTO> Run(PaginationParameters paginationParameters)
     {
-        var publications = await repository.Paginate(paginationParameters.LastRowNumber, paginationParameters.PageSize);
+        var publications = repository.Paginate(paginationParameters.LastRowNumber, paginationParameters.PageSize);
 
         return publications.Select(publication =>
         {

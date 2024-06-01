@@ -4,5 +4,5 @@ namespace Posterr.Core.Boundaries.Persistence;
 
 public interface IUsersRepository
 {
-    Task<IUser?> FindByUsername(string username);
+    IUser? FindByUsername(string username);
 }

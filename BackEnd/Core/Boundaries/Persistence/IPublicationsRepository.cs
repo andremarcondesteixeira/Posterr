@@ -4,9 +4,9 @@ namespace Posterr.Core.Boundaries.Persistence;
 
 public interface IPublicationsRepository
 {
-    Task<int> CountPublicationsByUserBetween(IUser author, DateTime startInclusive, DateTime endInclusive);
-    Task<IPost?> FindPostById(long originalPostId);
-    Task<IList<IPublication>> Paginate(int lastSeenRow, short pageSize);
-    Task<IPost> PublishNewPost(IUnpublishedPost unpublishedPost);
-    Task<IRepost> PublishNewRepost(IUnpublishedRepost unpublishedRepost);
+    IPublication? FindById(long publicationId);
+    int CountPublicationsMadeByUserBetweenDateTimeRange(IUser author, DateTime startInclusive, DateTime endInclusive);
+    IList<IPublication> Paginate(long lastSeenPublicationId, short pageSize);
+    IPost PublishNewPost(IUnpublishedPost unpublishedPost);
+    IRepost PublishNewRepost(IUnpublishedRepost unpublishedRepost);
 }

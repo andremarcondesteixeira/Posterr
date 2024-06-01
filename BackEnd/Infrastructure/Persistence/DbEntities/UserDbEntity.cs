@@ -10,8 +10,8 @@ public class UserDbEntity : BaseDbEntity
 {
     public required string Username { get; set; }
 
-    public IUser ToIUser() => new User(Username);
+    public IUser ToIUser() => new User(Id, Username);
 
-    public record User(string Username) : IUser;
+    public record User(long Id, string Username) : IUser;
 }
 

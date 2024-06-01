@@ -1,5 +1,6 @@
 ﻿using Posterr.Core.Boundaries.Configuration;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
+using Posterr.Core.Boundaries.Persistence;
 using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Domain.Entities.Publications;
@@ -30,13 +31,20 @@ public sealed record UnpublishedPost : IUnpublishedPost
         DomainConfig = domainConfig;
     }
 
-    public async Task<IPost> Publish(IDomainPersistencePort persistencePort)
+    public IPost Publish(IPublicationsRepository publicationsRepository)
     {
-        if (await persistencePort.AmountOfPublicationsMadeTodayBy(Author) >= DomainConfig.MaxAllowedDailyPublicationsByUser)
+        var now = DateTime.UtcNow;
+        int publicationsMadeToday = publicationsRepository.CountPublicationsMadeByUserBetweenDateTimeRange(
+            Author,
+            new DateTime(now.Year, now.Month, now.Day, 0, 0, 0),
+            new DateTime(now.Year, now.Month, now.Day, 23, 59, 59)
+        );
+
+        if (publicationsMadeToday >= DomainConfig.MaxAllowedDailyPublicationsByUser)
         {
             throw new MaxAllowedDailyPublicationsByUserExceededException(Author, DomainConfig);
         }
 
-        return await persistencePort.PublishNewPost(this);
+        return publicationsRepository.PublishNewPost(this);
     }
 }

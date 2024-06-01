@@ -9,17 +9,17 @@ namespace Posterr.Core.Application.UseCases.CreateNewPost;
 
 public sealed class CreateNewPostUseCase(
     IUsersRepository userRepository,
-    IDomainPersistencePort domainPersistenceAdapter,
+    IPublicationsRepository publicationsRepository,
     IDomainConfig domainConfig
 ) : IUseCase<CreateNewPostUseCaseInputDTO, CreateNewPostUseCaseOutputDTO>
 {
-    public async Task<CreateNewPostUseCaseOutputDTO> Run(CreateNewPostUseCaseInputDTO input)
+    public CreateNewPostUseCaseOutputDTO Run(CreateNewPostUseCaseInputDTO input)
     {
-        IUser user = await userRepository.FindByUsername(input.AuthorUsername)
+        IUser user = userRepository.FindByUsername(input.AuthorUsername)
             ?? throw new UserNotFoundException(input.AuthorUsername);
 
         var unpublishedPost = new UnpublishedPost(user, input.Content, domainConfig);
-        var publishedPost = await unpublishedPost.Publish(domainPersistenceAdapter);
+        var publishedPost = unpublishedPost.Publish(publicationsRepository);
 
         return new CreateNewPostUseCaseOutputDTO()
         {

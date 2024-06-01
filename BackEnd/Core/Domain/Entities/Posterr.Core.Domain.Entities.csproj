@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Boundaries\Configuration\Posterr.Core.Boundaries.Configuration.csproj" />
     <ProjectReference Include="..\..\Boundaries\EntitiesInterfaces\Posterr.Core.Boundaries.EntitiesInterfaces.csproj" />
+    <ProjectReference Include="..\..\Boundaries\Persistence\Posterr.Core.Boundaries.Persistence.csproj" />
     <ProjectReference Include="..\..\Shared\Exceptions\Posterr.Core.Shared.Exceptions.csproj" />
   </ItemGroup>
 

@@ -33,7 +33,7 @@ public class CreateNewRepostUseCaseTests
         var unpublishedRepost = Fake.UnpublishedRepost(repostAuthor, originalPost);
         var publishedRepost = Fake.Repost(unpublishedRepost.Author, Fake.CurrentTimeUTC, unpublishedRepost.OriginalPost);
         A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
-        A.CallTo(() => publicationsRepository.FindPostById(originalPost.Id)).Returns(originalPost);
+        A.CallTo(() => publicationsRepository.FindById(originalPost.Id)).Returns(originalPost);
         A.CallTo(() => domainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(repostAuthor)).Returns((ushort)0);
         A.CallTo(() => domainPersistenceAdapter.PublishNewRepost(A<IUnpublishedRepost>.That.Matches(r =>
             r.Author.Username == unpublishedRepost.Author.Username
@@ -67,7 +67,7 @@ public class CreateNewRepostUseCaseTests
     {
         var repostAuthor = Fake.User(Fake.Username);
         A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
-        A.CallTo(() => publicationsRepository.FindPostById(1)).Returns(Task.FromResult<IPost?>(null));
+        A.CallTo(() => publicationsRepository.FindById(1)).Returns(Task.FromResult<IPost?>(null));
         var request = new CreateNewRepostUseCaseInputDTO(repostAuthor.Username, 1);
         await Assert.ThrowsAsync<PostNotFoundException>(() => useCase.Run(request));
     }
@@ -80,7 +80,7 @@ public class CreateNewRepostUseCaseTests
         var originalPost = Fake.Post(1, originalPostAuthor, yesterday, Fake.Content);
         var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
         A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
-        A.CallTo(() => publicationsRepository.FindPostById(originalPost.Id)).Returns(originalPost);
+        A.CallTo(() => publicationsRepository.FindById(originalPost.Id)).Returns(originalPost);
         A.CallTo(() => domainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(repostAuthor)).Returns(
             domainConfig.MaxAllowedDailyPublicationsByUser
         );

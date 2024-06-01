@@ -1,279 +1,176 @@
 using Microsoft.EntityFrameworkCore;
-using Posterr.Core.Boundaries.Persistence;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
-using Posterr.Infrastructure.Persistence.DbEntities;
-using System.Data.Common;
+using Posterr.Core.Boundaries.Persistence;
 using Posterr.Core.Shared.Exceptions;
+using Posterr.Infrastructure.Persistence.DbEntities;
+using System.Data;
+using System.Data.Common;
 
 namespace Posterr.Infrastructure.Persistence.Repositories;
 
 public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicationsRepository
 {
-    public Task<int> CountPublicationsByUserBetween(IUser author, DateTime startInclusive, DateTime endInclusive)
-    {
-        var postsCount = dbContext.Posts.Where(p =>
-            p.User.Username == author.Username &&
-            p.CreatedAt >= startInclusive &&
-            p.CreatedAt <= endInclusive
-        ).Count();
-
-        var repostsCount = dbContext.Reposts.Where(r =>
-            r.User.Username == author.Username &&
-            r.CreatedAt >= startInclusive &&
-            r.CreatedAt <= endInclusive
-        ).Count();
-
-        return Task.FromResult(postsCount + repostsCount);
-    }
-
-    public Task<IPost?> FindPostById(long originalPostId)
+    public IPublication? FindById(long publicationId)
     {
         var queryResult = dbContext
-            .Posts
-            .Where(post => post.Id == originalPostId)
-            .Include(post => post.User);
+            .Publications
+            .Where(publication => publication.Id == publicationId)
+            .Include(publication => publication.Author);
 
         if (!queryResult.Any())
         {
-            return Task.FromResult<IPost?>(null);
+            return null;
         }
 
-        return Task.FromResult<IPost?>(queryResult.First().ToIPost());
+        PublicationDbEntity publication = queryResult.First();
+
+        if (publication.OriginalPostId is null)
+        {
+            return publication.ToIPost();
+        }
+
+        return publication.ToIRepost();
     }
 
-    public Task<IPost> PublishNewPost(IUnpublishedPost unpublishedPost)
+    public int CountPublicationsMadeByUserBetweenDateTimeRange(IUser author, DateTime startInclusive, DateTime endInclusive)
     {
-        var queryResult = dbContext.Users.Where(user => user.Username == unpublishedPost.Author.Username);
-        if (!queryResult.Any())
+        return dbContext.Publications.Where(p =>
+            p.AuthorUsername == author.Username &&
+            p.PublicationDate >= startInclusive &&
+            p.PublicationDate <= endInclusive
+        ).Count();
+    }
+
+    public IPost PublishNewPost(IUnpublishedPost unpublishedPost)
+    {
+        var postDbEntity = new PublicationDbEntity()
         {
-            throw new UserNotFoundException(unpublishedPost.Author.Username);
-        }
-        var user = queryResult.First();
-        
-        var postDbEntity = new PostDbEntity()
-        {
-            User = user,
-            UserId = user.Id,
-            Content = unpublishedPost.Content
+            AuthorId = unpublishedPost.Author.Id,
+            AuthorUsername = unpublishedPost.Author.Username,
+            Content = unpublishedPost.Content,
+            PublicationDate = DateTime.UtcNow,
         };
-        
-        dbContext.Posts.Add(postDbEntity);
+
+        dbContext.Publications.Add(postDbEntity);
         dbContext.SaveChanges();
 
-        return Task.FromResult(postDbEntity.ToIPost());
+        return postDbEntity.ToIPost();
     }
 
-    public Task<IRepost> PublishNewRepost(IUnpublishedRepost unpublishedRepost)
+    public IRepost PublishNewRepost(IUnpublishedRepost unpublishedRepost)
     {
-        bool postWasAlreadyRepostedByThisSameUser = dbContext.Reposts.Where(repost =>
-            repost.User.Username == unpublishedRepost.Author.Username &&
-            repost.PostId == unpublishedRepost.OriginalPost.Id
+        bool isDuplicatedRepost = dbContext.Publications.Where(publication =>
+            publication.AuthorUsername == unpublishedRepost.Author.Username &&
+            publication.OriginalPostId == unpublishedRepost.OriginalPost.Id
         ).Any();
 
-        if (postWasAlreadyRepostedByThisSameUser)
+        if (isDuplicatedRepost)
         {
             throw new DuplicatedRepostException(unpublishedRepost);
         }
 
-        var userQueryResult = dbContext.Users.Where(user => user.Username == unpublishedRepost.Author.Username);
-        if (!userQueryResult.Any())
+        var repostUserQueryResult = dbContext
+            .Users
+            .Where(user => user.Username == unpublishedRepost.Author.Username);
+
+        if (!repostUserQueryResult.Any())
         {
             throw new UserNotFoundException(unpublishedRepost.Author.Username);
         }
-        UserDbEntity user = userQueryResult.First();
 
-        var post = dbContext.Posts.Find(unpublishedRepost.OriginalPost.Id)
-            ?? throw new PostNotFoundException(unpublishedRepost.OriginalPost.Id);
+        UserDbEntity repostUser = repostUserQueryResult.First();
 
-        var repostDbEntity = new RepostDbEntity()
+        var originalPostQuery = dbContext
+            .Publications
+            .Where(p => p.Id == unpublishedRepost.OriginalPost.Id)
+            .Include(p => p.Author);
+
+        if (!originalPostQuery.Any())
         {
-            User = user,
-            UserId = user.Id,
-            Post = post,
-            PostId = post.Id,
+            throw new PostNotFoundException(unpublishedRepost.OriginalPost.Id);
+        }
+
+        PublicationDbEntity originalPost = originalPostQuery.First()!;
+
+        var publicationDbEntity = new PublicationDbEntity()
+        {
+            Author = repostUser,
+            AuthorId = repostUser.Id,
+            AuthorUsername = repostUser.Username,
+            Content = string.Empty,
+            PublicationDate = DateTime.UtcNow,
+            OriginalPost = originalPost,
+            OriginalPostId = originalPost.Id,
+            OriginalPostAuthorId = originalPost.AuthorId,
+            OriginalPostAuthorUsername = originalPost.AuthorUsername,
+            OriginalPostContent = originalPost.Content,
+            OriginalPostPublicationDate = originalPost.PublicationDate,
         };
 
-        var repostDbEntry = dbContext.Reposts.Add(repostDbEntity);
+        var repostDbEntry = dbContext.Publications.Add(publicationDbEntity);
+
         dbContext.SaveChanges();
 
-        return Task.FromResult(repostDbEntity.ToIRepost());
+        return publicationDbEntity.ToIRepost();
     }
 
-    public Task<IList<IPublication>> Paginate(int lastSeenRow, short pageSize)
+    public IList<IPublication> Paginate(long lastSeenPublicationId, short pageSize)
     {
         using DbCommand command = dbContext.Database.GetDbConnection().CreateCommand();
-        command.CommandText = POSTS_PAGINATION_QUERY;
-        AddQueryParams(lastSeenRow, pageSize, command);
-        dbContext.Database.OpenConnection();
-        using DbDataReader reader = command.ExecuteReader();
-        IList<IPublication> posts = GetPostsList(reader);
-        dbContext.Database.CloseConnection();
-        return Task.FromResult(posts);
-    }
-
-    private const string POSTS_PAGINATION_QUERY = @"
-        SELECT * FROM (
+        command.CommandText = """
             SELECT
-                Combined.PostId,
-                Combined.PostUserId,
-                UsersPost.""Username"" AS PostUsername,
-                UsersPost.""CreatedAt"" AS PostUserCreatedAt,
-                Combined.PostContent,
-                Combined.PostCreatedAt,
-                Combined.IsRepost,
-                Combined.RepostUserId,
-                UsersRepost.""Username"" AS RepostUsername,
-                UsersRepost.""CreatedAt"" as RepostUserCreatedAt,
-                Combined.RepostCreatedAt,
-                Combined.PublicationCreatedAt,
-                ROW_NUMBER() OVER (ORDER BY Combined.PublicationCreatedAt DESC) AS RowNumber
-            FROM (
-                SELECT
-                    ""Id"" AS PostId,
-                    ""UserId"" AS PostUserId,
-                    ""Content"" AS PostContent, 
-                    ""CreatedAt"" AS PostCreatedAt,
-                    CAST(0 AS BIT) AS IsRepost,
-                    NULL AS RepostUserId,
-                    NULL AS RepostCreatedAt,
-                    ""CreatedAt"" AS PublicationCreatedAt
-                FROM ""Posts""
+                "Id",
+                "AuthorId",
+                "AuthorUsername",
+                "Content",
+                "PublicationDate",
+                "OriginalPostId",
+                "OriginalPostAuthorId",
+                "OriginalPostAuthorUsername",
+                "OriginalPostContent",
+                "OriginalPostPublicationDate"
+            FROM "Publications"
+            WHERE "Id" > @lastSeenPublicationId
+            ORDER BY "PublicationDate" DESC
+            OFFSET 0 ROWS FETCH FIRST @pageSize ROWS ONLY;
+        """;
 
-                UNION ALL
-
-                SELECT
-                    p.""Id"" AS PostId,
-                    p.""UserId"" AS PostUserId,
-                    p.""Content"" AS PostContent,
-                    p.""CreatedAt"" AS PostCreatedAt,
-                    CAST(1 AS BIT) AS IsRepost,
-                    r.""UserId"" AS RepostUserId,
-                    r.""CreatedAt"" AS RepostCreatedAt,
-                    r.""CreatedAt"" AS PublicationCreatedAt
-                FROM ""Reposts"" AS r
-                INNER JOIN ""Posts"" AS p ON p.""Id"" = r.""PostId""
-            ) AS Combined
-            LEFT JOIN ""Users"" AS UsersPost ON Combined.PostUserId = UsersPost.""Id""
-            LEFT JOIN ""Users"" AS UsersRepost ON Combined.RepostUserId = UsersRepost.""Id""
-        ) AS SubQuery
-        WHERE RowNumber > @lastSeenRowNumber
-        ORDER BY PublicationCreatedAt DESC
-        OFFSET 0 ROWS FETCH FIRST @pageSize ROWS ONLY;
-    ";
-
-    private static void AddQueryParams(int lastSeenRowNumber, short pageSize, DbCommand command)
-    {
-        DbParameter lastSeenRowNumberParam = command.CreateParameter();
-        lastSeenRowNumberParam.ParameterName = "@lastSeenRowNumber";
-        lastSeenRowNumberParam.Value = lastSeenRowNumber;
-        command.Parameters.Add(lastSeenRowNumberParam);
+        DbParameter lastSeenPublicationIdParam = command.CreateParameter();
+        lastSeenPublicationIdParam.ParameterName = "@lastSeenPublicationId";
+        lastSeenPublicationIdParam.Value = lastSeenPublicationId;
+        command.Parameters.Add(lastSeenPublicationIdParam);
 
         DbParameter pageSizeParam = command.CreateParameter();
         pageSizeParam.ParameterName = "@pageSize";
         pageSizeParam.Value = pageSize;
         command.Parameters.Add(pageSizeParam);
-    }
 
-    private static List<IPublication> GetPostsList(DbDataReader reader)
-    {
-        List<IPublication> contents = [];
+        dbContext.Database.OpenConnection();
+        using DbDataReader reader = command.ExecuteReader();
+
+        List<IPublication> publications = [];
 
         while (reader.Read())
         {
-            PostColumns postColumns = GetPostColumns(reader);
-            UserDbEntity postAuthor = new()
+            PublicationDbEntity publication = new()
             {
-                Id = postColumns.PostUserId,
-                Username = postColumns.PostUsername,
-                CreatedAt = postColumns.PostUserCreatedAt
-            };
-            PostDbEntity post = new()
-            {
-                Id = postColumns.PostId,
-                User = postAuthor,
-                UserId = postAuthor.Id,
-                Content = postColumns.PostContent,
-                CreatedAt = postColumns.PostCreatedAt
+                Id = reader.GetInt64(0),
+                AuthorId = reader.GetInt64(1),
+                AuthorUsername = reader.GetString(2),
+                Content = reader.GetString(3),
+                PublicationDate = reader.GetDateTime(4),
+                OriginalPostId = reader.IsDBNull(5) ? null : reader.GetInt64(5),
+                OriginalPostAuthorId = reader.IsDBNull(6) ? null : reader.GetInt64(6),
+                OriginalPostAuthorUsername = reader.IsDBNull(7) ? null : reader.GetString(7),
+                OriginalPostContent = reader.IsDBNull(8) ? null : reader.GetString(8),
+                OriginalPostPublicationDate = reader.IsDBNull(9) ? null : reader.GetDateTime(9),
             };
 
-            if (GetRepostColumns(reader) is RepostColumns repostFields)
-            {
-                UserDbEntity repostAuthor = new()
-                {
-                    Id = repostFields.RepostUserId,
-                    Username = repostFields.RepostUsername,
-                    CreatedAt = repostFields.RepostUserCreatedAt
-                };
-                contents.Add(
-                    new RepostDbEntity()
-                    {
-                        User = repostAuthor,
-                        UserId = repostAuthor.Id,
-                        Post = post,
-                        PostId = post.Id,
-                        CreatedAt = repostFields.RepostCreatedAt
-                    }.ToIRepost()
-                );
-            }
-            else
-            {
-                contents.Add(post.ToIPost());
-            }
+            publications.Add(publication.ToIPost());
         }
 
-        return contents;
+        dbContext.Database.CloseConnection();
+
+        return publications;
     }
-
-    private static PostColumns GetPostColumns(DbDataReader reader)
-    {
-        return new PostColumns
-        {
-            PostId = reader.GetInt64(0),
-            PostUserId = reader.GetInt64(1),
-            PostUsername = reader.GetString(2),
-            PostUserCreatedAt = reader.GetDateTime(3),
-            PostContent = reader.GetString(4),
-            PostCreatedAt = reader.GetDateTime(5)
-        };
-    }
-
-    private static RepostColumns? GetRepostColumns(DbDataReader reader)
-    {
-        bool isRepost = reader.GetBoolean(6);
-        long? repostUserId = reader.IsDBNull(7) ? null : reader.GetInt64(7);
-        string? repostUsername = reader.IsDBNull(8) ? null : reader.GetString(8);
-        DateTime? repostUserCreatedAt = reader.IsDBNull(9) ? null : reader.GetDateTime(9);
-        DateTime? repostCreatedAt = reader.IsDBNull(10) ? null : reader.GetDateTime(10);
-
-        if (isRepost && repostUserId != null && repostUsername != null && repostUserCreatedAt != null && repostCreatedAt != null)
-        {
-            return new RepostColumns
-            {
-                RepostUsername = repostUsername,
-                RepostCreatedAt = (DateTime)repostCreatedAt,
-                RepostUserCreatedAt = (DateTime)repostUserCreatedAt,
-                RepostUserId = (long)repostUserId
-            };
-        }
-
-        return null;
-    }
-
-    internal readonly struct PostColumns
-    {
-        public required readonly long PostId { get; init; }
-        public required readonly long PostUserId { get; init; }
-        public required readonly string PostUsername { get; init; }
-        public required readonly DateTime PostUserCreatedAt { get; init; }
-        public required readonly string PostContent { get; init; }
-        public required readonly DateTime PostCreatedAt { get; init; }
-    }
-
-    internal readonly struct RepostColumns
-    {
-        public required readonly long RepostUserId { get; init; }
-        public required readonly string RepostUsername { get; init; }
-        public required readonly DateTime RepostUserCreatedAt { get; init; }
-        public required readonly DateTime RepostCreatedAt { get; init; }
-    };
 }

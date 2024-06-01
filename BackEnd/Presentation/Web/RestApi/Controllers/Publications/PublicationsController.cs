@@ -21,14 +21,14 @@ public class PublicationsController(
 ) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> ListPublications([FromQuery] int pageNumber)
+    public IActionResult ListPublications([FromQuery] int pageNumber)
     {
         string baseUrl = linkGenerator.GetUriByAction(HttpContext)!;
 
         try
         {
             var paginationParameters = new PaginationParameters(pageNumber, domainConfig);
-            IList<PublicationsPageEntryDTO> publications = await listPublicationsWithPaginationUseCase.Run(paginationParameters);
+            IList<PublicationsPageEntryDTO> publications = listPublicationsWithPaginationUseCase.Run(paginationParameters);
 
             IList<ListPublicationsResponseItemDTO> publicationDTOs = publications.Select(
                 ListPublicationsResponseItemDTO.FromPublicationsPageEntryDTO
@@ -48,14 +48,14 @@ public class PublicationsController(
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateNewPost([FromBody] CreateNewPostRequestBodyDTO requestBody)
+    public IActionResult CreateNewPost([FromBody] CreateNewPostRequestBodyDTO requestBody)
     {
         string baseUrl = linkGenerator.GetUriByAction(HttpContext)!;
 
         try
         {
             CreateNewPostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, requestBody.Content);
-            CreateNewPostUseCaseOutputDTO useCaseOutput = await createNewPostUseCase.Run(useCaseInput);
+            CreateNewPostUseCaseOutputDTO useCaseOutput = createNewPostUseCase.Run(useCaseInput);
             CreateNewPostRequestResponseDTO response = new(baseUrl)
             {
                 AuthorUsername = useCaseOutput.AuthorUsername,
@@ -83,14 +83,14 @@ public class PublicationsController(
     }
 
     [HttpPost("{publicationId}/repost")]
-    public async Task<IActionResult> CreateNewRepost(long publicationId, [FromBody] CreateNewRepostRequestBodyDTO requestBody)
+    public IActionResult CreateNewRepost(long publicationId, [FromBody] CreateNewRepostRequestBodyDTO requestBody)
     {
         string baseUrl = linkGenerator.GetUriByAction(HttpContext)!;
 
         try
         {
             CreateNewRepostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, publicationId);
-            CreateNewRepostUseCaseOutputDTO useCaseOutput = await createNewRepostUseCase.Run(useCaseInput);
+            CreateNewRepostUseCaseOutputDTO useCaseOutput = createNewRepostUseCase.Run(useCaseInput);
             CreateNewRepostRequestResponseDTO.OriginalPostData originalPostData = new()
             {
                 AuthorUsername = useCaseOutput.OriginalPost.AuthorUsername,

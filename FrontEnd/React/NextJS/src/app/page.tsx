@@ -24,9 +24,9 @@ export default function Home() {
     });
   }, []);
 
-  const tryCreateNewPost = (event: FormEvent<HTMLFormElement>) => {
+  const tryCreateNewPost = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    ApiEndpoint.posts.POST({ username, content: newPostContent })
+    const response = ApiEndpoint.posts.POST({ username, content: newPostContent });
   };
 
   return (

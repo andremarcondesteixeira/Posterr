@@ -12,7 +12,7 @@ using Posterr.Infrastructure.Persistence;
 namespace Posterr.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240522164638_Initial")]
+    [Migration("20240601003727_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace Posterr.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Posterr.Infrastructure.Persistence.DbEntities.PostDbEntity", b =>
+            modelBuilder.Entity("Posterr.Infrastructure.Persistence.DbEntities.PublicationDbEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,43 +33,42 @@ namespace Posterr.Infrastructure.Persistence.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<long>("AuthorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("AuthorUsername")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<long?>("OriginalPostAuthorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("OriginalPostAuthorUsername")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OriginalPostContent")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("OriginalPostId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("OriginalPostPublicationDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("PublicationDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
                         .HasDefaultValueSql("NOW()");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("OriginalPostId");
 
-                    b.ToTable("Posts");
-                });
-
-            modelBuilder.Entity("Posterr.Infrastructure.Persistence.DbEntities.RepostDbEntity", b =>
-                {
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("PostId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.HasKey("UserId", "PostId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Reposts");
+                    b.ToTable("Publications");
                 });
 
             modelBuilder.Entity("Posterr.Infrastructure.Persistence.DbEntities.UserDbEntity", b =>
@@ -79,11 +78,6 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                         .HasColumnType("bigint");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValueSql("NOW()");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -100,57 +94,39 @@ namespace Posterr.Infrastructure.Persistence.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedAt = new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8858),
                             Username = "simba"
                         },
                         new
                         {
                             Id = 2L,
-                            CreatedAt = new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8861),
                             Username = "nala"
                         },
                         new
                         {
                             Id = 3L,
-                            CreatedAt = new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8862),
                             Username = "timon"
                         },
                         new
                         {
                             Id = 4L,
-                            CreatedAt = new DateTime(2024, 5, 22, 16, 46, 37, 304, DateTimeKind.Utc).AddTicks(8863),
                             Username = "pumbaa"
                         });
                 });
 
-            modelBuilder.Entity("Posterr.Infrastructure.Persistence.DbEntities.PostDbEntity", b =>
+            modelBuilder.Entity("Posterr.Infrastructure.Persistence.DbEntities.PublicationDbEntity", b =>
                 {
-                    b.HasOne("Posterr.Infrastructure.Persistence.DbEntities.UserDbEntity", "User")
+                    b.HasOne("Posterr.Infrastructure.Persistence.DbEntities.PublicationDbEntity", "OriginalPost")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("OriginalPostId");
 
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Posterr.Infrastructure.Persistence.DbEntities.RepostDbEntity", b =>
-                {
-                    b.HasOne("Posterr.Infrastructure.Persistence.DbEntities.PostDbEntity", "Post")
+                    b.HasOne("Posterr.Infrastructure.Persistence.DbEntities.UserDbEntity", "Author")
                         .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("OriginalPostId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Posterr.Infrastructure.Persistence.DbEntities.UserDbEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Author");
 
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
+                    b.Navigation("OriginalPost");
                 });
 #pragma warning restore 612, 618
         }

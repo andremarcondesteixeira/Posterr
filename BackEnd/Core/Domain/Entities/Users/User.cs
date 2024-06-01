@@ -9,13 +9,15 @@ public sealed record User : IUser
 {
     private readonly Username _username;
 
+    public long Id { get; }
     public string Username { get => _username.Value; }
 
-    public User(string username)
+    public User(long id, string username)
     {
         // Here, the Username value object performs the validation.
         // I'm implementing the concept of making illegal states unrepresentable.
         // Doing validation in the constructor is, in my opinion, the strongest way of making illegal states unrepresentable in C#.
         _username = new Username(username);
+        Id = id;
     }
 }

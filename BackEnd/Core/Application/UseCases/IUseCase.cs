@@ -4,5 +4,5 @@ public interface IUseCaseRegisteredInDependencyInjectionContainer;
 
 public interface IUseCase<INPUT, OUTPUT> : IUseCaseRegisteredInDependencyInjectionContainer
 {
-    Task<OUTPUT> Run(INPUT input);
+    OUTPUT Run(INPUT input);
 }
