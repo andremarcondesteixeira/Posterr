@@ -26,8 +26,8 @@ public class PublicationsController(
     [HttpGet(Name = nameof(ListPublications))]
     public IActionResult ListPublications([FromQuery] int pageNumber)
     {
-        string baseUrl = linkGenerator.GetUriByName(HttpContext, nameof(ListPublications))!;
-        string listUsersUrl = Url.Action(nameof(UsersController.ListUsers), nameof(UsersController))!;
+        string listPublicationsUrl = linkGenerator.GetUriByName(HttpContext, nameof(ListPublications))!;
+        string listUsersUrl = Url.ActionLink(nameof(UsersController.ListUsers), "Users")!;
 
         try
         {
@@ -47,7 +47,7 @@ public class PublicationsController(
                         repost.OriginalPost.Author.Username,
                         repost.OriginalPost.PublicationDate,
                         repost.OriginalPost.Content,
-                        new PostAPIResourceDTO(repost.OriginalPost.Id, baseUrl)
+                        new PostAPIResourceDTO(repost.OriginalPost.Id, listPublicationsUrl)
                         {
                             AuthorUsername = repost.OriginalPost.Author.Username,
                             PublicationDate = repost.OriginalPost.PublicationDate,
@@ -72,7 +72,7 @@ public class PublicationsController(
                     Username = publication.Author.Username,
                 };
 
-                return new PublicationsListDTO.PublicationsListItemDTO(publication.Id, baseUrl)
+                return new PublicationsListDTO.PublicationsListItemDTO(publication.Id, listPublicationsUrl)
                 {
                     IsRepost = publication is IRepost,
                     AuthorUsername = publication.Author.Username,
@@ -90,7 +90,7 @@ public class PublicationsController(
                 Publications = publications,
             };
 
-            var response = new PublicationsListDTO(publications, paginationParameters, baseUrl)
+            var response = new PublicationsListDTO(publications, paginationParameters, listPublicationsUrl)
             {
                 Embedded = embeddedResponseObject
             };
@@ -103,7 +103,7 @@ public class PublicationsController(
                 title: ex.Message,
                 statusCode: StatusCodes.Status400BadRequest,
                 detail: ex.Mitigation,
-                instance: $"{baseUrl}&pageNumber={pageNumber}"
+                instance: $"{listPublicationsUrl}&pageNumber={pageNumber}"
             );
         }
     }
@@ -111,8 +111,8 @@ public class PublicationsController(
     [HttpPost]
     public IActionResult CreateNewPost([FromBody] CreateNewPostRequestBodyDTO requestBody)
     {
-        string baseUrl = linkGenerator.GetUriByName(HttpContext, nameof(ListPublications))!;
-        string listUsersUrl = linkGenerator.GetUriByAction(HttpContext, nameof(UsersController.ListUsers), nameof(UsersController))!;
+        string listPublicationsUrl = linkGenerator.GetUriByName(HttpContext, nameof(ListPublications))!;
+        string listUsersUrl = Url.ActionLink(nameof(UsersController.ListUsers), "Users")!;
 
         try
         {
@@ -124,7 +124,7 @@ public class PublicationsController(
                 Username = useCaseOutput.Author.Username,
             };
 
-            var response = new PostAPIResourceDTO(useCaseOutput.Id, baseUrl)
+            var response = new PostAPIResourceDTO(useCaseOutput.Id, listPublicationsUrl)
             {
                 AuthorUsername = author.Username,
                 PublicationDate = useCaseOutput.PublicationDate,
@@ -139,7 +139,7 @@ public class PublicationsController(
             return Problem(
                 title: e.Message,
                 detail: e.Mitigation,
-                instance: baseUrl,
+                instance: listPublicationsUrl,
                 statusCode: e switch
                 {
                     UserNotFoundException => StatusCodes.Status404NotFound,
@@ -154,8 +154,8 @@ public class PublicationsController(
     [HttpPost("{publicationId}/repost")]
     public IActionResult CreateNewRepost(long publicationId, [FromBody] CreateNewRepostRequestBodyDTO requestBody)
     {
-        string baseUrl = linkGenerator.GetUriByAction(HttpContext)!;
-        string listUsersUrl = linkGenerator.GetUriByAction(HttpContext, nameof(UsersController.ListUsers), nameof(UsersController))!;
+        string listPublicationsUrl = linkGenerator.GetUriByAction(HttpContext)!;
+        string listUsersUrl = Url.ActionLink(nameof(UsersController.ListUsers), "Users")!;
 
         try
         {
@@ -167,7 +167,7 @@ public class PublicationsController(
                 Username = useCaseOutput.OriginalPost.Author.Username,
             };
 
-            var originalPost = new PostAPIResourceDTO(useCaseOutput.OriginalPost.Id, baseUrl)
+            var originalPost = new PostAPIResourceDTO(useCaseOutput.OriginalPost.Id, listPublicationsUrl)
             {
                 AuthorUsername = useCaseOutput.OriginalPost.Author.Username,
                 PublicationDate = useCaseOutput.OriginalPost.PublicationDate,
@@ -180,7 +180,7 @@ public class PublicationsController(
                 Username = useCaseOutput.Author.Username,
             };
 
-            var response = new RepostAPIResourceDTO(useCaseOutput.Id, baseUrl)
+            var response = new RepostAPIResourceDTO(useCaseOutput.Id, listPublicationsUrl)
             {
                 AuthorUsername = useCaseOutput.Author.Username,
                 PublicationDate = useCaseOutput.PublicationDate,
@@ -198,7 +198,7 @@ public class PublicationsController(
             return Problem(
                 title: e.Message,
                 detail: e.Mitigation,
-                instance: baseUrl,
+                instance: listPublicationsUrl,
                 statusCode: e switch
                 {
                     UserNotFoundException or PostNotFoundException => StatusCodes.Status404NotFound,
