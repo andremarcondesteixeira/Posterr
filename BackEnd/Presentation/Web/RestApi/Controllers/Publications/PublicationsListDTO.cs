@@ -1,6 +1,7 @@
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
 using Posterr.Presentation.Web.RestApi.Controllers.Models;
+using System.Text.Json.Serialization;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers.Publications;
 
@@ -29,9 +30,20 @@ public sealed record PublicationsListDTO : APIResource<PublicationsListDTO.Publi
 
     public sealed record PublicationsListItemDTO : APIResource<PublicationsListItemDTO.EmbeddedObjects>
     {
+        public required bool IsRepost { get; init; }
         public required long Id { get; init; }
+        public required string AuthorUsername { get; init; }
         public required DateTime PublicationDate { get; init; }
         public required string Content { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? OriginalPostAuthorUsername { get; set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public DateTime? OriginalPostPublicationDate { get; init; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? OriginalPostContent { get; init; }
 
         public sealed record EmbeddedObjects(UserAPIResourceDTO Author, PostAPIResourceDTO? OriginalPost);
     }

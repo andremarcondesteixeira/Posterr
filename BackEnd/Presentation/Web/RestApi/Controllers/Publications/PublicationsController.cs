@@ -33,22 +33,41 @@ public class PublicationsController(
         {
             var paginationParameters = new ListPublicationsUseCaseInputDTO(pageNumber, domainConfig);
             IList<IPublication> useCaseOutput = listPublicationsWithPaginationUseCase.Run(paginationParameters);
-            
+
             var publications = useCaseOutput.Select(publication =>
             {
-                var originalPost = publication is IRepost repost ? new PostAPIResourceDTO(baseUrl)
-                {
-                    Id = repost.OriginalPost.Id,
-                    PublicationDate = repost.OriginalPost.PublicationDate,
-                    Content = repost.OriginalPost.Content,
-                    Embedded = new PostAPIResourceDTO.EmbeddedObjects(
-                        new UserAPIResourceDTO(listUsersUrl)
+                (
+                    string? originalPostAuthorUsername,
+                    DateTime? originalPostPublicationDate,
+                    string? originalPostContent,
+                    PostAPIResourceDTO? originalPost
+                ) =
+                    publication is IRepost repost
+                    ? (
+                        repost.OriginalPost.Author.Username,
+                        repost.OriginalPost.PublicationDate,
+                        repost.OriginalPost.Content,
+                        new PostAPIResourceDTO(baseUrl)
                         {
-                            Id = repost.OriginalPost.Author.Id,
-                            Username = repost.OriginalPost.Author.Username,
+                            Id = repost.OriginalPost.Id,
+                            AuthorUsername = repost.OriginalPost.Author.Username,
+                            PublicationDate = repost.OriginalPost.PublicationDate,
+                            Content = repost.OriginalPost.Content,
+                            Embedded = new PostAPIResourceDTO.EmbeddedObjects(
+                                new UserAPIResourceDTO(listUsersUrl)
+                                {
+                                    Id = repost.OriginalPost.Author.Id,
+                                    Username = repost.OriginalPost.Author.Username,
+                                }
+                            )
                         }
                     )
-                } : null;
+                    : (
+                        (string?)null,
+                        (DateTime?)null,
+                        (string?)null,
+                        (PostAPIResourceDTO?)null
+                    );
 
                 var publicationAuthor = new UserAPIResourceDTO(listUsersUrl)
                 {
@@ -58,9 +77,14 @@ public class PublicationsController(
 
                 return new PublicationsListDTO.PublicationsListItemDTO
                 {
+                    IsRepost = publication is IRepost,
                     Id = publication.Id,
+                    AuthorUsername = publication.Author.Username,
                     PublicationDate = publication.PublicationDate,
                     Content = publication.Content,
+                    OriginalPostAuthorUsername = originalPostAuthorUsername,
+                    OriginalPostPublicationDate = originalPostPublicationDate,
+                    OriginalPostContent = originalPostContent,
                     Embedded = new PublicationsListDTO.PublicationsListItemDTO.EmbeddedObjects(publicationAuthor, originalPost),
                 };
             }).ToList();
@@ -98,21 +122,22 @@ public class PublicationsController(
         {
             CreateNewPostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, requestBody.Content);
             IPost useCaseOutput = createNewPostUseCase.Run(useCaseInput);
-            
+
             var author = new UserAPIResourceDTO(listUsersUrl)
             {
                 Id = useCaseOutput.Author.Id,
                 Username = useCaseOutput.Author.Username,
             };
-            
+
             var response = new PostAPIResourceDTO(baseUrl)
             {
                 Id = useCaseOutput.Id,
+                AuthorUsername = author.Username,
                 PublicationDate = useCaseOutput.PublicationDate,
                 Content = useCaseOutput.Content,
                 Embedded = new PostAPIResourceDTO.EmbeddedObjects(author),
             };
-            
+
             return Ok(response);
         }
         catch (PosterrException e)
@@ -152,6 +177,7 @@ public class PublicationsController(
             var originalPost = new PostAPIResourceDTO(baseUrl)
             {
                 Id = useCaseOutput.OriginalPost.Id,
+                AuthorUsername = useCaseOutput.OriginalPost.Author.Username,
                 PublicationDate = useCaseOutput.OriginalPost.PublicationDate,
                 Content = useCaseOutput.OriginalPost.Content,
                 Embedded = new PostAPIResourceDTO.EmbeddedObjects(originalPostAuthor),
@@ -166,8 +192,12 @@ public class PublicationsController(
             var response = new RepostAPIResourceDTO(baseUrl)
             {
                 Id = useCaseOutput.Id,
+                AuthorUsername = useCaseOutput.Author.Username,
                 PublicationDate = useCaseOutput.PublicationDate,
                 Content = useCaseOutput.Content,
+                OriginalPostAuthorUsername = useCaseOutput.OriginalPost.Author.Username,
+                OriginalPostPublicationDate = useCaseOutput.OriginalPost.PublicationDate,
+                OriginalPostContent = useCaseOutput.OriginalPost.Content,
                 Embedded = new RepostAPIResourceDTO.EmbeddedObjects(originalPost, repostAuthor),
             };
 
