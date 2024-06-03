@@ -51,6 +51,12 @@ public sealed record PublicationsListDTO : APIResource<PublicationsListDTO.Publi
             Links.Add("self", [new($"{publicationsListEndpointUrl}/{Id}")]);
         }
 
-        public sealed record EmbeddedObjects(UserAPIResourceDTO Author, PostAPIResourceDTO? OriginalPost);
+        public sealed record EmbeddedObjects
+        {
+            public required UserAPIResourceDTO Author { get; init; }
+
+            [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+            public PostAPIResourceDTO? OriginalPost { get; set; }
+        }
     }
 }

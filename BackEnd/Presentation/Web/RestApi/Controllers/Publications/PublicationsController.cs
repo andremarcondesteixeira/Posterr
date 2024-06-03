@@ -81,7 +81,11 @@ public class PublicationsController(
                     OriginalPostAuthorUsername = originalPostAuthorUsername,
                     OriginalPostPublicationDate = originalPostPublicationDate,
                     OriginalPostContent = originalPostContent,
-                    Embedded = new PublicationsListDTO.PublicationsListItemDTO.EmbeddedObjects(publicationAuthor, originalPost),
+                    Embedded = new PublicationsListDTO.PublicationsListItemDTO.EmbeddedObjects
+                    {
+                        Author = publicationAuthor,
+                        OriginalPost = originalPost
+                    },
                 };
             }).ToList();
 
