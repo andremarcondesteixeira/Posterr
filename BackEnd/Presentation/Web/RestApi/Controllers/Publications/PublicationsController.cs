@@ -27,19 +27,42 @@ public class PublicationsController(
     public IActionResult ListPublications([FromQuery] int pageNumber)
     {
         string baseUrl = linkGenerator.GetUriByName(HttpContext, nameof(ListPublications))!;
+        string listUsersUrl = linkGenerator.GetUriByAction(HttpContext, nameof(UsersController.ListUsers), nameof(UsersController))!;
 
         try
         {
             var paginationParameters = new ListPublicationsUseCaseInputDTO(pageNumber, domainConfig);
             IList<IPublication> useCaseOutput = listPublicationsWithPaginationUseCase.Run(paginationParameters);
             
-            var publications = useCaseOutput.Select(publication => new PublicationsListDTO.PublicationsListItemDTO
+            var publications = useCaseOutput.Select(publication =>
             {
-                Id = publication.Id,
-                Author = publication.Author,
-                PublicationDate = publication.PublicationDate,
-                Content = publication.Content,
-                OriginalPost = publication is IRepost repost ? repost.OriginalPost : null,
+                var originalPost = publication is IRepost repost ? new PostAPIResourceDTO(baseUrl)
+                {
+                    Id = repost.OriginalPost.Id,
+                    PublicationDate = repost.OriginalPost.PublicationDate,
+                    Content = repost.OriginalPost.Content,
+                    Embedded = new PostAPIResourceDTO.EmbeddedObjects(
+                        new UserAPIResourceDTO(listUsersUrl)
+                        {
+                            Id = repost.OriginalPost.Author.Id,
+                            Username = repost.OriginalPost.Author.Username,
+                        }
+                    )
+                } : null;
+
+                var publicationAuthor = new UserAPIResourceDTO(listUsersUrl)
+                {
+                    Id = publication.Author.Id,
+                    Username = publication.Author.Username,
+                };
+
+                return new PublicationsListDTO.PublicationsListItemDTO
+                {
+                    Id = publication.Id,
+                    PublicationDate = publication.PublicationDate,
+                    Content = publication.Content,
+                    Embedded = new PublicationsListDTO.PublicationsListItemDTO.EmbeddedObjects(publicationAuthor, originalPost),
+                };
             }).ToList();
 
             var embeddedResponseObject = new PublicationsListDTO.PublicationsList

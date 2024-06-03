@@ -1,6 +1,6 @@
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
-using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
+using Posterr.Presentation.Web.RestApi.Controllers.Models;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers.Publications;
 
@@ -27,12 +27,12 @@ public sealed record PublicationsListDTO : APIResource<PublicationsListDTO.Publi
         public required List<PublicationsListItemDTO> Publications { get; init; }
     }
 
-    public sealed record PublicationsListItemDTO : APIResource
+    public sealed record PublicationsListItemDTO : APIResource<PublicationsListItemDTO.EmbeddedObjects>
     {
         public required long Id { get; init; }
-        public required IUser Author { get; init; }
         public required DateTime PublicationDate { get; init; }
         public required string Content { get; init; }
-        public IPost? OriginalPost { get; set; }
+
+        public sealed record EmbeddedObjects(UserAPIResourceDTO Author, PostAPIResourceDTO? OriginalPost);
     }
 }
