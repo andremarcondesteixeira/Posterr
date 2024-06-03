@@ -10,13 +10,13 @@ public sealed class CreateNewRepostUseCase(
     IUsersRepository _userRepository,
     IPublicationsRepository _publicationsRepository,
     IDomainConfig _domainConfig
-) : IUseCase<CreateNewRepostUseCaseInputDTO, CreateNewRepostUseCaseOutputDTO>
+) : IUseCase<CreateNewRepostUseCaseInputDTO, IRepost>
 {
     private readonly IUsersRepository _userRepository = _userRepository;
     private readonly IPublicationsRepository _publicationsRepository = _publicationsRepository;
     private readonly IDomainConfig _domainConfig = _domainConfig;
 
-    public CreateNewRepostUseCaseOutputDTO Run(CreateNewRepostUseCaseInputDTO input)
+    public IRepost Run(CreateNewRepostUseCaseInputDTO input)
     {
         IUser user = _userRepository.FindByUsername(input.AuthorUsername)
             ?? throw new UserNotFoundException(input.AuthorUsername);
@@ -30,19 +30,6 @@ public sealed class CreateNewRepostUseCase(
         }
 
         var unpublishedRepost = new UnpublishedRepost(user, (IPost) originalPost, _domainConfig);
-        var publishedRepost = unpublishedRepost.Publish(_publicationsRepository);
-
-        return new CreateNewRepostUseCaseOutputDTO()
-        {
-            AuthorUsername = publishedRepost.Author.Username,
-            PublicationDate = publishedRepost.PublicationDate,
-            OriginalPost = new CreateNewRepostUseCaseOutputDTO.OriginalPostData()
-            {
-                Id = publishedRepost.OriginalPost.Id,
-                AuthorUsername = publishedRepost.OriginalPost.Author.Username,
-                PublicationDate = publishedRepost.OriginalPost.PublicationDate,
-                Content = publishedRepost.OriginalPost.Content
-            },
-        };
+        return unpublishedRepost.Publish(_publicationsRepository);
     }
 }

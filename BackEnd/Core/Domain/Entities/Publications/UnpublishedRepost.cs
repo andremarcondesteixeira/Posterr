@@ -8,9 +8,7 @@ namespace Posterr.Core.Domain.Entities.Publications;
 public sealed record UnpublishedRepost(IUser Author, IPost OriginalPost, IDomainConfig DomainConfig) : IUnpublishedRepost
 {
     public IUser Author { get; } = Author ?? throw new ArgumentNullException(nameof(Author));
-
     public IPost OriginalPost { get; } = OriginalPost ?? throw new ArgumentNullException(nameof(OriginalPost));
-
     public IDomainConfig DomainConfig { get; } = DomainConfig ?? throw new ArgumentNullException(nameof(DomainConfig));
 
     public IRepost Publish(IPublicationsRepository publicationsRepository)

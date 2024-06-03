@@ -10,18 +10,18 @@ public class ListPublicationsResponseItemDTOTests
     {
         var postPublicationDate = DateTime.UtcNow.AddDays(-1);
         var repostPublicationDate = DateTime.UtcNow;
-        var from = new PublicationsPageEntryDTO
+        var from = new ListPublicationsUseCaseOutputListItemDTO
         {
             IsRepost = true,
             Post = new(1, "original_author", postPublicationDate, "content"),
             Repost = new("reposter", repostPublicationDate)
         };
-        var to = ListPublicationsResponseItemDTO.FromPublicationsPageEntryDTO(from);
+        var to = ListPublicationsRequestResponseItemDTO.FromPublicationsPageEntryDTO(from);
 
-        Assert.Equal(1, to.PostId);
-        Assert.Equal("original_author", to.PostAuthorUsername);
-        Assert.Equal(postPublicationDate, to.PostPublicationDate);
-        Assert.Equal("content", to.PostContent);
+        Assert.Equal(1, to.Id);
+        Assert.Equal("original_author", to.AuthorUsername);
+        Assert.Equal(postPublicationDate, to.PublicationDate);
+        Assert.Equal("content", to.Content);
         Assert.True(to.IsRepost);
         Assert.Equal("reposter", to.RepostAuthorUsername);
         Assert.Equal(repostPublicationDate, to.RepostPublicationDate);

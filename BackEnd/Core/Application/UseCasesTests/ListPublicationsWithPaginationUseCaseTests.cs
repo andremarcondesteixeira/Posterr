@@ -9,7 +9,7 @@ namespace Posterr.Core.Application.UseCasesTests;
 
 public class ListPublicationsWithPaginationUseCaseTests
 {
-    private readonly ListPublicationsWithPaginationUseCase useCase;
+    private readonly ListPublicationsUseCase useCase;
     private readonly IPublicationsRepository publicationsRepository = Fake.PublicationsRepository();
     private readonly IDomainConfig domainConfig = Fake.DomainConfig();
 
@@ -29,7 +29,7 @@ public class ListPublicationsWithPaginationUseCaseTests
         IRepost repost = Fake.Repost(reposterUser, now, post);
         A.CallTo(() => publicationsRepository.Paginate(0, 15)).Returns([repost, post]);
 
-        IList<PublicationsPageEntryDTO> publications = await useCase.Run(new PaginationParameters(1, domainConfig));
+        IList<ListPublicationsUseCaseOutputListItemDTO> publications = await useCase.Run(new ListPublicationsUseCaseInputDTO(1, domainConfig));
 
         Assert.Equal(2, publications.Count);
 
@@ -55,7 +55,7 @@ public class ListPublicationsWithPaginationUseCaseTests
     public async Task GivenAnInvalidPageNumber_ThenThrowException(int pageNumber)
     {
         await Assert.ThrowsAsync<InvalidPageNumberException>(
-            () => useCase.Run(new PaginationParameters(pageNumber, domainConfig))
+            () => useCase.Run(new ListPublicationsUseCaseInputDTO(pageNumber, domainConfig))
         );
     }
 }

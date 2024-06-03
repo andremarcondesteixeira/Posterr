@@ -166,7 +166,14 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
                 OriginalPostPublicationDate = reader.IsDBNull(9) ? null : reader.GetDateTime(9),
             };
 
-            publications.Add(publication.ToIPost());
+            if (publication.OriginalPostId == null)
+            {
+                publications.Add(publication.ToIPost());
+            }
+            else
+            {
+                publications.Add(publication.ToIRepost());
+            }
         }
 
         dbContext.Database.CloseConnection();

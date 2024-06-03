@@ -1,4 +1,7 @@
-﻿using FakeItEasy;
+﻿#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+
+using FakeItEasy;
 using Posterr.Core.Boundaries.Configuration;
 using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.Exceptions;
@@ -22,8 +25,6 @@ public class PostContentTests
         Assert.Equal("content", content.Value);
     }
 
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
     [Fact]
     public void GivenNullDomainConfig_WhenInstantiatingPostContentValueObject_ThenThrowException()
     {
@@ -38,8 +39,6 @@ public class PostContentTests
     {
         Assert.Throws<EmptyPostContentException>(() => new PostContent(content, _domainConfig));
     }
-#pragma warning restore CS8604 // Possible null reference argument.
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
     [Fact]
     public void GivenContentLengthIsGreaterThanMaxAllowedSize_WhenInstantiatingPostContentValueObject_ThenThrowException()

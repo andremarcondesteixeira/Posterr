@@ -11,13 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Application.Us
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Application.UseCasesTests", "Core\Application\UseCasesTests\Posterr.Core.Application.UseCasesTests.csproj", "{5626F035-ECB8-4D86-A75B-E16968C7DCA4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Boundaries", "Boundaries", "{80399FD6-419B-4A07-9CCA-934F83D63F39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Shared.Configuration", "Core\Boundaries\Configuration\Posterr.Core.Shared.Configuration.csproj", "{7089FCA5-6832-4016-BD67-14C7F743F89D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Boundaries.Configuration", "Core\Boundaries\Configuration\Posterr.Core.Boundaries.Configuration.csproj", "{7089FCA5-6832-4016-BD67-14C7F743F89D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Shared.EntitiesInterfaces", "Core\Boundaries\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj", "{E6065B50-364F-4F71-8880-6E6BE8CC5039}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Boundaries.EntitiesInterfaces", "Core\Boundaries\EntitiesInterfaces\Posterr.Core.Boundaries.EntitiesInterfaces.csproj", "{E6065B50-364F-4F71-8880-6E6BE8CC5039}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Boundaries.Persistence", "Core\Boundaries\Persistence\Posterr.Core.Boundaries.Persistence.csproj", "{39B0219A-30B4-4DE3-846B-99F38845AC9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Shared.PersistenceInterfaces", "Core\Boundaries\Persistence\Posterr.Core.Shared.PersistenceInterfaces.csproj", "{39B0219A-30B4-4DE3-846B-99F38845AC9D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{7FF9EB11-1FBA-4861-A9D4-EB2C8245E8A4}"
 EndProject
@@ -41,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Presentation.Web.Re
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Presentation.Web.RestApi.Tests", "Presentation\Web\RestApi\Tests\Posterr.Presentation.Web.RestApi.Tests.csproj", "{1B683C1C-ED89-4F01-96DD-BBD1E2F3F3FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Core.Shared.Exceptions", "Core\Shared\Exceptions\Posterr.Core.Shared.Exceptions.csproj", "{9F831404-AFA1-40E8-889D-A26F6E489912}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Shared.Exceptions", "Core\Shared\Exceptions\Posterr.Core.Shared.Exceptions.csproj", "{9F831404-AFA1-40E8-889D-A26F6E489912}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{EA978C0D-8724-4028-9ED4-2711F84C6C2B}"
 EndProject
@@ -107,10 +105,9 @@ Global
 		{93F522A5-4627-440D-B550-A5E43F3B90ED} = {ABA5D98E-656F-471B-89CD-B174648EDE04}
 		{DC402358-071E-4F5D-9534-53497FA665F8} = {93F522A5-4627-440D-B550-A5E43F3B90ED}
 		{5626F035-ECB8-4D86-A75B-E16968C7DCA4} = {93F522A5-4627-440D-B550-A5E43F3B90ED}
-		{80399FD6-419B-4A07-9CCA-934F83D63F39} = {ABA5D98E-656F-471B-89CD-B174648EDE04}
-		{7089FCA5-6832-4016-BD67-14C7F743F89D} = {80399FD6-419B-4A07-9CCA-934F83D63F39}
-		{E6065B50-364F-4F71-8880-6E6BE8CC5039} = {80399FD6-419B-4A07-9CCA-934F83D63F39}
-		{39B0219A-30B4-4DE3-846B-99F38845AC9D} = {80399FD6-419B-4A07-9CCA-934F83D63F39}
+		{7089FCA5-6832-4016-BD67-14C7F743F89D} = {EA978C0D-8724-4028-9ED4-2711F84C6C2B}
+		{E6065B50-364F-4F71-8880-6E6BE8CC5039} = {EA978C0D-8724-4028-9ED4-2711F84C6C2B}
+		{39B0219A-30B4-4DE3-846B-99F38845AC9D} = {EA978C0D-8724-4028-9ED4-2711F84C6C2B}
 		{7FF9EB11-1FBA-4861-A9D4-EB2C8245E8A4} = {ABA5D98E-656F-471B-89CD-B174648EDE04}
 		{A52070FE-2722-4490-B365-110008A75DB6} = {7FF9EB11-1FBA-4861-A9D4-EB2C8245E8A4}
 		{057672F7-261F-47FC-869F-0096AC906446} = {7FF9EB11-1FBA-4861-A9D4-EB2C8245E8A4}

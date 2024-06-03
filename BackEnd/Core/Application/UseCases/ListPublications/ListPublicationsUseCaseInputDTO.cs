@@ -3,13 +3,13 @@ using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 
-public sealed record PaginationParameters
+public sealed record ListPublicationsUseCaseInputDTO
 {
     public int PageNumber { get; }
     public short PageSize { get; }
     public int LastRowNumber { get; }
 
-    public PaginationParameters(int pageNumber, IDomainConfig domainConfig)
+    public ListPublicationsUseCaseInputDTO(int pageNumber, IDomainConfig domainConfig)
     {
         if (pageNumber < 1)
         {

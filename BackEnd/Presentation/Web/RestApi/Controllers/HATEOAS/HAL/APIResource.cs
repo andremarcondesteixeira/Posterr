@@ -8,12 +8,13 @@ public abstract record APIResource
 {
     [JsonPropertyName("_links")]
     [JsonConverter(typeof(LinksConverter))]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IDictionary<string, IList<APIResourceLinkDTO>> Links { get; } =
         new Dictionary<string, IList<APIResourceLinkDTO>>();
 }
 
-public abstract record APIResource<EMBEDDED> : APIResource where EMBEDDED : APIResource
+public abstract record APIResource<EMBEDDED> : APIResource
 {
     [JsonPropertyName("_embedded")]
-    public Dictionary<string, IList<EMBEDDED>> Embedded { get; } = [];
+    public required EMBEDDED Embedded { get; init; }
 }

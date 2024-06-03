@@ -5,8 +5,11 @@ using Posterr.Core.Application.UseCases.CreateNewPost;
 using Posterr.Core.Application.UseCases.CreateNewRepost;
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Core.Boundaries.Configuration;
+using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Core.Shared.Exceptions;
+using Posterr.Presentation.Web.RestApi.Controllers.Models;
 using Posterr.Presentation.Web.RestApi.Controllers.Publications;
+using Posterr.Presentation.Web.RestApi.Controllers.Users;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers;
 
@@ -15,26 +18,41 @@ namespace Posterr.Presentation.Web.RestApi.Controllers;
 public class PublicationsController(
     IDomainConfig domainConfig,
     LinkGenerator linkGenerator,
-    ListPublicationsWithPaginationUseCase listPublicationsWithPaginationUseCase,
+    ListPublicationsUseCase listPublicationsWithPaginationUseCase,
     CreateNewPostUseCase createNewPostUseCase,
     CreateNewRepostUseCase createNewRepostUseCase
 ) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet(Name = nameof(ListPublications))]
     public IActionResult ListPublications([FromQuery] int pageNumber)
     {
-        string baseUrl = linkGenerator.GetUriByAction(HttpContext)!;
+        string baseUrl = linkGenerator.GetUriByName(HttpContext, nameof(ListPublications))!;
 
         try
         {
-            var paginationParameters = new PaginationParameters(pageNumber, domainConfig);
-            IList<PublicationsPageEntryDTO> publications = listPublicationsWithPaginationUseCase.Run(paginationParameters);
+            var paginationParameters = new ListPublicationsUseCaseInputDTO(pageNumber, domainConfig);
+            IList<IPublication> useCaseOutput = listPublicationsWithPaginationUseCase.Run(paginationParameters);
+            
+            var publications = useCaseOutput.Select(publication => new PublicationsListDTO.PublicationsListItemDTO
+            {
+                Id = publication.Id,
+                Author = publication.Author,
+                PublicationDate = publication.PublicationDate,
+                Content = publication.Content,
+                OriginalPost = publication is IRepost repost ? repost.OriginalPost : null,
+            }).ToList();
 
-            IList<ListPublicationsResponseItemDTO> publicationDTOs = publications.Select(
-                ListPublicationsResponseItemDTO.FromPublicationsPageEntryDTO
-            ).ToList();
+            var embeddedResponseObject = new PublicationsListDTO.PublicationsList
+            {
+                Publications = publications,
+            };
 
-            return Ok(new ListPublicationsResponseDTO(publicationDTOs, paginationParameters, baseUrl));
+            var response = new PublicationsListDTO(publications, paginationParameters, baseUrl)
+            {
+                Embedded = embeddedResponseObject
+            };
+
+            return Ok(response);
         }
         catch (InvalidPageNumberException ex)
         {
@@ -50,19 +68,28 @@ public class PublicationsController(
     [HttpPost]
     public IActionResult CreateNewPost([FromBody] CreateNewPostRequestBodyDTO requestBody)
     {
-        string baseUrl = linkGenerator.GetUriByAction(HttpContext)!;
+        string baseUrl = linkGenerator.GetUriByName(HttpContext, nameof(ListPublications))!;
+        string listUsersUrl = linkGenerator.GetUriByAction(HttpContext, nameof(UsersController.ListUsers), nameof(UsersController))!;
 
         try
         {
             CreateNewPostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, requestBody.Content);
-            CreateNewPostUseCaseOutputDTO useCaseOutput = createNewPostUseCase.Run(useCaseInput);
-            CreateNewPostRequestResponseDTO response = new(baseUrl)
+            IPost useCaseOutput = createNewPostUseCase.Run(useCaseInput);
+            
+            var author = new UserAPIResourceDTO(listUsersUrl)
             {
-                AuthorUsername = useCaseOutput.AuthorUsername,
-                Content = useCaseOutput.Content,
+                Id = useCaseOutput.Author.Id,
+                Username = useCaseOutput.Author.Username,
+            };
+            
+            var response = new PostAPIResourceDTO(baseUrl)
+            {
                 Id = useCaseOutput.Id,
                 PublicationDate = useCaseOutput.PublicationDate,
+                Content = useCaseOutput.Content,
+                Embedded = new PostAPIResourceDTO.EmbeddedObjects(author),
             };
+            
             return Ok(response);
         }
         catch (PosterrException e)
@@ -86,23 +113,41 @@ public class PublicationsController(
     public IActionResult CreateNewRepost(long publicationId, [FromBody] CreateNewRepostRequestBodyDTO requestBody)
     {
         string baseUrl = linkGenerator.GetUriByAction(HttpContext)!;
+        string listUsersUrl = linkGenerator.GetUriByAction(HttpContext, nameof(UsersController.ListUsers), nameof(UsersController))!;
 
         try
         {
             CreateNewRepostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, publicationId);
-            CreateNewRepostUseCaseOutputDTO useCaseOutput = createNewRepostUseCase.Run(useCaseInput);
-            CreateNewRepostRequestResponseDTO.OriginalPostData originalPostData = new()
+            IRepost useCaseOutput = createNewRepostUseCase.Run(useCaseInput);
+
+            var originalPostAuthor = new UserAPIResourceDTO(listUsersUrl)
             {
-                AuthorUsername = useCaseOutput.OriginalPost.AuthorUsername,
-                Content = useCaseOutput.OriginalPost.Content,
+                Id = useCaseOutput.OriginalPost.Author.Id,
+                Username = useCaseOutput.OriginalPost.Author.Username,
+            };
+
+            var originalPost = new PostAPIResourceDTO(baseUrl)
+            {
                 Id = useCaseOutput.OriginalPost.Id,
                 PublicationDate = useCaseOutput.OriginalPost.PublicationDate,
+                Content = useCaseOutput.OriginalPost.Content,
+                Embedded = new PostAPIResourceDTO.EmbeddedObjects(originalPostAuthor),
             };
-            CreateNewRepostRequestResponseDTO response = new(originalPostData, baseUrl)
+
+            var repostAuthor = new UserAPIResourceDTO(listUsersUrl)
             {
-                AuthorUsername = useCaseOutput.AuthorUsername,
-                PublicationDate = useCaseOutput.PublicationDate,
+                Id = useCaseOutput.Author.Id,
+                Username = useCaseOutput.Author.Username,
             };
+
+            var response = new RepostAPIResourceDTO(baseUrl)
+            {
+                Id = useCaseOutput.Id,
+                PublicationDate = useCaseOutput.PublicationDate,
+                Content = useCaseOutput.Content,
+                Embedded = new RepostAPIResourceDTO.EmbeddedObjects(originalPost, repostAuthor),
+            };
+
             return Ok(response);
         }
         catch (PosterrException e)
