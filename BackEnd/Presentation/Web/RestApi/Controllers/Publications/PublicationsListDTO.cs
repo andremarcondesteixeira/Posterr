@@ -31,7 +31,7 @@ public sealed record PublicationsListDTO : APIResource<PublicationsListDTO.Publi
     public sealed record PublicationsListItemDTO : APIResource<PublicationsListItemDTO.EmbeddedObjects>
     {
         public required bool IsRepost { get; init; }
-        public required long Id { get; init; }
+        public long Id { get; }
         public required string AuthorUsername { get; init; }
         public required DateTime PublicationDate { get; init; }
         public required string Content { get; init; }
@@ -44,6 +44,12 @@ public sealed record PublicationsListDTO : APIResource<PublicationsListDTO.Publi
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string? OriginalPostContent { get; init; }
+
+        public PublicationsListItemDTO(long id, string publicationsListEndpointUrl)
+        {
+            Id = id;
+            Links.Add("self", [new($"{publicationsListEndpointUrl}/{Id}")]);
+        }
 
         public sealed record EmbeddedObjects(UserAPIResourceDTO Author, PostAPIResourceDTO? OriginalPost);
     }

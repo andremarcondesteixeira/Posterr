@@ -27,7 +27,7 @@ public class PublicationsController(
     public IActionResult ListPublications([FromQuery] int pageNumber)
     {
         string baseUrl = linkGenerator.GetUriByName(HttpContext, nameof(ListPublications))!;
-        string listUsersUrl = linkGenerator.GetUriByAction(HttpContext, nameof(UsersController.ListUsers), nameof(UsersController))!;
+        string listUsersUrl = Url.Action(nameof(UsersController.ListUsers), nameof(UsersController))!;
 
         try
         {
@@ -47,16 +47,14 @@ public class PublicationsController(
                         repost.OriginalPost.Author.Username,
                         repost.OriginalPost.PublicationDate,
                         repost.OriginalPost.Content,
-                        new PostAPIResourceDTO(baseUrl)
+                        new PostAPIResourceDTO(repost.OriginalPost.Id, baseUrl)
                         {
-                            Id = repost.OriginalPost.Id,
                             AuthorUsername = repost.OriginalPost.Author.Username,
                             PublicationDate = repost.OriginalPost.PublicationDate,
                             Content = repost.OriginalPost.Content,
                             Embedded = new PostAPIResourceDTO.EmbeddedObjects(
-                                new UserAPIResourceDTO(listUsersUrl)
+                                new UserAPIResourceDTO(repost.OriginalPost.Author.Id, listUsersUrl)
                                 {
-                                    Id = repost.OriginalPost.Author.Id,
                                     Username = repost.OriginalPost.Author.Username,
                                 }
                             )
@@ -69,16 +67,14 @@ public class PublicationsController(
                         (PostAPIResourceDTO?)null
                     );
 
-                var publicationAuthor = new UserAPIResourceDTO(listUsersUrl)
+                var publicationAuthor = new UserAPIResourceDTO(publication.Author.Id, listUsersUrl)
                 {
-                    Id = publication.Author.Id,
                     Username = publication.Author.Username,
                 };
 
-                return new PublicationsListDTO.PublicationsListItemDTO
+                return new PublicationsListDTO.PublicationsListItemDTO(publication.Id, baseUrl)
                 {
                     IsRepost = publication is IRepost,
-                    Id = publication.Id,
                     AuthorUsername = publication.Author.Username,
                     PublicationDate = publication.PublicationDate,
                     Content = publication.Content,
@@ -123,15 +119,13 @@ public class PublicationsController(
             CreateNewPostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, requestBody.Content);
             IPost useCaseOutput = createNewPostUseCase.Run(useCaseInput);
 
-            var author = new UserAPIResourceDTO(listUsersUrl)
+            var author = new UserAPIResourceDTO(useCaseOutput.Author.Id, listUsersUrl)
             {
-                Id = useCaseOutput.Author.Id,
                 Username = useCaseOutput.Author.Username,
             };
 
-            var response = new PostAPIResourceDTO(baseUrl)
+            var response = new PostAPIResourceDTO(useCaseOutput.Id, baseUrl)
             {
-                Id = useCaseOutput.Id,
                 AuthorUsername = author.Username,
                 PublicationDate = useCaseOutput.PublicationDate,
                 Content = useCaseOutput.Content,
@@ -168,30 +162,26 @@ public class PublicationsController(
             CreateNewRepostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, publicationId);
             IRepost useCaseOutput = createNewRepostUseCase.Run(useCaseInput);
 
-            var originalPostAuthor = new UserAPIResourceDTO(listUsersUrl)
+            var originalPostAuthor = new UserAPIResourceDTO(useCaseOutput.OriginalPost.Author.Id, listUsersUrl)
             {
-                Id = useCaseOutput.OriginalPost.Author.Id,
                 Username = useCaseOutput.OriginalPost.Author.Username,
             };
 
-            var originalPost = new PostAPIResourceDTO(baseUrl)
+            var originalPost = new PostAPIResourceDTO(useCaseOutput.OriginalPost.Id, baseUrl)
             {
-                Id = useCaseOutput.OriginalPost.Id,
                 AuthorUsername = useCaseOutput.OriginalPost.Author.Username,
                 PublicationDate = useCaseOutput.OriginalPost.PublicationDate,
                 Content = useCaseOutput.OriginalPost.Content,
                 Embedded = new PostAPIResourceDTO.EmbeddedObjects(originalPostAuthor),
             };
 
-            var repostAuthor = new UserAPIResourceDTO(listUsersUrl)
+            var repostAuthor = new UserAPIResourceDTO(useCaseOutput.Author.Id, listUsersUrl)
             {
-                Id = useCaseOutput.Author.Id,
                 Username = useCaseOutput.Author.Username,
             };
 
-            var response = new RepostAPIResourceDTO(baseUrl)
+            var response = new RepostAPIResourceDTO(useCaseOutput.Id, baseUrl)
             {
-                Id = useCaseOutput.Id,
                 AuthorUsername = useCaseOutput.Author.Username,
                 PublicationDate = useCaseOutput.PublicationDate,
                 Content = useCaseOutput.Content,

@@ -6,7 +6,7 @@ namespace Posterr.Presentation.Web.RestApi.Controllers.Users;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    [HttpGet]
+    [HttpGet(Name = nameof(ListUsers))]
     public IActionResult ListUsers()
     {
         return Ok("");

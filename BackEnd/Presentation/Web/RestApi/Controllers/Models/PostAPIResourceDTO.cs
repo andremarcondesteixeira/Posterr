@@ -5,13 +5,14 @@ namespace Posterr.Presentation.Web.RestApi.Controllers.Models;
 public sealed record PostAPIResourceDTO : APIResource<PostAPIResourceDTO.EmbeddedObjects>
 {
     public readonly bool IsRepost = false;
-    public required long Id { get; init; }
+    public long Id { get; }
     public required string AuthorUsername { get; init; }
     public required DateTime PublicationDate { get; init; }
     public required string Content { get; init; }
 
-    public PostAPIResourceDTO(string listPublicationsEndpointUrl)
+    public PostAPIResourceDTO(long id, string listPublicationsEndpointUrl)
     {
+        Id = id;
         Links.Add("self", [new($"{listPublicationsEndpointUrl}/{Id}")]);
     }
 
