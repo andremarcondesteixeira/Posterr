@@ -114,6 +114,49 @@ public class PublicationsController(
         }
     }
 
+    [HttpPost]
+    public IActionResult CreateNewPost([FromBody] CreateNewPostRequestBodyDTO requestBody)
+    {
+        string listPublicationsUrl = linkGenerator.GetUriByName(HttpContext, nameof(ListPublications))!;
+        string listUsersUrl = Url.ActionLink(nameof(UsersController.ListUsers), "Users")!;
+
+        try
+        {
+            CreateNewPostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, requestBody.Content);
+            IPost useCaseOutput = createNewPostUseCase.Run(useCaseInput);
+
+            var author = new UserAPIResourceDTO(useCaseOutput.Author.Id, listUsersUrl)
+            {
+                Username = useCaseOutput.Author.Username,
+            };
+
+            var response = new PostAPIResourceDTO(useCaseOutput.Id, listPublicationsUrl)
+            {
+                AuthorUsername = author.Username,
+                PublicationDate = useCaseOutput.PublicationDate,
+                Content = useCaseOutput.Content,
+                Embedded = new PostAPIResourceDTO.EmbeddedObjects(author),
+            };
+
+            return Ok(response);
+        }
+        catch (PosterrException e)
+        {
+            return Problem(
+                title: e.Message,
+                detail: e.Mitigation,
+                instance: listPublicationsUrl,
+                statusCode: e switch
+                {
+                    UserNotFoundException => StatusCodes.Status404NotFound,
+                    EmptyPostContentException or MaxPostContentLengthExceededException => StatusCodes.Status400BadRequest,
+                    MaxAllowedDailyPublicationsByUserExceededException => StatusCodes.Status403Forbidden,
+                    _ => StatusCodes.Status500InternalServerError
+                }
+            );
+        }
+    }
+
     [HttpGet("{publicationId}")]
     public IActionResult GetPublicationById([FromRoute] long publicationId)
     {
@@ -185,50 +228,7 @@ public class PublicationsController(
         }
     }
 
-    [HttpPost]
-    public IActionResult CreateNewPost([FromBody] CreateNewPostRequestBodyDTO requestBody)
-    {
-        string listPublicationsUrl = linkGenerator.GetUriByName(HttpContext, nameof(ListPublications))!;
-        string listUsersUrl = Url.ActionLink(nameof(UsersController.ListUsers), "Users")!;
-
-        try
-        {
-            CreateNewPostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, requestBody.Content);
-            IPost useCaseOutput = createNewPostUseCase.Run(useCaseInput);
-
-            var author = new UserAPIResourceDTO(useCaseOutput.Author.Id, listUsersUrl)
-            {
-                Username = useCaseOutput.Author.Username,
-            };
-
-            var response = new PostAPIResourceDTO(useCaseOutput.Id, listPublicationsUrl)
-            {
-                AuthorUsername = author.Username,
-                PublicationDate = useCaseOutput.PublicationDate,
-                Content = useCaseOutput.Content,
-                Embedded = new PostAPIResourceDTO.EmbeddedObjects(author),
-            };
-
-            return Ok(response);
-        }
-        catch (PosterrException e)
-        {
-            return Problem(
-                title: e.Message,
-                detail: e.Mitigation,
-                instance: listPublicationsUrl,
-                statusCode: e switch
-                {
-                    UserNotFoundException => StatusCodes.Status404NotFound,
-                    EmptyPostContentException or MaxPostContentLengthExceededException => StatusCodes.Status400BadRequest,
-                    MaxAllowedDailyPublicationsByUserExceededException => StatusCodes.Status403Forbidden,
-                    _ => StatusCodes.Status500InternalServerError
-                }
-            );
-        }
-    }
-
-    [HttpPost("{publicationId}/repost")]
+    [HttpPatch("{publicationId}")]
     public IActionResult CreateNewRepost(long publicationId, [FromBody] CreateNewRepostRequestBodyDTO requestBody)
     {
         string listPublicationsUrl = linkGenerator.GetUriByAction(HttpContext)!;
