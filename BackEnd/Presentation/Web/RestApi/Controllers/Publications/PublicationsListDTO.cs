@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Mvc;
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
+using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
 using Posterr.Presentation.Web.RestApi.Controllers.Models;
+using Posterr.Presentation.Web.RestApi.Controllers.Users;
 using System.Text.Json.Serialization;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers.Publications;
@@ -12,11 +15,15 @@ public sealed record PublicationsListDTO : APIResource<PublicationsListDTO.Publi
     public PublicationsListDTO(
         IList<PublicationsListItemDTO> publications,
         ListPublicationsUseCaseInputDTO paginationParameters,
-        string baseUrl)
+        IUrlHelper urlHelper)
     {
+        string baseUrl = urlHelper.ActionLink(
+            nameof(PublicationsController.ListPublications),
+            nameof(PublicationsController).Replace("Controller", "")
+        )!;
         Count = publications.Count;
         Links.Add("self", [new($"{baseUrl}?pageNumber={paginationParameters.PageNumber}")]);
-        
+
         if (publications.Count >= paginationParameters.PageSize)
         {
             Links.Add("next", [new($"{baseUrl}?pageNumber={paginationParameters.PageNumber + 1}")]);
@@ -49,6 +56,49 @@ public sealed record PublicationsListDTO : APIResource<PublicationsListDTO.Publi
         {
             Id = id;
             Links.Add("self", [new($"{publicationsListEndpointUrl}/{Id}")]);
+        }
+
+        public static PublicationsListItemDTO FromIPublication(IPublication publication, IUrlHelper urlHelper)
+        {
+            string listUsersUrl = urlHelper.ActionLink(nameof(UsersController.ListUsers), nameof(UsersController).Replace("Controller", ""))!;
+            string listPublicationsUrl = urlHelper.ActionLink(nameof(UsersController.ListUsers), nameof(UsersController).Replace("Controller", ""))!;
+
+            if (publication is IRepost repost)
+            {
+                return new PublicationsListItemDTO(publication.Id, listPublicationsUrl)
+                {
+                    IsRepost = true,
+                    AuthorUsername = publication.Author.Username,
+                    PublicationDate = publication.PublicationDate,
+                    Content = publication.Content,
+                    OriginalPostAuthorUsername = repost.OriginalPost.Author.Username,
+                    OriginalPostPublicationDate = repost.OriginalPost.PublicationDate,
+                    OriginalPostContent = repost.OriginalPost.Content,
+                    Embedded = new EmbeddedObjects
+                    {
+                        Author = new UserAPIResourceDTO(publication.Author.Id, listUsersUrl)
+                        {
+                            Username = publication.Author.Username
+                        },
+                        OriginalPost = PostAPIResourceDTO.FromIPost(repost.OriginalPost, urlHelper)
+                    }
+                };
+            }
+
+            return new PublicationsListItemDTO(publication.Id, listPublicationsUrl)
+            {
+                IsRepost = false,
+                AuthorUsername = publication.Author.Username,
+                PublicationDate = publication.PublicationDate,
+                Content = publication.Content,
+                Embedded = new EmbeddedObjects
+                {
+                    Author = new UserAPIResourceDTO(publication.Author.Id, listUsersUrl)
+                    {
+                        Username = publication.Author.Username
+                    }
+                },
+            };
         }
 
         public sealed record EmbeddedObjects
