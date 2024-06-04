@@ -25,16 +25,18 @@ public class PublicationsController(
 ) : ControllerBase
 {
     [HttpGet(Name = nameof(ListPublications))]
+    [ProducesResponseType<PublicationsListDTO>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     public IActionResult ListPublications([FromQuery] int pageNumber)
     {
         try
         {
             var paginationParameters = new ListPublicationsUseCaseInputDTO(pageNumber, domainConfig);
             IList<IPublication> useCaseOutput = listPublicationsWithPaginationUseCase.Run(paginationParameters);
-            var publications = useCaseOutput.Select(p => PublicationsListItemDTO.FromIPublication(p, Url)).ToList();
+            var publications = useCaseOutput.Select(p => PublicationAPIResourceDTO.FromIPublication(p, Url)).ToList();
             var response = new PublicationsListDTO(publications, paginationParameters, Url)
             {
-                Embedded = new PublicationsList
+                Embedded = new EmbeddedObjects
                 {
                     Publications = publications,
                 }
@@ -58,6 +60,10 @@ public class PublicationsController(
     }
 
     [HttpPost]
+    [ProducesResponseType<PostAPIResourceDTO>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public IActionResult CreateNewPost([FromBody] CreateNewPostRequestBodyDTO requestBody)
     {
         try
@@ -85,6 +91,9 @@ public class PublicationsController(
     }
 
     [HttpGet("{publicationId}")]
+    [ProducesResponseType<PostAPIResourceDTO>(StatusCodes.Status200OK)]
+    [ProducesResponseType<RepostAPIResourceDTO>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public IActionResult GetPublicationById([FromRoute] long publicationId)
     {
         try
@@ -114,6 +123,9 @@ public class PublicationsController(
     }
 
     [HttpPatch("{publicationId}")]
+    [ProducesResponseType<RepostAPIResourceDTO>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public IActionResult CreateNewRepost(long publicationId, [FromBody] CreateNewRepostRequestBodyDTO requestBody)
     {
         try
