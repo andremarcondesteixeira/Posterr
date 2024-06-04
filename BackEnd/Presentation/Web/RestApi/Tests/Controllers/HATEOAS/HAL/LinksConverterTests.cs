@@ -1,6 +1,6 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
+using Posterr.Presentation.Web.RestApi.Controllers.SharedModels.HATEOAS.HAL;
 
 namespace Posterr.Presentation.Web.RestApi.Tests.Controllers.HATEOAS.HAL;
 

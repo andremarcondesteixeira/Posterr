@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
+namespace Posterr.Presentation.Web.RestApi.Controllers.SharedModels.HATEOAS.HAL;
 
 public class LinksConverter : JsonConverter<IDictionary<string, IList<APIResourceLinkDTO>>>
 {
@@ -20,7 +20,7 @@ public class LinksConverter : JsonConverter<IDictionary<string, IList<APIResourc
 
         var linksDictionary = new Dictionary<string, IList<APIResourceLinkDTO>>();
 
-        foreach(var entry in value)
+        foreach (var entry in value)
         {
             if (string.IsNullOrWhiteSpace(entry.Key) || entry.Value is null || entry.Value.Count == 0)
             {

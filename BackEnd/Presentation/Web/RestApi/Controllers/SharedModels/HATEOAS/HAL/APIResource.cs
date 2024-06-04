@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
+namespace Posterr.Presentation.Web.RestApi.Controllers.SharedModels.HATEOAS.HAL;
 
 // HAL Specification: https://datatracker.ietf.org/doc/html/draft-kelly-json-hal-11
 

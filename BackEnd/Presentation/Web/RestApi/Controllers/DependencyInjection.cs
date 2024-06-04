@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.Extensions.DependencyInjection;
-using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
+using Posterr.Presentation.Web.RestApi.Controllers.SharedModels.HATEOAS.HAL;
 using System.Reflection;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers;
