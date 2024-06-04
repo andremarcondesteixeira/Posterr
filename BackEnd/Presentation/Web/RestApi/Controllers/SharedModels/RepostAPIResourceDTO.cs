@@ -15,27 +15,27 @@ public sealed record RepostAPIResourceDTO : APIResource<RepostAPIResourceDTO.Emb
     public required DateTime OriginalPostPublicationDate { get; init; }
     public required string OriginalPostContent { get; init; }
 
-    public RepostAPIResourceDTO(long id, IUrlHelper urlHelper)
+    public RepostAPIResourceDTO(long id, LinkGenerationService linkGenerationService)
     {
-        string selfUrl = urlHelper.ActionLink(
-            nameof(PublicationsController.GetPublicationById),
-            nameof(PublicationsController).Replace("Controller", ""),
-            id
+        string selfUrl = linkGenerationService.Generate(
+            controller: nameof(PublicationsController),
+            action: nameof(PublicationsController.GetPublicationById),
+            values: new { publicationId = id }
         )!;
         APIResourceLinkDTO selfResourceLink = new(selfUrl);
         Id = id;
         Links.Add("self", [selfResourceLink]);
     }
 
-    public static RepostAPIResourceDTO FromIRepost(IRepost repost, IUrlHelper urlHelper)
+    public static RepostAPIResourceDTO FromIRepost(IRepost repost, LinkGenerationService linkGenerationService)
     {
-        var originalPost = PostAPIResourceDTO.FromIPost(repost.OriginalPost, urlHelper);
-        UserAPIResourceDTO repostAuthor = new(repost.Author.Id, urlHelper)
+        var originalPost = PostAPIResourceDTO.FromIPost(repost.OriginalPost, linkGenerationService);
+        UserAPIResourceDTO repostAuthor = new(repost.Author.Id, linkGenerationService)
         {
             Username = repost.Author.Username
         };
 
-        return new RepostAPIResourceDTO(repost.Id, urlHelper)
+        return new RepostAPIResourceDTO(repost.Id, linkGenerationService)
         {
             AuthorUsername = repost.Author.Username,
             PublicationDate = repost.PublicationDate,

@@ -10,20 +10,20 @@ public record UserAPIResourceDTO : APIResource
     public long Id { get; }
     public required string Username { get; init; }
 
-    public UserAPIResourceDTO(long id, IUrlHelper urlHelper)
+    public UserAPIResourceDTO(long id, LinkGenerationService linkGenerationService)
     {
-        string selfUrl = urlHelper.ActionLink(
-            nameof(UsersController.GetUserById),
-            nameof(UsersController).Replace("Controller", ""),
-            id
+        string selfUrl = linkGenerationService.Generate(
+            controller: nameof(UsersController).Replace("Controller", ""),
+            action: nameof(UsersController.GetUserById),
+            values: new { userId = id }
         )!;
         Id = id;
         Links.Add("self", [new(selfUrl)]);
     }
 
-    public static UserAPIResourceDTO FromIUser(IUser user, IUrlHelper urlHelper)
+    public static UserAPIResourceDTO FromIUser(IUser user, LinkGenerationService linkGenerationService)
     {
-        return new UserAPIResourceDTO(user.Id, urlHelper)
+        return new UserAPIResourceDTO(user.Id, linkGenerationService)
         {
             Username = user.Username
         };

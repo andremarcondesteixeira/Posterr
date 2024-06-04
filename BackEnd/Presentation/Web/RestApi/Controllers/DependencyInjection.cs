@@ -22,5 +22,7 @@ public static class DependencyInjection
                 {
                     options.JsonSerializerOptions.Converters.Add(new LinksConverter());
                 });
+        services.AddHttpContextAccessor();
+        services.AddScoped<LinkGenerationService>();
     }
 }

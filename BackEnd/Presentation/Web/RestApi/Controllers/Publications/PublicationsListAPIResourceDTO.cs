@@ -6,7 +6,7 @@ namespace Posterr.Presentation.Web.RestApi.Controllers.Publications;
 
 public sealed record PublicationsListAPIResourceDTO : APIResource<PublicationsListAPIResourceDTO.EmbeddedObjects>
 {
-    public int Count { get; set; }
+    public int Count { get => Embedded.Publications.Count; }
 
     public PublicationsListAPIResourceDTO(
         IList<PublicationAPIResourceDTO> publications,
@@ -15,9 +15,8 @@ public sealed record PublicationsListAPIResourceDTO : APIResource<PublicationsLi
     {
         string baseUrl = urlHelper.ActionLink(
             nameof(PublicationsController.ListPublications),
-            nameof(PublicationsController).Replace("Controller", "")
+            nameof(PublicationsController)
         )!;
-        Count = publications.Count;
         Links.Add("self", [new($"{baseUrl}?pageNumber={paginationParameters.PageNumber}")]);
 
         if (publications.Count >= paginationParameters.PageSize)

@@ -21,7 +21,8 @@ public class PublicationsController(
     ListPublicationsUseCase listPublicationsWithPaginationUseCase,
     GetPublicationByIdUseCase getPublicationByIdUseCase,
     CreateNewPostUseCase createNewPostUseCase,
-    CreateNewRepostUseCase createNewRepostUseCase
+    CreateNewRepostUseCase createNewRepostUseCase,
+    LinkGenerationService linkGenerationService
 ) : ControllerBase
 {
     [HttpGet(Name = nameof(ListPublications))]
@@ -33,7 +34,7 @@ public class PublicationsController(
         {
             var paginationParameters = new ListPublicationsUseCaseInputDTO(pageNumber, domainConfig);
             IList<IPublication> useCaseOutput = listPublicationsWithPaginationUseCase.Run(paginationParameters);
-            var publications = useCaseOutput.Select(p => PublicationAPIResourceDTO.FromIPublication(p, Url)).ToList();
+            var publications = useCaseOutput.Select(p => PublicationAPIResourceDTO.FromIPublication(p, linkGenerationService)).ToList();
             var response = new PublicationsListAPIResourceDTO(publications, paginationParameters, Url)
             {
                 Embedded = new EmbeddedObjects
@@ -50,10 +51,10 @@ public class PublicationsController(
                 title: ex.Message,
                 statusCode: StatusCodes.Status400BadRequest,
                 detail: ex.Mitigation,
-                instance: Url.ActionLink(
-                    nameof(ListPublications),
-                    nameof(PublicationsController).Replace("Controller", ""),
-                    pageNumber
+                instance: linkGenerationService.Generate(
+                    controller: nameof(PublicationsController),
+                    action: nameof(ListPublications),
+                    values: new { pageNumber }
                 )
             );
         }
@@ -70,7 +71,7 @@ public class PublicationsController(
         {
             CreateNewPostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, requestBody.Content);
             IPost useCaseOutput = createNewPostUseCase.Run(useCaseInput);
-            var response = PostAPIResourceDTO.FromIPost(useCaseOutput, Url);
+            var response = PostAPIResourceDTO.FromIPost(useCaseOutput, linkGenerationService);
             return Ok(response);
         }
         catch (PosterrException e)
@@ -78,7 +79,11 @@ public class PublicationsController(
             return Problem(
                 title: e.Message,
                 detail: e.Mitigation,
-                instance: Url.ActionLink(nameof(CreateNewPost), nameof(PublicationsController).Replace("Controller", "")),
+                instance: linkGenerationService.Generate(
+                    controller: nameof(PublicationsController),
+                    action: nameof(CreateNewPost),
+                    values: null
+                ),
                 statusCode: e switch
                 {
                     UserNotFoundException => StatusCodes.Status404NotFound,
@@ -102,17 +107,21 @@ public class PublicationsController(
 
             if (publication is IPost post)
             {
-                return Ok(PostAPIResourceDTO.FromIPost(post, Url));
+                return Ok(PostAPIResourceDTO.FromIPost(post, linkGenerationService));
             }
 
-            return Ok(RepostAPIResourceDTO.FromIRepost((IRepost)publication, Url));
+            return Ok(RepostAPIResourceDTO.FromIRepost((IRepost)publication, linkGenerationService));
         }
         catch(PosterrException e)
         {
             return Problem(
                 title: e.Message,
                 detail: e.Mitigation,
-                instance: Url.ActionLink(nameof(GetPublicationById), nameof(PublicationsController).Replace("Controller", ""), publicationId),
+                instance: linkGenerationService.Generate(
+                    controller: nameof(PublicationsController),
+                    action: nameof(GetPublicationById),
+                    values: new { publicationId }
+                ),
                 statusCode: e switch
                 {
                     PublicationNotFoundException => StatusCodes.Status404NotFound,
@@ -132,7 +141,7 @@ public class PublicationsController(
         {
             CreateNewRepostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, publicationId);
             IRepost useCaseOutput = createNewRepostUseCase.Run(useCaseInput);
-            var responseResource = RepostAPIResourceDTO.FromIRepost(useCaseOutput, Url);
+            var responseResource = RepostAPIResourceDTO.FromIRepost(useCaseOutput, linkGenerationService);
             return Ok(responseResource);
         }
         catch (PosterrException e)
@@ -140,7 +149,11 @@ public class PublicationsController(
             return Problem(
                 title: e.Message,
                 detail: e.Mitigation,
-                instance: Url.ActionLink(nameof(ListPublications), nameof(PublicationsController).Replace("Controller", ""))!,
+                instance: linkGenerationService.Generate(
+                    controller: nameof(PublicationsController),
+                    action: nameof(CreateNewRepost),
+                    values: null
+                ),
                 statusCode: e switch
                 {
                     UserNotFoundException or PostNotFoundException => StatusCodes.Status404NotFound,

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Posterr.Core.Application.UseCases.GetUserById;
 using Posterr.Core.Application.UseCases.ListUsers;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
@@ -12,7 +13,8 @@ namespace Posterr.Presentation.Web.RestApi.Controllers.Users;
 [Route("api/[controller]")]
 public class UsersController(
     ListUsersUseCase listUsersUseCase,
-    GetUserByIdUseCase getUserByIdUseCase
+    GetUserByIdUseCase getUserByIdUseCase,
+    LinkGenerationService linkGenerationService
 ) : ControllerBase
 {
     [HttpGet(Name = nameof(ListUsers))]
@@ -21,9 +23,9 @@ public class UsersController(
     {
         IList<IUser> users = listUsersUseCase.Run();
         IList<UserAPIResourceDTO> userResources = users
-            .Select(user => UserAPIResourceDTO.FromIUser(user, Url))
+            .Select(user => UserAPIResourceDTO.FromIUser(user, linkGenerationService))
             .ToList();
-        UsersListAPIResourceDTO response = new(Url)
+        UsersListAPIResourceDTO response = new(linkGenerationService)
         {
             Embedded = new UsersListAPIResourceDTO.EmbeddedObjects(userResources)
         };
@@ -32,13 +34,13 @@ public class UsersController(
 
     [HttpGet("{userId}")]
     [ProducesResponseType<UserAPIResourceDTO>(StatusCodes.Status200OK)]
-    [ProducesResponseType<UserNotFoundException>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public IActionResult GetUserById([FromRoute] long userId)
     {
         try
         {
             IUser user = getUserByIdUseCase.Run(userId);
-            var response = UserAPIResourceDTO.FromIUser(user, Url);
+            var response = UserAPIResourceDTO.FromIUser(user, linkGenerationService);
             return Ok(response);
         }
         catch (PosterrException e)
@@ -46,10 +48,10 @@ public class UsersController(
             return Problem(
                 title: e.Message,
                 detail: e.Mitigation,
-                instance: Url.ActionLink(
-                    nameof(GetUserById),
-                    nameof(UsersController).Replace("Controller", ""),
-                    userId
+                instance: linkGenerationService.Generate(
+                    controller: nameof(UsersController),
+                    action: nameof(GetUserById),
+                    values: new { userId }
                 ),
                 statusCode: e switch
                 {

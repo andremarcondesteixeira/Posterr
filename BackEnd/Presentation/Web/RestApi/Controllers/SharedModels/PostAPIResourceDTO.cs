@@ -12,26 +12,26 @@ public sealed record PostAPIResourceDTO : APIResource<PostAPIResourceDTO.Embedde
     public required DateTime PublicationDate { get; init; }
     public required string Content { get; init; }
 
-    public PostAPIResourceDTO(long id, IUrlHelper urlHelper)
+    public PostAPIResourceDTO(long id, LinkGenerationService linkGenerationService)
     {
-        string selfUrl = urlHelper.ActionLink(
-            nameof(PublicationsController.GetPublicationById),
-            nameof(PublicationsController).Replace("Controller", ""),
-            id
+        string selfUrl = linkGenerationService.Generate(
+            controller: nameof(PublicationsController),
+            action: nameof(PublicationsController.GetPublicationById),
+            values: new { publicationId = id }
         )!;
         APIResourceLinkDTO selfResourceLink = new(selfUrl);
         Id = id;
         Links.Add("self", [selfResourceLink]);
     }
 
-    public static PostAPIResourceDTO FromIPost(IPost post, IUrlHelper urlHelper)
+    public static PostAPIResourceDTO FromIPost(IPost post, LinkGenerationService linkGenerationService)
     {
-        UserAPIResourceDTO author = new(post.Author.Id, urlHelper)
+        UserAPIResourceDTO author = new(post.Author.Id, linkGenerationService)
         {
             Username = post.Author.Username
         };
 
-        return new PostAPIResourceDTO(post.Id, urlHelper)
+        return new PostAPIResourceDTO(post.Id, linkGenerationService)
         {
             AuthorUsername = author.Username,
             PublicationDate = post.PublicationDate,

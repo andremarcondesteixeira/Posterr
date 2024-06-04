@@ -23,23 +23,23 @@ public sealed record PublicationAPIResourceDTO : APIResource<PublicationAPIResou
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? OriginalPostContent { get; init; }
 
-    public PublicationAPIResourceDTO(long id, IUrlHelper urlHelper)
+    public PublicationAPIResourceDTO(long id, LinkGenerationService linkGenerationService)
     {
-        string selfUrl = urlHelper.ActionLink(
-            nameof(PublicationsController.GetPublicationById),
-            nameof(PublicationsController).Replace("Controller", ""),
-            id
+        string selfUrl = linkGenerationService.Generate(
+            controller: nameof(PublicationsController),
+            action: nameof(PublicationsController.GetPublicationById),
+            values: new { publicationId = id }
         )!;
         APIResourceLinkDTO selfResourceLink = new(selfUrl);
         Id = id;
         Links.Add("self", [selfResourceLink]);
     }
 
-    public static PublicationAPIResourceDTO FromIPublication(IPublication publication, IUrlHelper urlHelper)
+    public static PublicationAPIResourceDTO FromIPublication(IPublication publication, LinkGenerationService linkGenerationService)
     {
         if (publication is IRepost repost)
         {
-            return new PublicationAPIResourceDTO(publication.Id, urlHelper)
+            return new PublicationAPIResourceDTO(publication.Id, linkGenerationService)
             {
                 IsRepost = true,
                 AuthorUsername = publication.Author.Username,
@@ -50,16 +50,16 @@ public sealed record PublicationAPIResourceDTO : APIResource<PublicationAPIResou
                 OriginalPostContent = repost.OriginalPost.Content,
                 Embedded = new EmbeddedObjects
                 {
-                    Author = new UserAPIResourceDTO(publication.Author.Id, urlHelper)
+                    Author = new UserAPIResourceDTO(publication.Author.Id, linkGenerationService)
                     {
                         Username = publication.Author.Username
                     },
-                    OriginalPost = PostAPIResourceDTO.FromIPost(repost.OriginalPost, urlHelper)
+                    OriginalPost = PostAPIResourceDTO.FromIPost(repost.OriginalPost, linkGenerationService)
                 }
             };
         }
 
-        return new PublicationAPIResourceDTO(publication.Id, urlHelper)
+        return new PublicationAPIResourceDTO(publication.Id, linkGenerationService)
         {
             IsRepost = false,
             AuthorUsername = publication.Author.Username,
@@ -67,7 +67,7 @@ public sealed record PublicationAPIResourceDTO : APIResource<PublicationAPIResou
             Content = publication.Content,
             Embedded = new EmbeddedObjects
             {
-                Author = new UserAPIResourceDTO(publication.Author.Id, urlHelper)
+                Author = new UserAPIResourceDTO(publication.Author.Id, linkGenerationService)
                 {
                     Username = publication.Author.Username
                 }
