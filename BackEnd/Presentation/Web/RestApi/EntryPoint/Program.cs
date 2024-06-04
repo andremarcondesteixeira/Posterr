@@ -15,7 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDomainConfig, DomainConfig>();
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-builder.Services.ConfigureSwaggerGen(options => options.CustomSchemaIds(x => x.FullName));
+builder.Services.ConfigureSwaggerGen(options => options.CustomSchemaIds(x => x.ToString().Replace("+", ".")));
 
 var corsPolicyName = "_allowAll";
 builder.Services.AddCors(options =>
