@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Posterr.Core.Application.UseCases.CreateNewPost;
 using Posterr.Core.Application.UseCases.CreateNewRepost;
+using Posterr.Core.Application.UseCases.GetPublicationById;
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Core.Boundaries.Configuration;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
@@ -19,6 +20,7 @@ public class PublicationsController(
     IDomainConfig domainConfig,
     LinkGenerator linkGenerator,
     ListPublicationsUseCase listPublicationsWithPaginationUseCase,
+    GetPublicationByIdUseCase getPublicationByIdUseCase,
     CreateNewPostUseCase createNewPostUseCase,
     CreateNewRepostUseCase createNewRepostUseCase
 ) : ControllerBase
@@ -108,6 +110,77 @@ public class PublicationsController(
                 statusCode: StatusCodes.Status400BadRequest,
                 detail: ex.Mitigation,
                 instance: $"{listPublicationsUrl}&pageNumber={pageNumber}"
+            );
+        }
+    }
+
+    [HttpGet("{publicationId}")]
+    public IActionResult GetPublicationById([FromRoute] long publicationId)
+    {
+        try
+        {
+            string listPublicationsUrl = linkGenerator.GetUriByName(HttpContext, nameof(ListPublications))!;
+            string listUsersUrl = Url.ActionLink(nameof(UsersController.ListUsers), "Users")!;
+            var publication = getPublicationByIdUseCase.Run(new(publicationId));
+
+            if (publication is IPost post)
+            {
+                var postAuthor = new UserAPIResourceDTO(post.Author.Id, listUsersUrl)
+                {
+                    Username = post.Author.Username,
+                };
+
+                return Ok(new PostAPIResourceDTO(post.Id, listPublicationsUrl)
+                {
+                    AuthorUsername = post.Author.Username,
+                    PublicationDate = post.PublicationDate,
+                    Content = post.Content,
+                    Embedded = new PostAPIResourceDTO.EmbeddedObjects(postAuthor),
+                });
+            }
+
+            IRepost repost = (IRepost)publication;
+
+            var originalPostAuthor = new UserAPIResourceDTO(repost.OriginalPost.Author.Id, listUsersUrl)
+            {
+                Username = repost.OriginalPost.Author.Username,
+            };
+
+            var originalPost = new PostAPIResourceDTO(repost.OriginalPost.Id, listPublicationsUrl)
+            {
+                AuthorUsername = repost.OriginalPost.Author.Username,
+                PublicationDate = repost.OriginalPost.PublicationDate,
+                Content = repost.OriginalPost.Content,
+                Embedded = new PostAPIResourceDTO.EmbeddedObjects(originalPostAuthor),
+            };
+
+            var repostAuthor = new UserAPIResourceDTO(repost.Author.Id, listUsersUrl)
+            {
+                Username = repost.Author.Username,
+            };
+
+            return Ok(new RepostAPIResourceDTO(repost.Id, listPublicationsUrl)
+            {
+                AuthorUsername = repost.Author.Username,
+                PublicationDate = repost.PublicationDate,
+                Content = repost.Content,
+                OriginalPostAuthorUsername = repost.OriginalPost.Author.Username,
+                OriginalPostPublicationDate = repost.OriginalPost.PublicationDate,
+                OriginalPostContent = repost.OriginalPost.Content,
+                Embedded = new RepostAPIResourceDTO.EmbeddedObjects(originalPost, repostAuthor),
+            });
+        }
+        catch(PosterrException e)
+        {
+            return Problem(
+                title: e.Message,
+                detail: e.Mitigation,
+                instance: Url.ActionLink(nameof(GetPublicationById), nameof(PublicationsController).Replace("Controller", ""), publicationId),
+                statusCode: e switch
+                {
+                    PublicationNotFoundException => StatusCodes.Status404NotFound,
+                    _ => StatusCodes.Status500InternalServerError
+                }
             );
         }
     }

@@ -4,7 +4,7 @@ namespace Posterr.Presentation.Web.RestApi.Controllers.Models;
 
 public sealed record RepostAPIResourceDTO : APIResource<RepostAPIResourceDTO.EmbeddedObjects>
 {
-    public readonly bool IsRepost = true;
+    public bool IsRepost { get; } = true;
     public long Id { get; }
     public required DateTime PublicationDate { get; init; }
     public required string AuthorUsername { get; init; }
