@@ -16,16 +16,23 @@ public class UsersController(
 ) : ControllerBase
 {
     [HttpGet(Name = nameof(ListUsers))]
+    [ProducesResponseType<UsersListAPIResourceDTO>(StatusCodes.Status200OK)]
     public IActionResult ListUsers()
     {
         IList<IUser> users = listUsersUseCase.Run();
         IList<UserAPIResourceDTO> userResources = users
             .Select(user => UserAPIResourceDTO.FromIUser(user, Url))
             .ToList();
-        return Ok(userResources);
+        UsersListAPIResourceDTO response = new(Url)
+        {
+            Embedded = new UsersListAPIResourceDTO.EmbeddedObjects(userResources)
+        };
+        return Ok(response);
     }
 
     [HttpGet("{userId}")]
+    [ProducesResponseType<UserAPIResourceDTO>(StatusCodes.Status200OK)]
+    [ProducesResponseType<UserNotFoundException>(StatusCodes.Status404NotFound)]
     public IActionResult GetUserById([FromRoute] long userId)
     {
         try
