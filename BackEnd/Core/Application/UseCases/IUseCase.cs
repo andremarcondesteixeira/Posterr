@@ -6,3 +6,8 @@ public interface IUseCase<INPUT, OUTPUT> : IUseCaseRegisteredInDependencyInjecti
 {
     OUTPUT Run(INPUT input);
 }
+
+public interface IUseCase<OUTPUT> : IUseCaseRegisteredInDependencyInjectionContainer
+{
+    OUTPUT Run();
+}

@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
-using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
-using Posterr.Presentation.Web.RestApi.Controllers.Models;
+using Posterr.Presentation.Web.RestApi.Controllers.SharedModels.HATEOAS.HAL;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers.Publications;
 
-public sealed record PublicationsListDTO : APIResource<PublicationsListDTO.EmbeddedObjects>
+public sealed record PublicationsListAPIResourceDTO : APIResource<PublicationsListAPIResourceDTO.EmbeddedObjects>
 {
     public int Count { get; set; }
 
-    public PublicationsListDTO(
+    public PublicationsListAPIResourceDTO(
         IList<PublicationAPIResourceDTO> publications,
         ListPublicationsUseCaseInputDTO paginationParameters,
         IUrlHelper urlHelper)

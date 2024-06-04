@@ -8,9 +8,9 @@ using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Core.Boundaries.Configuration;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Core.Shared.Exceptions;
-using Posterr.Presentation.Web.RestApi.Controllers.Models;
 using Posterr.Presentation.Web.RestApi.Controllers.Publications;
-using static Posterr.Presentation.Web.RestApi.Controllers.Publications.PublicationsListDTO;
+using Posterr.Presentation.Web.RestApi.Controllers.SharedModels;
+using static Posterr.Presentation.Web.RestApi.Controllers.Publications.PublicationsListAPIResourceDTO;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers;
 
@@ -25,7 +25,7 @@ public class PublicationsController(
 ) : ControllerBase
 {
     [HttpGet(Name = nameof(ListPublications))]
-    [ProducesResponseType<PublicationsListDTO>(StatusCodes.Status200OK)]
+    [ProducesResponseType<PublicationsListAPIResourceDTO>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     public IActionResult ListPublications([FromQuery] int pageNumber)
     {
@@ -34,7 +34,7 @@ public class PublicationsController(
             var paginationParameters = new ListPublicationsUseCaseInputDTO(pageNumber, domainConfig);
             IList<IPublication> useCaseOutput = listPublicationsWithPaginationUseCase.Run(paginationParameters);
             var publications = useCaseOutput.Select(p => PublicationAPIResourceDTO.FromIPublication(p, Url)).ToList();
-            var response = new PublicationsListDTO(publications, paginationParameters, Url)
+            var response = new PublicationsListAPIResourceDTO(publications, paginationParameters, Url)
             {
                 Embedded = new EmbeddedObjects
                 {
