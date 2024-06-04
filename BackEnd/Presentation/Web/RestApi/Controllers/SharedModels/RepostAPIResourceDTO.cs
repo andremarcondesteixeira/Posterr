@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
-using Posterr.Presentation.Web.RestApi.Controllers.HATEOAS.HAL;
-using Posterr.Presentation.Web.RestApi.Controllers.Users;
+using Posterr.Presentation.Web.RestApi.Controllers.SharedModels.HATEOAS.HAL;
 
-namespace Posterr.Presentation.Web.RestApi.Controllers.Models;
+namespace Posterr.Presentation.Web.RestApi.Controllers.SharedModels;
 
 public sealed record RepostAPIResourceDTO : APIResource<RepostAPIResourceDTO.EmbeddedObjects>
 {
@@ -16,30 +15,27 @@ public sealed record RepostAPIResourceDTO : APIResource<RepostAPIResourceDTO.Emb
     public required DateTime OriginalPostPublicationDate { get; init; }
     public required string OriginalPostContent { get; init; }
 
-    public RepostAPIResourceDTO(long id, string listPublicationsEndpointUrl)
+    public RepostAPIResourceDTO(long id, IUrlHelper urlHelper)
     {
+        string selfUrl = urlHelper.ActionLink(
+            nameof(PublicationsController.GetPublicationById),
+            nameof(PublicationsController).Replace("Controller", ""),
+            id
+        )!;
+        APIResourceLinkDTO selfResourceLink = new(selfUrl);
         Id = id;
-        Links.Add("self", [new($"{listPublicationsEndpointUrl}/{Id}")]);
+        Links.Add("self", [selfResourceLink]);
     }
 
-    public static RepostAPIResourceDTO FromIRepost(IRepost repost, IUrlHelper Url)
+    public static RepostAPIResourceDTO FromIRepost(IRepost repost, IUrlHelper urlHelper)
     {
-        var originalPost = PostAPIResourceDTO.FromIPost(repost.OriginalPost, Url);
-
-        string listUsersUrl = Url.ActionLink(
-            nameof(UsersController.ListUsers),
-            nameof(UsersController).Replace("Controller", "")
-        )!;
-        var repostAuthor = new UserAPIResourceDTO(repost.Author.Id, listUsersUrl)
+        var originalPost = PostAPIResourceDTO.FromIPost(repost.OriginalPost, urlHelper);
+        UserAPIResourceDTO repostAuthor = new(repost.Author.Id, urlHelper)
         {
-            Username = repost.Author.Username,
+            Username = repost.Author.Username
         };
 
-        string listPublicationsUrl = Url.ActionLink(
-            nameof(PublicationsController.ListPublications),
-            nameof(PublicationsController).Replace("Controller", "")
-        )!;
-        return new RepostAPIResourceDTO(repost.Id, listPublicationsUrl)
+        return new RepostAPIResourceDTO(repost.Id, urlHelper)
         {
             AuthorUsername = repost.Author.Username,
             PublicationDate = repost.PublicationDate,
