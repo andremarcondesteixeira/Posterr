@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Core\Application\UseCases\Posterr.Core.Application.UseCases.csproj" />
-    <ProjectReference Include="..\..\..\..\Core\Boundaries\Configuration\Posterr.Core.Shared.Configuration.csproj" />
+    <ProjectReference Include="..\..\..\..\Core\Boundaries\Configuration\Posterr.Core.Shared.ConfigurationInterface.csproj" />
     <ProjectReference Include="..\..\..\..\Core\Boundaries\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj" />
     <ProjectReference Include="..\..\..\..\Core\Shared\Exceptions\Posterr.Core.Shared.Exceptions.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />

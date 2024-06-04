@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Application.Us
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Application.UseCasesTests", "Core\Application\UseCasesTests\Posterr.Core.Application.UseCasesTests.csproj", "{5626F035-ECB8-4D86-A75B-E16968C7DCA4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Shared.Configuration", "Core\Boundaries\Configuration\Posterr.Core.Shared.Configuration.csproj", "{7089FCA5-6832-4016-BD67-14C7F743F89D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Shared.ConfigurationInterface", "Core\Boundaries\Configuration\Posterr.Core.Shared.ConfigurationInterface.csproj", "{7089FCA5-6832-4016-BD67-14C7F743F89D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Core.Shared.EntitiesInterfaces", "Core\Boundaries\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj", "{E6065B50-364F-4F71-8880-6E6BE8CC5039}"
 EndProject
