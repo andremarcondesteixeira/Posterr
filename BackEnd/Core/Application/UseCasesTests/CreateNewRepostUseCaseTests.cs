@@ -2,10 +2,9 @@
 
 using FakeItEasy;
 using Posterr.Core.Application.UseCases.CreateNewRepost;
-using Posterr.Core.Boundaries.Configuration;
+using Posterr.Core.Boundaries.ConfigurationInterface;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Core.Boundaries.Persistence;
-using Posterr.Core.Domain.Entities;
 using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Application.UseCasesTests;
@@ -14,28 +13,31 @@ public class CreateNewRepostUseCaseTests
 {
     private readonly IUsersRepository usersRepository = Fake.UserRepository();
     private readonly IPublicationsRepository publicationsRepository = Fake.PublicationsRepository();
-    private readonly IDomainPersistencePort domainPersistenceAdapter = Fake.DomainPersistenceAdapter();
     private readonly IDomainConfig domainConfig = Fake.DomainConfig();
     private readonly CreateNewRepostUseCase useCase;
 
     public CreateNewRepostUseCaseTests()
     {
-        useCase = new CreateNewRepostUseCase(usersRepository, publicationsRepository, domainPersistenceAdapter, domainConfig);
+        useCase = new CreateNewRepostUseCase(usersRepository, publicationsRepository, domainConfig);
     }
 
     [Fact]
-    public async Task GivenCorrectParametersAndRequirements_WhenCreatingNewRepost_ThenSucceed()
+    public void GivenCorrectParametersAndRequirements_WhenCreatingNewRepost_ThenSucceed()
     {
         var yesterday = Fake.CurrentTimeUTC.AddDays(-1);
         var originalPostAuthor = Fake.User(Fake.OriginalPostAuthorUsername);
         var originalPost = Fake.Post(1, originalPostAuthor, yesterday, Fake.Content);
         var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
         var unpublishedRepost = Fake.UnpublishedRepost(repostAuthor, originalPost);
-        var publishedRepost = Fake.Repost(unpublishedRepost.Author, Fake.CurrentTimeUTC, unpublishedRepost.OriginalPost);
+        var publishedRepost = Fake.Repost(2, unpublishedRepost.Author, Fake.CurrentTimeUTC, "repost content", unpublishedRepost.OriginalPost);
         A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
         A.CallTo(() => publicationsRepository.FindById(originalPost.Id)).Returns(originalPost);
-        A.CallTo(() => domainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(repostAuthor)).Returns((ushort)0);
-        A.CallTo(() => domainPersistenceAdapter.PublishNewRepost(A<IUnpublishedRepost>.That.Matches(r =>
+        A.CallTo(() => publicationsRepository.CountPublicationsMadeByUserBetweenDateTimeRange(
+            repostAuthor,
+            A<DateTime>.Ignored,
+            A<DateTime>.Ignored
+        )).Returns(0);
+        A.CallTo(() => publicationsRepository.PublishNewRepost(A<IUnpublishedRepost>.That.Matches(r =>
             r.Author.Username == unpublishedRepost.Author.Username
             && r.OriginalPost.Id == unpublishedRepost.OriginalPost.Id
             && r.OriginalPost.Author.Username == unpublishedRepost.OriginalPost.Author.Username
@@ -44,36 +46,38 @@ public class CreateNewRepostUseCaseTests
         ))).Returns(publishedRepost);
 
         var dto = new CreateNewRepostUseCaseInputDTO(repostAuthor.Username, originalPost.Id);
-        var response = await useCase.Run(dto);
+        var response = useCase.Run(dto);
 
-        Assert.Equal(Fake.RepostAuthorUsername, response.AuthorUsername);
+        Assert.Equal(2, response.Id);
+        Assert.Equal(Fake.RepostAuthorUsername, response.Author.Username);
         Assert.Equal(Fake.CurrentTimeUTC, response.PublicationDate);
+        Assert.Equal("repost content", response.Content);
         Assert.Equal(1, response.OriginalPost.Id);
-        Assert.Equal(Fake.OriginalPostAuthorUsername, response.OriginalPost.AuthorUsername);
+        Assert.Equal(Fake.OriginalPostAuthorUsername, response.OriginalPost.Author.Username);
         Assert.Equal(yesterday, response.OriginalPost.PublicationDate);
         Assert.Equal(Fake.Content, response.OriginalPost.Content);
     }
 
     [Fact]
-    public async Task GivenRepostAuthorUsernameDoesNotBelongToAnyRegisteredUser_WhenCreatingNewRepost_ThenThrowException()
+    public void GivenRepostAuthorUsernameDoesNotBelongToAnyRegisteredUser_WhenCreatingNewRepost_ThenThrowException()
     {
-        A.CallTo(() => usersRepository.FindByUsername(Fake.Username)).Returns(Task.FromResult<IUser?>(null));
+        A.CallTo(() => usersRepository.FindByUsername(Fake.Username)).Returns(null);
         var request = new CreateNewRepostUseCaseInputDTO(Fake.Username, 1);
-        await Assert.ThrowsAsync<UserNotFoundException>(() => useCase.Run(request));
+        Assert.Throws<UserNotFoundException>(() => useCase.Run(request));
     }
 
     [Fact]
-    public async Task GivenOriginalPostNotFound_WhenCreatingNewRepost_ThenThrowException()
+    public void GivenOriginalPostNotFound_WhenCreatingNewRepost_ThenThrowException()
     {
         var repostAuthor = Fake.User(Fake.Username);
         A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
-        A.CallTo(() => publicationsRepository.FindById(1)).Returns(Task.FromResult<IPost?>(null));
+        A.CallTo(() => publicationsRepository.FindById(1)).Returns(null);
         var request = new CreateNewRepostUseCaseInputDTO(repostAuthor.Username, 1);
-        await Assert.ThrowsAsync<PostNotFoundException>(() => useCase.Run(request));
+        Assert.Throws<PostNotFoundException>(() => useCase.Run(request));
     }
 
     [Fact]
-    public async Task GivenUserHasReachedMaxAllowedDailyPublications_WhenCreatingNewRepost_ThenThrowException()
+    public void GivenUserHasReachedMaxAllowedDailyPublications_WhenCreatingNewRepost_ThenThrowException()
     {
         var yesterday = Fake.CurrentTimeUTC.AddDays(-1);
         var originalPostAuthor = Fake.User(Fake.OriginalPostAuthorUsername);
@@ -81,13 +85,17 @@ public class CreateNewRepostUseCaseTests
         var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
         A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
         A.CallTo(() => publicationsRepository.FindById(originalPost.Id)).Returns(originalPost);
-        A.CallTo(() => domainPersistenceAdapter.AmountOfPublicationsMadeTodayBy(repostAuthor)).Returns(
+        A.CallTo(() => publicationsRepository.CountPublicationsMadeByUserBetweenDateTimeRange(
+            repostAuthor,
+            A<DateTime>.Ignored,
+            A<DateTime>.Ignored
+        )).Returns(
             domainConfig.MaxAllowedDailyPublicationsByUser
         );
 
         var createNewRepostRequest = new CreateNewRepostUseCaseInputDTO(repostAuthor.Username, originalPost.Id);
 
-        await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(
+        Assert.Throws<MaxAllowedDailyPublicationsByUserExceededException>(
             () => useCase.Run(createNewRepostRequest)
         );
     }

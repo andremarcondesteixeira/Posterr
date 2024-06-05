@@ -1,5 +1,5 @@
 ﻿using FakeItEasy;
-using Posterr.Core.Boundaries.Configuration;
+using Posterr.Core.Boundaries.ConfigurationInterface;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.Exceptions;

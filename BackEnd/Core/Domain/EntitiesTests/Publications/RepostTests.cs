@@ -16,22 +16,30 @@ public class RepostTests
         var repostAuthor = A.Fake<IUser>();
         var originalPost = A.Fake<IPost>();
         var publicationDate = DateTime.UtcNow;
-        var repost = new Repost(repostAuthor, originalPost, publicationDate);
+        var repost = new Repost(1, repostAuthor, publicationDate, "repost content", originalPost, Fake.DomainConfig());
 
+        Assert.Equal(1, repost.Id);
         Assert.Equal(repostAuthor, repost.Author);
-        Assert.Equal(originalPost, repost.OriginalPost);
         Assert.Equal(publicationDate, repost.PublicationDate);
+        Assert.Equal("repost content", repost.Content);
+        Assert.Equal(originalPost, repost.OriginalPost);
     }
 
     [Fact]
     public void GivenNullAuthor_WhenInstantiatingRepostEntity_ThenThrowException()
     {
-        Assert.Throws<ArgumentNullException>(() => new Repost(null, A.Fake<IPost>(), DateTime.UtcNow));
+        Assert.Throws<ArgumentNullException>(() => new Repost(1, null, DateTime.UtcNow, "content", A.Fake<IPost>(), Fake.DomainConfig()));
     }
 
     [Fact]
     public void GivenNullOriginalPost_WhenInstantiatingRepostEntity_ThenThrowException()
     {
-        Assert.Throws<ArgumentNullException>(() => new Repost(A.Fake<IUser>(), null, DateTime.UtcNow));
+        Assert.Throws<ArgumentNullException>(() => new Repost(1, A.Fake<IUser>(), DateTime.UtcNow, "content", null, Fake.DomainConfig()));
+    }
+
+    [Fact]
+    public void GivenNullDomainConfig_WhenInstantiatingRepostEntity_ThenThrowException()
+    {
+        Assert.Throws<ArgumentNullException>(() => new Repost(1, A.Fake<IUser>(), DateTime.UtcNow, "content", A.Fake<IPost>(), null));
     }
 }

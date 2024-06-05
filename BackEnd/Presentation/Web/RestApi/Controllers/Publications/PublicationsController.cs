@@ -5,7 +5,7 @@ using Posterr.Core.Application.UseCases.CreateNewPost;
 using Posterr.Core.Application.UseCases.CreateNewRepost;
 using Posterr.Core.Application.UseCases.GetPublicationById;
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
-using Posterr.Core.Boundaries.Configuration;
+using Posterr.Core.Boundaries.ConfigurationInterface;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Core.Shared.Exceptions;
 using Posterr.Presentation.Web.RestApi.Controllers.Publications;

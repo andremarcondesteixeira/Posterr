@@ -1,6 +1,6 @@
 using FakeItEasy;
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
-using Posterr.Core.Boundaries.Configuration;
+using Posterr.Core.Boundaries.ConfigurationInterface;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
 using Posterr.Core.Boundaries.Persistence;
 using Posterr.Core.Shared.Exceptions;
@@ -19,42 +19,43 @@ public class ListPublicationsWithPaginationUseCaseTests
     }
 
     [Fact]
-    public async Task GivenAPageHasPostsAndReposts_ThenRepostsShouldBeFlagged()
+    public void GivenAPageHasPostsAndReposts_ThenRepostsShouldBeFlagged()
     {
-        IUser posterUser = Fake.User(Fake.OriginalPostAuthorUsername);
-        IUser reposterUser = Fake.User(Fake.RepostAuthorUsername);
         var yesterday = DateTime.UtcNow.AddDays(-1);
-        var now = DateTime.UtcNow;
+        IUser posterUser = Fake.User(Fake.OriginalPostAuthorUsername);
         IPost post = Fake.Post(1, posterUser, yesterday, Fake.Content);
-        IRepost repost = Fake.Repost(reposterUser, now, post);
+        
+        var now = DateTime.UtcNow;
+        IUser reposterUser = Fake.User(Fake.RepostAuthorUsername);
+        IRepost repost = Fake.Repost(2, reposterUser, now, "repost content", post);
+        
         A.CallTo(() => publicationsRepository.Paginate(0, 15)).Returns([repost, post]);
 
-        IList<ListPublicationsUseCaseOutputListItemDTO> publications = await useCase.Run(new ListPublicationsUseCaseInputDTO(1, domainConfig));
+        IList<IPublication> publications = useCase.Run(new ListPublicationsUseCaseInputDTO(1, domainConfig));
 
         Assert.Equal(2, publications.Count);
 
-        Assert.True(publications[0].IsRepost);
-        Assert.Equal(1, publications[0].Post.PostId);
-        Assert.Equal(Fake.OriginalPostAuthorUsername, publications[0].Post.AuthorUsername);
-        Assert.Equal(yesterday, publications[0].Post.PublicationDate);
-        Assert.Equal(Fake.Content, publications[0].Post.Content);
-        Assert.Equal(Fake.RepostAuthorUsername, publications[0].Repost!.AuthorUsername);
-        Assert.Equal(now, publications[0].Repost!.PublicationDate);
+        Assert.True(publications[0] is IRepost);
+        Assert.Equal(2, publications[0].Id);
+        Assert.Equal(Fake.RepostAuthorUsername, publications[0].Author.Username);
+        Assert.Equal(now, publications[0].PublicationDate);
+        Assert.Equal("repost content", publications[0].Content);
+        Assert.Equal(Fake.OriginalPostAuthorUsername, ((IRepost)publications[0]).OriginalPost.Author.Username);
+        Assert.Equal(yesterday, ((IRepost)publications[0]).OriginalPost.PublicationDate);
 
-        Assert.False(publications[1].IsRepost);
-        Assert.Equal(1, publications[1].Post.PostId);
-        Assert.Equal(Fake.OriginalPostAuthorUsername, publications[1].Post.AuthorUsername);
-        Assert.Equal(yesterday, publications[1].Post.PublicationDate);
-        Assert.Equal(Fake.Content, publications[1].Post.Content);
-        Assert.Null(publications[1].Repost);
+        Assert.False(publications[1] is IRepost);
+        Assert.Equal(1, publications[1].Id);
+        Assert.Equal(Fake.OriginalPostAuthorUsername, publications[1].Author.Username);
+        Assert.Equal(yesterday, publications[1].PublicationDate);
+        Assert.Equal(Fake.Content, publications[1].Content);
     }
 
     [Theory]
     [InlineData(0)]
     [InlineData(-1)]
-    public async Task GivenAnInvalidPageNumber_ThenThrowException(int pageNumber)
+    public void GivenAnInvalidPageNumber_ThenThrowException(int pageNumber)
     {
-        await Assert.ThrowsAsync<InvalidPageNumberException>(
+        Assert.Throws<InvalidPageNumberException>(
             () => useCase.Run(new ListPublicationsUseCaseInputDTO(pageNumber, domainConfig))
         );
     }

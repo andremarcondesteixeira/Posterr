@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Posterr.Core.Application.UseCases;
-using Posterr.Core.Boundaries.Configuration;
+using Posterr.Core.Boundaries.ConfigurationInterface;
 using Posterr.Infrastructure.Persistence;
 using Posterr.Presentation.Web.RestApi.Controllers;
 using Posterr.Presentation.Web.RestApi.EntryPoint;

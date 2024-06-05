@@ -1,7 +1,9 @@
-﻿using FakeItEasy;
-using Posterr.Core.Boundaries.Configuration;
+﻿#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+
+using FakeItEasy;
+using Posterr.Core.Boundaries.ConfigurationInterface;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
-using Posterr.Core.Domain.Entities;
+using Posterr.Core.Boundaries.Persistence;
 using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.Exceptions;
 
@@ -9,13 +11,7 @@ namespace Posterr.Core.Domain.EntitiesTests.Publications;
 
 public class UnpublishedRepostTests
 {
-    private readonly IDomainConfig _domainConfig;
-
-    public UnpublishedRepostTests()
-    {
-        _domainConfig = A.Fake<IDomainConfig>();
-        A.CallTo(() => _domainConfig.MaxAllowedDailyPublicationsByUser).Returns((ushort) 5);
-    }
+    private readonly IDomainConfig _domainConfig = Fake.DomainConfig();
 
     [Fact]
     public void GivenValidParameters_WhenInstantiatingUnpublishedRepostEntity_ThenSucceed()
@@ -29,7 +25,6 @@ public class UnpublishedRepostTests
         Assert.Equal(_domainConfig, unpublishedRepost.DomainConfig);
     }
 
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
     [Fact]
     public void GivenNullAuthor_WhenInstantiatingUnpublishedRepostEntity_ThenThrowException()
     {
@@ -47,39 +42,49 @@ public class UnpublishedRepostTests
     {
         Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(A.Fake<IUser>(), A.Fake<IPost>(), null));
     }
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
     [Fact]
-    public async Task GivenUserHasNotReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenSucceed()
+    public void GivenUserHasNotReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenSucceed()
     {
         var author = A.Fake<IUser>();
         var originalPost = A.Fake<IPost>();
         var unpublishedRepost = new UnpublishedRepost(author, originalPost, _domainConfig);
         var now = DateTime.UtcNow;
 
-        var domainPersistencePort = A.Fake<IDomainPersistencePort>();
-        A.CallTo(() => domainPersistencePort.AmountOfPublicationsMadeTodayBy(author)).Returns(Task.FromResult(0));
-        A.CallTo(() => domainPersistencePort.PublishNewRepost(unpublishedRepost)).Returns(new Repost(author, originalPost, now));
+        var publicationsRepository = A.Fake<IPublicationsRepository>();
+        A.CallTo(() => publicationsRepository.CountPublicationsMadeByUserBetweenDateTimeRange(
+            author,
+            A<DateTime>.Ignored,
+            A<DateTime>.Ignored
+        )).Returns(0);
+        A.CallTo(() => publicationsRepository.PublishNewRepost(unpublishedRepost)).Returns(
+            new Repost(1, author, now, "post content", originalPost, _domainConfig)
+        );
 
-        var repost = await unpublishedRepost.Publish(domainPersistencePort);
+        var repost = unpublishedRepost.Publish(publicationsRepository);
 
+        Assert.Equal(1, repost.Id);
         Assert.Equal(author, repost.Author);
-        Assert.Equal(originalPost, repost.OriginalPost);
         Assert.Equal(now, repost.PublicationDate);
+        Assert.Equal("post content", repost.Content);
+        Assert.Equal(originalPost, repost.OriginalPost);
     }
 
     [Fact]
-    public async Task GivenUserHasReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenThrowException()
+    public void GivenUserHasReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenThrowException()
     {
         var author = A.Fake<IUser>();
         var unpublishedRepost = new UnpublishedRepost(author, A.Fake<IPost>(), _domainConfig);
 
-        var domainPersistencePort = A.Fake<IDomainPersistencePort>();
-        A.CallTo(() => domainPersistencePort.AmountOfPublicationsMadeTodayBy(author))
-            .Returns(Task.FromResult((int) _domainConfig.MaxAllowedDailyPublicationsByUser));
+        var publicationsRepository = A.Fake<IPublicationsRepository>();
+        A.CallTo(() => publicationsRepository.CountPublicationsMadeByUserBetweenDateTimeRange(
+            author,
+            A<DateTime>.Ignored,
+            A<DateTime>.Ignored
+        )).Returns(_domainConfig.MaxAllowedDailyPublicationsByUser);
 
-        await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(
-            () => unpublishedRepost.Publish(domainPersistencePort)
+        Assert.Throws<MaxAllowedDailyPublicationsByUserExceededException>(
+            () => unpublishedRepost.Publish(publicationsRepository)
         );
     }
 }

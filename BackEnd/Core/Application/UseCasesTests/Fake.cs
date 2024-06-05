@@ -1,8 +1,7 @@
 ﻿using FakeItEasy;
-using Posterr.Core.Boundaries.Persistence;
-using Posterr.Core.Boundaries.Configuration;
+using Posterr.Core.Boundaries.ConfigurationInterface;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
-using Posterr.Core.Domain.Entities;
+using Posterr.Core.Boundaries.Persistence;
 
 namespace Posterr.Core.Application.UseCasesTests;
 
@@ -28,8 +27,6 @@ static class Fake
         return domainConfig;
     }
 
-    public static IDomainPersistencePort DomainPersistenceAdapter() => A.Fake<IDomainPersistencePort>(x => x.Strict());
-
     public static IPost Post(long postId, IUser user, DateTime now, string content)
     {
         var post = A.Fake<IPost>();
@@ -44,12 +41,14 @@ static class Fake
 
     public static IPublicationsRepository PublicationsRepository() => A.Fake<IPublicationsRepository>(x => x.Strict());
 
-    public static IRepost Repost(IUser author, DateTime publicationDate, IPost originalPost)
+    public static IRepost Repost(long id, IUser author, DateTime publicationDate, string content, IPost originalPost)
     {
         var repost = A.Fake<IRepost>();
 
+        A.CallTo(() => repost.Id).Returns(id);
         A.CallTo(() => repost.Author).Returns(author);
         A.CallTo(() => repost.PublicationDate).Returns(publicationDate);
+        A.CallTo(() => repost.Content).Returns(content);
         A.CallTo(() => repost.OriginalPost).Returns(originalPost);
 
         return repost;

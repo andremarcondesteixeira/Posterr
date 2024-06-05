@@ -1,4 +1,4 @@
-﻿using Posterr.Core.Boundaries.Configuration;
+﻿using Posterr.Core.Boundaries.ConfigurationInterface;
 
 namespace Posterr.Core.Shared.Exceptions;
 

@@ -2,9 +2,9 @@
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 using FakeItEasy;
-using Posterr.Core.Boundaries.Configuration;
+using Posterr.Core.Boundaries.ConfigurationInterface;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
-using Posterr.Core.Domain.Entities;
+using Posterr.Core.Boundaries.Persistence;
 using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.Exceptions;
 
@@ -54,7 +54,7 @@ public class UnpublishedPostTests
     }
 
     [Fact]
-    public async Task GivenUserHasNotReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenSucceed()
+    public void GivenUserHasNotReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenSucceed()
     {
         var user = A.Fake<IUser>();
         var content = "content";
@@ -63,9 +63,13 @@ public class UnpublishedPostTests
 
         // No, this test it not useless and is not testing only mockery.
         // Actually, it acts as a safeguard that can detect whenever the Publish method changes behavior.
-        var persistencePort = A.Fake<IDomainPersistencePort>();
-        A.CallTo(() => persistencePort.AmountOfPublicationsMadeTodayBy(user)).Returns(Task.FromResult(0));
-        A.CallTo(() => persistencePort.PublishNewPost(unpublishedPost)).Returns(Post
+        var publicationsRepository = A.Fake<IPublicationsRepository>();
+        A.CallTo(() => publicationsRepository.CountPublicationsMadeByUserBetweenDateTimeRange(
+            user,
+            A<DateTime>.Ignored,
+            A<DateTime>.Ignored
+        )).Returns(0);
+        A.CallTo(() => publicationsRepository.PublishNewPost(unpublishedPost)).Returns(Post
             .Builder()
             .WithId(1)
             .WithAuthor(user)
@@ -75,7 +79,7 @@ public class UnpublishedPostTests
             .Build()
         );
 
-        var publishedPost = await unpublishedPost.Publish(persistencePort);
+        var publishedPost = unpublishedPost.Publish(publicationsRepository);
 
         Assert.Equal(1, publishedPost.Id);
         Assert.Equal(user, publishedPost.Author);
@@ -84,17 +88,20 @@ public class UnpublishedPostTests
     }
 
     [Fact]
-    public async Task GivenUserHasReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenThrowException()
+    public void GivenUserHasReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenThrowException()
     {
         var user = A.Fake<IUser>();
         var unpublishedPost = new UnpublishedPost(user, "content", _domainConfig);
 
-        var persistencePort = A.Fake<IDomainPersistencePort>();
-        A.CallTo(() => persistencePort.AmountOfPublicationsMadeTodayBy(user))
-            .Returns(_domainConfig.MaxAllowedDailyPublicationsByUser);
+        var publicationsRepository = A.Fake<IPublicationsRepository>();
+        A.CallTo(() => publicationsRepository.CountPublicationsMadeByUserBetweenDateTimeRange(
+            user,
+            A<DateTime>.Ignored,
+            A<DateTime>.Ignored
+        )).Returns(_domainConfig.MaxAllowedDailyPublicationsByUser);
 
-        await Assert.ThrowsAsync<MaxAllowedDailyPublicationsByUserExceededException>(
-            () => unpublishedPost.Publish(persistencePort)
+        Assert.Throws<MaxAllowedDailyPublicationsByUserExceededException>(
+            () => unpublishedPost.Publish(publicationsRepository)
         );
     }
 }

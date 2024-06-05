@@ -2,7 +2,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Posterr.Presentation.Web.RestApi.Controllers.SharedModels.HATEOAS.HAL;
 
-namespace Posterr.Presentation.Web.RestApi.Tests.Controllers.HATEOAS.HAL;
+namespace Posterr.Presentation.Web.RestApi.Tests.Controllers.SharedModels.HATEOAS.HAL;
 
 public partial class LinksConverterTests {
     private readonly JsonSerializerOptions options;

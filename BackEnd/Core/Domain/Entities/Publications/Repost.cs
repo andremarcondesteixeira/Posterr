@@ -1,4 +1,4 @@
-﻿using Posterr.Core.Boundaries.Configuration;
+﻿using Posterr.Core.Boundaries.ConfigurationInterface;
 using Posterr.Core.Boundaries.EntitiesInterfaces;
 
 namespace Posterr.Core.Domain.Entities.Publications;
