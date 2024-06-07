@@ -54,7 +54,14 @@
   width: 30rem;
 }
 
-.postAuthor {
+.post:has(> .post) {
+  grid-template-areas:
+    'author publication_date'
+    'post_content post_content'
+    'original_post original_post';
+}
+
+.post > .postAuthor {
   font-family: "Bebas Neue", sans-serif;
   font-style: normal;
   font-weight: 400;
@@ -62,11 +69,16 @@
   text-transform: uppercase;
 }
 
-.postPublicationDate {
+.post > .postPublicationDate {
   grid-area: publication_date;
   text-align: right;
 }
 
-.postContent {
+.post > .postContent {
   grid-area: post_content;
+}
+
+.post > .post {
+  grid-area: original_post;
+  width: unset;
 }

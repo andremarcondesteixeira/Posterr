@@ -1,6 +1,6 @@
 "use client"
 
-import { Publication } from "@Core/Domain/Entities/Publication";
+import type { Publication } from "@Core/Domain/Entities/types";
 import { ApiEndpoint } from "@Core/Services/ApiEndpointsService";
 import { FormEvent, useEffect, useState } from "react";
 import styles from "./page.module.css";
@@ -37,11 +37,18 @@ export default function Home() {
       </form>
       <ul className={styles.publicationsList}>
         {publications && publications.map(post => (
-          <li key={`${post.postId}-${post.repostAuthorUsername ?? 'original'}`}>
+          <li key={post.id}>
             <article className={styles.post}>
-              <span className={styles.postAuthor}>{post.postAuthorUsername}</span>
-              <span className={styles.postPublicationDate}>{new Date(post.postPublicationDate).toLocaleString()}</span>
-              <span className={styles.postContent}>{post.postContent}</span>
+              <span className={styles.postAuthor}>{post.authorUsername}</span>
+              <span className={styles.postPublicationDate}>{new Date(post.publicationDate).toLocaleString()}</span>
+              <span className={styles.postContent}>{post.content}</span>
+              {post.isRepost && (
+                <div className={styles.post}>
+                  <span className={styles.postAuthor}>{post.originalPostAuthorUsername}</span>
+                  <span className={styles.postPublicationDate}>{new Date(post.originalPostPublicationDate!).toLocaleString()}</span>
+                  <span className={styles.postContent}>{post.originalPostContent}</span>
+                </div>
+              )}
             </article>
           </li>
         ))}

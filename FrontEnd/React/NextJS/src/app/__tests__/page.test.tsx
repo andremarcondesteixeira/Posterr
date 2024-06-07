@@ -1,23 +1,23 @@
-import * as usePostsPaginationHook from "@/hooks/usePostsPagination";
+import { Publication } from "@Core/Domain/Entities/types";
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterAll, afterEach, describe, expect, test, vi } from 'vitest';
 import Page from '../page';
-import { Publication } from "@Core/Domain/Entities/Publication";
+import * as HttpRequestService from "@Core/Services/HttpRequestService";
 
 describe("Home", () => {
-  const usePostsPaginationSpy = vi.spyOn(usePostsPaginationHook, "usePostsPagination");
+  const HttpRequestServiceSpy = vi.spyOn(HttpRequestService, "makeRequest");
 
   afterEach(() => {
-    usePostsPaginationSpy.mockReset();
+    HttpRequestServiceSpy.mockReset();
     cleanup();
   });
 
   afterAll(() => {
-    usePostsPaginationSpy.mockRestore();
+    HttpRequestServiceSpy.mockRestore();
   });
 
   test('It should render', () => {
-    usePostsPaginationSpy.mockReturnValueOnce({
+    HttpRequestServiceSpy.mockReturnValueOnce({
       errorLoadingPosts: undefined,
       isLoadingPosts: true,
       posts: undefined,
@@ -27,7 +27,7 @@ describe("Home", () => {
   });
 
   test("It should display a loading state", () => {
-    usePostsPaginationSpy.mockReturnValueOnce({
+    HttpRequestServiceSpy.mockReturnValueOnce({
       errorLoadingPosts: undefined,
       isLoadingPosts: true,
       posts: undefined,
@@ -37,7 +37,7 @@ describe("Home", () => {
   });
 
   test("It should display loaded posts", () => {
-    usePostsPaginationSpy.mockReturnValueOnce({
+    HttpRequestServiceSpy.mockReturnValueOnce({
       errorLoadingPosts: undefined,
       isLoadingPosts: false,
       posts: [
