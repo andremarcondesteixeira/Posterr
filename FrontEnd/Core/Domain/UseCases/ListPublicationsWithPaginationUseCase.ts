@@ -1,7 +1,7 @@
 import { ApiEndpoint } from "../../Services/ApiEndpointsService";
 import { makeRequest } from "../../Services/HttpRequestService";
 import { Result } from "../../Util/Result";
-import { Publication } from "../Entities/Publication";
+import { Publication } from "../Entities/types";
 
 export type ListPublicationsWithPaginationUseCaseResponse = {
   count: number;
