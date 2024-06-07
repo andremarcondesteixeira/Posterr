@@ -1,4 +1,4 @@
-import { Publication } from "../Domain/Entities/Publication";
+import { Author, Publication } from "../Domain/Entities/types";
 import { makeRequest } from "./HttpRequestService";
 
 const baseUrl = `${process.env["NEXT_PUBLIC_API_SERVER_URL"]}/api`;
@@ -23,17 +23,25 @@ export const ApiEndpoint = Object.freeze({
     url: `${baseUrl}/Publications`,
     GET: (pageNumber: number) => makeRequest<{
       count: number;
-      _embedded: {
-        publications: Publication[];
+    } & APIResource<{
+      publications: PublicationAPIResource[];
+    }, {
+      next?: {
+        href: string;
       };
-      _links: {
-        self: {
-          href: string;
-        };
-        next?: {
-          href: string;
-        }
-      }
-    }>(`${ApiEndpoint.publications.url}?pageNumber=${pageNumber}`),
+    }>>(`${ApiEndpoint.publications.url}?pageNumber=${pageNumber}`),
   }),
 });
+
+export type PublicationAPIResource = Publication & APIResource<AuthorAPIResource>;
+
+export type AuthorAPIResource = Author & APIResource;
+
+export type APIResource<EMBEDDED = undefined, LINKS = undefined> = {
+  _links: {
+    self: {
+      href: string;
+    }
+  } & LINKS;
+  _embedded: EMBEDDED;
+}
