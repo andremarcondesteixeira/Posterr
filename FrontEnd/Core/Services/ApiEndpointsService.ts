@@ -16,9 +16,6 @@ export const ApiEndpoint = Object.freeze({
         }
       }),
   }),
-  reposts: Object.freeze({
-    url: `${baseUrl}/Reposts`,
-  }),
   publications: Object.freeze({
     url: `${baseUrl}/Publications`,
     GET: (pageNumber: number) => makeRequest<{
