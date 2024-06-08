@@ -4,29 +4,29 @@ import { makeRequest } from "./HttpRequestService";
 const baseUrl = `${process.env["NEXT_PUBLIC_API_SERVER_URL"]}/api`;
 
 export const ApiEndpoint = Object.freeze({
-  posts: Object.freeze({
-    url: `${baseUrl}/Posts`,
-    POST: ({ username, content }: { username: string; content: string }) =>
-      makeRequest(ApiEndpoint.posts.url, {
+  publications: Object.freeze({
+    url: `${baseUrl}/Publications`,
+    GET: (pageNumber: number) => {
+      return makeRequest<{
+        count: number;
+      } & APIResource<{
+        publications: PublicationAPIResource[];
+      }, {
+        next?: {
+          href: string;
+        };
+      }>>(`${ApiEndpoint.publications.url}?pageNumber=${pageNumber}`);
+    },
+    POST: ({ authorUsername, content }: { authorUsername: string; content: string; }) => {
+      return makeRequest<PublicationAPIResource>(ApiEndpoint.publications.url, {
         method: "POST",
-        body: JSON.stringify({ username, content }),
+        body: JSON.stringify({ authorUsername, content }),
         headers: {
           "accept": "*/*",
           "Content-Type": "application/json"
         }
-      }),
-  }),
-  publications: Object.freeze({
-    url: `${baseUrl}/Publications`,
-    GET: (pageNumber: number) => makeRequest<{
-      count: number;
-    } & APIResource<{
-      publications: PublicationAPIResource[];
-    }, {
-      next?: {
-        href: string;
-      };
-    }>>(`${ApiEndpoint.publications.url}?pageNumber=${pageNumber}`),
+      });
+    }
   }),
 });
 

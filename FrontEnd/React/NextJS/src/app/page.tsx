@@ -5,7 +5,7 @@ import { ApiEndpoint } from "@Core/Services/ApiEndpointsService";
 import { FormEvent, useEffect, useState } from "react";
 import styles from "./page.module.css";
 
-const username = process.env["NEXT_PUBLIC_DEFAULT_USERNAME"] as string;
+const defaultAuthorUsername = process.env["NEXT_PUBLIC_DEFAULT_USERNAME"] as string;
 
 export default function Home() {
   const [newPostContent, setNewPostContent] = useState("");
@@ -26,7 +26,14 @@ export default function Home() {
 
   const tryCreateNewPost = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const response = ApiEndpoint.posts.POST({ username, content: newPostContent });
+    const response = await ApiEndpoint.publications.POST({
+      authorUsername: defaultAuthorUsername,
+      content: newPostContent
+    });
+    response.match({
+      error: (error) => alert(error.message),
+      ok: (publication) => setPublications(prev => [publication, ...prev]),
+    });
   };
 
   return (
