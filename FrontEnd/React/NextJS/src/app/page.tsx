@@ -14,12 +14,8 @@ export default function Home() {
   useEffect(() => {
     ApiEndpoint.publications.GET(1).then(response => {
       response.match({
-        ok: (okValue) => {
-          setPublications(okValue._embedded.publications);
-        },
-        error: (errorValue) => {
-          alert(errorValue.message);
-        },
+        ok: response => setPublications(response._embedded.publications),
+        error: error => alert(`${error.cause.title}\n${error.cause.detail}`),
       });
     });
   }, []);
@@ -31,8 +27,8 @@ export default function Home() {
       content: newPostContent
     });
     response.match({
-      error: (error) => alert(error.message),
-      ok: (publication) => setPublications(prev => [publication, ...prev]),
+      error: error => alert(`${error.cause.title}\n${error.cause.detail}`),
+      ok: publication => setPublications(prev => [publication, ...prev]),
     });
   };
 
