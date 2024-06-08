@@ -35,7 +35,7 @@ public class PublicationsController(
             var paginationParameters = new ListPublicationsUseCaseInputDTO(pageNumber, domainConfig);
             IList<IPublication> useCaseOutput = listPublicationsWithPaginationUseCase.Run(paginationParameters);
             var publications = useCaseOutput.Select(p => PublicationAPIResourceDTO.FromIPublication(p, linkGenerationService)).ToList();
-            var response = new PublicationsListAPIResourceDTO(publications, paginationParameters, Url)
+            var response = new PublicationsListAPIResourceDTO(publications, paginationParameters, linkGenerationService)
             {
                 Embedded = new EmbeddedObjects
                 {

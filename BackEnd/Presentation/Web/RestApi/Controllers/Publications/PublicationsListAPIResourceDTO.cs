@@ -11,11 +11,12 @@ public sealed record PublicationsListAPIResourceDTO : APIResource<PublicationsLi
     public PublicationsListAPIResourceDTO(
         IList<PublicationAPIResourceDTO> publications,
         ListPublicationsUseCaseInputDTO paginationParameters,
-        IUrlHelper urlHelper)
+        LinkGenerationService linkGenerationService)
     {
-        string baseUrl = urlHelper.ActionLink(
-            nameof(PublicationsController.ListPublications),
-            nameof(PublicationsController)
+        string baseUrl = linkGenerationService.Generate(
+            action: nameof(PublicationsController.ListPublications),
+            controller: nameof(PublicationsController),
+            values: null
         )!;
         Links.Add("self", [new($"{baseUrl}?pageNumber={paginationParameters.PageNumber}")]);
 
