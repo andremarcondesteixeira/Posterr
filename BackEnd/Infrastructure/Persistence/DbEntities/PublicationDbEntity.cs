@@ -36,7 +36,17 @@ public class PublicationDbEntity : BaseDbEntity
             OriginalPostContent!
         )
     );
-    
+
+    public IPublication ToIPublication()
+    {
+        if (OriginalPostAuthorId == null)
+        {
+            return ToIPost();
+        }
+
+        return ToIRepost();
+    }
+
     public record Post(long Id, IUser Author, DateTime PublicationDate, string Content) : IPost;
 
     public record Repost(long Id, IUser Author, DateTime PublicationDate, string Content, IPost OriginalPost) : IRepost;

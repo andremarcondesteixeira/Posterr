@@ -10,6 +10,15 @@ namespace Posterr.Infrastructure.Persistence.Repositories;
 
 public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicationsRepository
 {
+    public int CountPublicationsMadeByUserBetweenDateTimeRange(IUser author, DateTime startInclusive, DateTime endInclusive)
+    {
+        return dbContext.Publications.Where(p =>
+            p.AuthorUsername == author.Username &&
+            p.PublicationDate >= startInclusive &&
+            p.PublicationDate <= endInclusive
+        ).Count();
+    }
+
     public IPublication? FindById(long publicationId)
     {
         var queryResult = dbContext
@@ -32,13 +41,87 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         return publication.ToIRepost();
     }
 
-    public int CountPublicationsMadeByUserBetweenDateTimeRange(IUser author, DateTime startInclusive, DateTime endInclusive)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Style",
+        "IDE0305:Simplify collection initialization",
+        Justification = "makes code harder to read in this case"
+    )]
+    public IList<IPublication> GetNMostRecentPublications(short pageSize)
     {
-        return dbContext.Publications.Where(p =>
-            p.AuthorUsername == author.Username &&
-            p.PublicationDate >= startInclusive &&
-            p.PublicationDate <= endInclusive
-        ).Count();
+        return dbContext
+            .Publications
+            .Include(publication => publication.Author)
+            .OrderByDescending(p => p.PublicationDate)
+            .Take(pageSize)
+            .Select(p => p.ToIPublication())
+            .ToList();
+    }
+
+    public IList<IPublication> Paginate(long lastSeenPublicationId, short pageSize)
+    {
+        using DbCommand command = dbContext.Database.GetDbConnection().CreateCommand();
+        command.CommandText = """
+            SELECT
+                "Id",
+                "AuthorId",
+                "AuthorUsername",
+                "Content",
+                "PublicationDate",
+                "OriginalPostId",
+                "OriginalPostAuthorId",
+                "OriginalPostAuthorUsername",
+                "OriginalPostContent",
+                "OriginalPostPublicationDate"
+            FROM "Publications"
+            WHERE "Id" < @lastSeenPublicationId
+            ORDER BY "PublicationDate" DESC
+            OFFSET 0 ROWS FETCH FIRST @pageSize ROWS ONLY;
+        """;
+
+        DbParameter lastSeenPublicationIdParam = command.CreateParameter();
+        lastSeenPublicationIdParam.ParameterName = "@lastSeenPublicationId";
+        lastSeenPublicationIdParam.Value = lastSeenPublicationId;
+        command.Parameters.Add(lastSeenPublicationIdParam);
+
+        DbParameter pageSizeParam = command.CreateParameter();
+        pageSizeParam.ParameterName = "@pageSize";
+        pageSizeParam.Value = pageSize;
+        command.Parameters.Add(pageSizeParam);
+
+        dbContext.Database.OpenConnection();
+        using DbDataReader reader = command.ExecuteReader();
+
+        List<IPublication> publications = [];
+
+        while (reader.Read())
+        {
+            PublicationDbEntity publication = new()
+            {
+                Id = reader.GetInt64(0),
+                AuthorId = reader.GetInt64(1),
+                AuthorUsername = reader.GetString(2),
+                Content = reader.GetString(3),
+                PublicationDate = reader.GetDateTime(4),
+                OriginalPostId = reader.IsDBNull(5) ? null : reader.GetInt64(5),
+                OriginalPostAuthorId = reader.IsDBNull(6) ? null : reader.GetInt64(6),
+                OriginalPostAuthorUsername = reader.IsDBNull(7) ? null : reader.GetString(7),
+                OriginalPostContent = reader.IsDBNull(8) ? null : reader.GetString(8),
+                OriginalPostPublicationDate = reader.IsDBNull(9) ? null : reader.GetDateTime(9),
+            };
+
+            if (publication.OriginalPostId == null)
+            {
+                publications.Add(publication.ToIPost());
+            }
+            else
+            {
+                publications.Add(publication.ToIRepost());
+            }
+        }
+
+        dbContext.Database.CloseConnection();
+
+        return publications;
     }
 
     public IPost PublishNewPost(IUnpublishedPost unpublishedPost)
@@ -112,72 +195,5 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         dbContext.SaveChanges();
 
         return publicationDbEntity.ToIRepost();
-    }
-
-    public IList<IPublication> Paginate(long lastSeenPublicationId, short pageSize)
-    {
-        using DbCommand command = dbContext.Database.GetDbConnection().CreateCommand();
-        command.CommandText = """
-            SELECT
-                "Id",
-                "AuthorId",
-                "AuthorUsername",
-                "Content",
-                "PublicationDate",
-                "OriginalPostId",
-                "OriginalPostAuthorId",
-                "OriginalPostAuthorUsername",
-                "OriginalPostContent",
-                "OriginalPostPublicationDate"
-            FROM "Publications"
-            WHERE "Id" > @lastSeenPublicationId
-            ORDER BY "PublicationDate" DESC
-            OFFSET 0 ROWS FETCH FIRST @pageSize ROWS ONLY;
-        """;
-
-        DbParameter lastSeenPublicationIdParam = command.CreateParameter();
-        lastSeenPublicationIdParam.ParameterName = "@lastSeenPublicationId";
-        lastSeenPublicationIdParam.Value = lastSeenPublicationId;
-        command.Parameters.Add(lastSeenPublicationIdParam);
-
-        DbParameter pageSizeParam = command.CreateParameter();
-        pageSizeParam.ParameterName = "@pageSize";
-        pageSizeParam.Value = pageSize;
-        command.Parameters.Add(pageSizeParam);
-
-        dbContext.Database.OpenConnection();
-        using DbDataReader reader = command.ExecuteReader();
-
-        List<IPublication> publications = [];
-
-        while (reader.Read())
-        {
-            PublicationDbEntity publication = new()
-            {
-                Id = reader.GetInt64(0),
-                AuthorId = reader.GetInt64(1),
-                AuthorUsername = reader.GetString(2),
-                Content = reader.GetString(3),
-                PublicationDate = reader.GetDateTime(4),
-                OriginalPostId = reader.IsDBNull(5) ? null : reader.GetInt64(5),
-                OriginalPostAuthorId = reader.IsDBNull(6) ? null : reader.GetInt64(6),
-                OriginalPostAuthorUsername = reader.IsDBNull(7) ? null : reader.GetString(7),
-                OriginalPostContent = reader.IsDBNull(8) ? null : reader.GetString(8),
-                OriginalPostPublicationDate = reader.IsDBNull(9) ? null : reader.GetDateTime(9),
-            };
-
-            if (publication.OriginalPostId == null)
-            {
-                publications.Add(publication.ToIPost());
-            }
-            else
-            {
-                publications.Add(publication.ToIRepost());
-            }
-        }
-
-        dbContext.Database.CloseConnection();
-
-        return publications;
     }
 }

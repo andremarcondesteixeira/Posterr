@@ -1,36 +1,70 @@
 "use client"
 
-import type { Publication } from "@Core/Domain/Entities/types";
-import { ApiEndpoint } from "@Core/Services/ApiEndpointsService";
-import { FormEvent, useEffect, useState } from "react";
+import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
+import { REQUEST_ABORTED } from "@Core/Services/HttpRequestService";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 
 const defaultAuthorUsername = process.env["NEXT_PUBLIC_DEFAULT_USERNAME"] as string;
 
 export default function Home() {
   const [newPostContent, setNewPostContent] = useState("");
-  const [publications, setPublications] = useState<Publication[]>([]);
+  const [isFirstPage, setIsFirstPage] = useState(true);
+  const [publications, setPublications] = useState<PublicationAPIResource[]>([]);
+  const feedEndElementRef = useRef<HTMLParagraphElement | null>(null);
 
   useEffect(() => {
-    ApiEndpoint.publications.GET(1).then(response => {
-      response.match({
-        ok: response => setPublications(response._embedded.publications),
-        error: error => alert(`${error.cause.title}\n${error.cause.detail}`),
-      });
+    const abortController = new AbortController();
+    loadNextPublicationsPage(0, abortController.signal, () => {
+      setIsFirstPage(false);
     });
+    return () => abortController.abort(REQUEST_ABORTED);
   }, []);
 
-  const tryCreateNewPost = async (event: FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    if (!feedEndElementRef.current || isFirstPage) return;
+
+    const abortController = new AbortController();
+    const onIntersect = () => {
+      if (publications.length === 0) return;
+      console.log({ publications });
+      const lastSeenPublicationId = publications[publications.length - 1].id;
+      loadNextPublicationsPage(lastSeenPublicationId, abortController.signal);
+    }
+    const intersectionCfg = { rootMargin: '0px 0px 500px 0px' };
+    const intersectionObserver = new IntersectionObserver(onIntersect, intersectionCfg);
+    intersectionObserver.observe(feedEndElementRef.current!);
+
+    return () => {
+      abortController.abort(REQUEST_ABORTED);
+      intersectionObserver.unobserve(feedEndElementRef.current!);
+    };
+  }, [isFirstPage, publications.length]);
+
+  function loadNextPublicationsPage(lastSeenPublicationId: number, abortSignal: AbortSignal, onSuccess?: () => void) {
+      ApiEndpoint.publications.GET(lastSeenPublicationId, isFirstPage, abortSignal).then(response => {
+        response.match({
+          ok(response) {
+            setPublications(prev => [...prev, ...response._embedded.publications]);
+            onSuccess?.();
+          },
+          error(error) {
+            if (error.cause.title !== REQUEST_ABORTED) {
+              alert(`${error.cause.title}\n${error.cause.detail}`);
+            }
+          }
+        });
+      });
+  }
+
+  async function tryCreateNewPost(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const response = await ApiEndpoint.publications.POST({
-      authorUsername: defaultAuthorUsername,
-      content: newPostContent
-    });
+    const response = await ApiEndpoint.publications.POST(defaultAuthorUsername, newPostContent);
     response.match({
       error: error => alert(`${error.cause.title}\n${error.cause.detail}`),
       ok: publication => setPublications(prev => [publication, ...prev]),
     });
-  };
+  }
 
   return (
     <main className={styles.main}>
@@ -56,6 +90,7 @@ export default function Home() {
           </li>
         ))}
       </ul>
+      <p ref={feedEndElementRef}>That's all for today!</p>
     </main>
   );
 }

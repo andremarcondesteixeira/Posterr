@@ -28,11 +28,11 @@ public class PublicationsController(
     [HttpGet(Name = nameof(ListPublications))]
     [ProducesResponseType<PublicationsListAPIResourceDTO>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
-    public IActionResult ListPublications([FromQuery] int pageNumber)
+    public IActionResult ListPublications([FromQuery] long lastSeenPublicationId, [FromQuery] bool isFirstPage)
     {
         try
         {
-            var paginationParameters = new ListPublicationsUseCaseInputDTO(pageNumber, domainConfig);
+            var paginationParameters = new ListPublicationsUseCaseInputDTO(isFirstPage, lastSeenPublicationId, domainConfig);
             IList<IPublication> useCaseOutput = listPublicationsWithPaginationUseCase.Run(paginationParameters);
             var publications = useCaseOutput.Select(p => PublicationAPIResourceDTO.FromIPublication(p, linkGenerationService)).ToList();
             var response = new PublicationsListAPIResourceDTO(publications, paginationParameters, linkGenerationService)
@@ -45,16 +45,16 @@ public class PublicationsController(
 
             return Ok(response);
         }
-        catch (InvalidPageNumberException ex)
+        catch (PosterrException ex)
         {
             return Problem(
                 title: ex.Message,
-                statusCode: StatusCodes.Status400BadRequest,
+                statusCode: StatusCodes.Status500InternalServerError,
                 detail: ex.Mitigation,
                 instance: linkGenerationService.Generate(
                     controller: nameof(PublicationsController),
                     action: nameof(ListPublications),
-                    values: new { pageNumber }
+                    values: new { lastSeenPublicationId, isFirstPage }
                 )
             );
         }

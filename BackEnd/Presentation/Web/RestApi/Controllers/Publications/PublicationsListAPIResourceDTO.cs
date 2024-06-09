@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Presentation.Web.RestApi.Controllers.SharedModels.HATEOAS.HAL;
 
@@ -18,11 +17,15 @@ public sealed record PublicationsListAPIResourceDTO : APIResource<PublicationsLi
             controller: nameof(PublicationsController),
             values: null
         )!;
-        Links.Add("self", [new($"{baseUrl}?pageNumber={paginationParameters.PageNumber}")]);
+        Links.Add("self", [new($"{baseUrl}?lastSeenPublicationId={paginationParameters.LastSeenPublicationId}&isFirstPage={paginationParameters.IsFirstPage}")]);
 
         if (publications.Count >= paginationParameters.PageSize)
         {
-            Links.Add("next", [new($"{baseUrl}?pageNumber={paginationParameters.PageNumber + 1}")]);
+            var oldestPublication = publications.Last();
+            if (oldestPublication is not null)
+            {
+                Links.Add("next", [new($"{baseUrl}?lastSeenPublicationId={oldestPublication.Id}&isFirstPage=false")]);
+            }
         }
     }
 
