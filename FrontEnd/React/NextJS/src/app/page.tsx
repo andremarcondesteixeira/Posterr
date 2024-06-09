@@ -14,7 +14,7 @@ export default function Home() {
 
   useEffect(() => {
     const abortController = new AbortController();
-    loadNextPublicationsPage(0, true, abortController.signal);
+    loadPublications(0, true, abortController.signal);
     return () => abortController.abort(REQUEST_ABORTED);
   }, []);
 
@@ -27,7 +27,7 @@ export default function Home() {
       if (!entries[0].isIntersecting || isLoading) return;
       isLoading = true;
       const lastSeenPublicationId = publications[publications.length - 1].id;
-      loadNextPublicationsPage(lastSeenPublicationId, false, abortController.signal, () => {
+      loadPublications(lastSeenPublicationId, false, abortController.signal, () => {
         isLoading = false;
       });
     }
@@ -40,20 +40,20 @@ export default function Home() {
     };
   }, [publications.length]);
 
-  function loadNextPublicationsPage(lastSeenPublicationId: number, isFirstPage: boolean, abortSignal: AbortSignal, onSuccess?: () => void) {
-      ApiEndpoint.publications.GET(lastSeenPublicationId, isFirstPage, abortSignal).then(response => {
-        response.match({
-          ok(response) {
-            setPublications(prev => [...prev, ...response._embedded.publications]);
-            onSuccess?.();
-          },
-          error(error) {
-            if (error.cause.title !== REQUEST_ABORTED) {
-              alert(`${error.cause.title}\n${error.cause.detail}`);
-            }
+  function loadPublications(lastSeenPublicationId: number, isFirstPage: boolean, abortSignal: AbortSignal, onSuccess?: () => void) {
+    ApiEndpoint.publications.GET(lastSeenPublicationId, isFirstPage, abortSignal).then(response => {
+      response.match({
+        ok(response) {
+          setPublications(prev => [...prev, ...response._embedded.publications]);
+          onSuccess?.();
+        },
+        error(error) {
+          if (error.cause.title !== REQUEST_ABORTED) {
+            alert(`${error.cause.title}\n${error.cause.detail}`);
           }
-        });
+        }
       });
+    });
   }
 
   async function tryCreateNewPost(event: FormEvent<HTMLFormElement>) {
