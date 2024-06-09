@@ -27,7 +27,6 @@ export default function Home() {
     const abortController = new AbortController();
     const onIntersect = () => {
       if (publications.length === 0) return;
-      console.log({ publications });
       const lastSeenPublicationId = publications[publications.length - 1].id;
       loadNextPublicationsPage(lastSeenPublicationId, abortController.signal);
     }
