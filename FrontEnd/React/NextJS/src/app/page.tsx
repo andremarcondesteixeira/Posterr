@@ -67,7 +67,7 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <form method="post" action="/api/posts" className={styles.newPostForm} onSubmit={tryCreateNewPost}>
+      <form className={styles.newPostForm} onSubmit={tryCreateNewPost}>
         <textarea placeholder="What are your thoughts?" value={newPostContent} onChange={(event) => setNewPostContent(event.target.value)} />
         <button>Publish</button>
       </form>
