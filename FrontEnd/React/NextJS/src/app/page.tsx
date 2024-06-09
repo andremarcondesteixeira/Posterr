@@ -9,38 +9,39 @@ const defaultAuthorUsername = process.env["NEXT_PUBLIC_DEFAULT_USERNAME"] as str
 
 export default function Home() {
   const [newPostContent, setNewPostContent] = useState("");
-  const [isFirstPage, setIsFirstPage] = useState(true);
   const [publications, setPublications] = useState<PublicationAPIResource[]>([]);
   const feedEndElementRef = useRef<HTMLParagraphElement | null>(null);
 
   useEffect(() => {
     const abortController = new AbortController();
-    loadNextPublicationsPage(0, abortController.signal, () => {
-      setIsFirstPage(false);
-    });
+    loadNextPublicationsPage(0, true, abortController.signal);
     return () => abortController.abort(REQUEST_ABORTED);
   }, []);
 
   useEffect(() => {
-    if (!feedEndElementRef.current || isFirstPage) return;
+    if (!feedEndElementRef.current || publications.length === 0) return;
 
     const abortController = new AbortController();
-    const onIntersect = () => {
-      if (publications.length === 0) return;
+    let isLoading = false;
+    const onIntersect: IntersectionObserverCallback = entries => {
+      console.log({ entries, isLoading });
+      if (!entries[0].isIntersecting || isLoading) return;
+      isLoading = true;
       const lastSeenPublicationId = publications[publications.length - 1].id;
-      loadNextPublicationsPage(lastSeenPublicationId, abortController.signal);
+      loadNextPublicationsPage(lastSeenPublicationId, false, abortController.signal, () => {
+        isLoading = false;
+      });
     }
-    const intersectionCfg = { rootMargin: '0px 0px 500px 0px' };
-    const intersectionObserver = new IntersectionObserver(onIntersect, intersectionCfg);
+    const intersectionObserver = new IntersectionObserver(onIntersect);
     intersectionObserver.observe(feedEndElementRef.current!);
 
     return () => {
       abortController.abort(REQUEST_ABORTED);
       intersectionObserver.unobserve(feedEndElementRef.current!);
     };
-  }, [isFirstPage, publications.length]);
+  }, [publications.length]);
 
-  function loadNextPublicationsPage(lastSeenPublicationId: number, abortSignal: AbortSignal, onSuccess?: () => void) {
+  function loadNextPublicationsPage(lastSeenPublicationId: number, isFirstPage: boolean, abortSignal: AbortSignal, onSuccess?: () => void) {
       ApiEndpoint.publications.GET(lastSeenPublicationId, isFirstPage, abortSignal).then(response => {
         response.match({
           ok(response) {
