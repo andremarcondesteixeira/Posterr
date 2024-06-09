@@ -24,7 +24,6 @@ export default function Home() {
     const abortController = new AbortController();
     let isLoading = false;
     const onIntersect: IntersectionObserverCallback = entries => {
-      console.log({ entries, isLoading });
       if (!entries[0].isIntersecting || isLoading) return;
       isLoading = true;
       const lastSeenPublicationId = publications[publications.length - 1].id;
