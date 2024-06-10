@@ -8,27 +8,33 @@
 }
 
 .newPostForm {
-  align-items: flex-end;
   background-color: #efefef;
   border: 1px solid #ccc;
   border-radius: 10px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 1rem;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto;
+  justify-items: flex-end;
   padding: 1rem;
   width: 40rem;
-}
 
-.newPostForm textarea {
-  border: 1px solid #ccc;
-  border-radius: calc(1rem - 10px);
-  height: 10rem;
-  max-height: 80vh;
-  max-width: 100%;
-  min-height: 10rem;
-  min-width: 100%;
-  padding: 1rem;
-  width: 100%;
+  & > textarea {
+    border: 1px solid #ccc;
+    border-radius: calc(1rem - 10px);
+    grid-column: 1 / 3;
+    height: 10rem;
+    max-height: 80vh;
+    max-width: 100%;
+    min-height: 10rem;
+    min-width: 100%;
+    padding: 1rem;
+    width: 100%;
+  }
+
+  & > .newPostAuthor {
+    justify-self: flex-start;
+  }
 }
 
 .publicationsList {
@@ -52,33 +58,33 @@
     'post_content post_content';
   padding: 1rem;
   width: 30rem;
-}
 
-.post:has(> .post) {
-  grid-template-areas:
-    'author publication_date'
-    'post_content post_content'
-    'original_post original_post';
-}
+  &:has(> .post) {
+    grid-template-areas:
+      'author publication_date'
+      'post_content post_content'
+      'original_post original_post';
+  }
 
-.post > .postAuthor {
-  font-family: "Bebas Neue", sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  grid-area: author;
-  text-transform: uppercase;
-}
+  & > .post {
+    grid-area: original_post;
+    width: unset;
+  }
 
-.post > .postPublicationDate {
-  grid-area: publication_date;
-  text-align: right;
-}
+  & > .postAuthor {
+    font-family: "Bebas Neue", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    grid-area: author;
+    text-transform: uppercase;
+  }
 
-.post > .postContent {
-  grid-area: post_content;
-}
+  & > .postPublicationDate {
+    grid-area: publication_date;
+    text-align: right;
+  }
 
-.post > .post {
-  grid-area: original_post;
-  width: unset;
+  & > .postContent {
+    grid-area: post_content;
+  }
 }

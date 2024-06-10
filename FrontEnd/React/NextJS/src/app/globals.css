@@ -15,19 +15,28 @@ body {
 }
 
 button {
+  transition: ease-in-out 100ms;
+
+  &:hover {
+    transform: scale(1.1);
+    transition: ease-in-out 100ms;
+  }
+
+  &:active {
+    transform: scale(0.9);
+    transition: linear 100ms;
+  }
+}
+
+button, select {
   border: 1px solid #333;
   border-radius: calc(1rem - 10px);
   cursor: pointer;
   padding: 0.2rem 1rem;
-  transition: linear 50ms;
 }
 
-button:hover {
-  transform: scale(1.1);
-  transition: linear 50ms;
-}
-
-button:active {
-  transform: scale(0.9);
-  transition: linear 50ms;
+label:has(select) {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
 }

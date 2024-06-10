@@ -8,6 +8,10 @@ export const ApiEndpoint = {
     url: `${baseUrl}/publications`,
     GET: publications_GET,
     POST: publications_POST,
+  },
+  users: {
+    url: `${baseUrl}/users`,
+    GET: users_GET,
   }
 };
 
@@ -27,6 +31,10 @@ function publications_POST(authorUsername: string, content: string) {
   });
 }
 
+function users_GET() {
+  return makeRequest<Users_GET_Response>(ApiEndpoint.users.url);
+}
+
 export type APIResource<EMBEDDED = undefined, LINKS = undefined> = {
   _links: { self: { href: string } } & LINKS;
   _embedded: EMBEDDED;
@@ -35,3 +43,4 @@ export type AuthorAPIResource = Author & APIResource;
 export type NextPageLink = { next?: { href: string } };
 export type PublicationAPIResource = Publication & APIResource<AuthorAPIResource>;
 export type Publications_GET_Response = { count: number } & APIResource<{ publications: PublicationAPIResource[] }, NextPageLink>;
+export type Users_GET_Response = { count: number } & APIResource<{ users: AuthorAPIResource[] }>;
