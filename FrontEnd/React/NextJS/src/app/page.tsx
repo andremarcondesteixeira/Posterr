@@ -1,16 +1,16 @@
 "use client"
 
-import { ApiEndpoint, AuthorAPIResource, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
+import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
 import { REQUEST_ABORTED } from "@Core/Services/HttpRequestService";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useContext, useEffect, useRef, useState } from "react";
+import { DefaultAuthorUsernameContext } from "./DefaultAuthorUsernameContext";
 import styles from "./page.module.css";
 
 export default function Home() {
   const [newPostContent, setNewPostContent] = useState("");
   const [publications, setPublications] = useState<PublicationAPIResource[]>([]);
-  const [users, setUsers] = useState<AuthorAPIResource[]>([]);
-  const [selectedAuthorUsername, setSelectedAuthorUsername] = useState<string | null>(null);
   const feedEndElementRef = useRef<HTMLParagraphElement | null>(null);
+  const { defaultAuthorUsername } = useContext(DefaultAuthorUsernameContext);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -40,15 +40,6 @@ export default function Home() {
     };
   }, [publications.length]);
 
-  useEffect(() => {
-    ApiEndpoint.users.GET().then(response => {
-      response.match({
-        ok: users => setUsers(users._embedded.users),
-        error: error => alert(error.message),
-      });
-    });
-  }, []);
-
   function loadPublications(lastSeenPublicationId: number, isFirstPage: boolean, abortSignal: AbortSignal, onSuccess?: () => void) {
     ApiEndpoint.publications.GET(lastSeenPublicationId, isFirstPage, abortSignal).then(response => {
       response.match({
@@ -68,12 +59,12 @@ export default function Home() {
   async function tryCreateNewPost(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!selectedAuthorUsername) {
+    if (!defaultAuthorUsername) {
       alert("Please select the author for the new post");
       return;
     }
 
-    const response = await ApiEndpoint.publications.POST(selectedAuthorUsername, newPostContent);
+    const response = await ApiEndpoint.publications.POST(defaultAuthorUsername, newPostContent);
     response.match({
       error: error => alert(`${error.cause.title}\n${error.cause.detail}`),
       ok: publication => setPublications(prev => [publication, ...prev]),
@@ -84,15 +75,6 @@ export default function Home() {
     <main className={styles.main}>
       <form className={styles.newPostForm} onSubmit={tryCreateNewPost}>
         <textarea placeholder="What are your thoughts?" value={newPostContent} onChange={(event) => setNewPostContent(event.target.value)} />
-        <label className={styles.newPostAuthor}>
-          Author
-          <select onChange={event => setSelectedAuthorUsername(event.target.value)}>
-            <option>--- select ---</option>
-            {users.map(user => (
-              <option value={user.username} key={user.username}>{user.username}</option>
-            ))}
-          </select>
-        </label>
         <button>Publish</button>
       </form>
       <ul className={styles.publicationsList}>
