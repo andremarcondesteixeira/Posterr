@@ -14,7 +14,12 @@ body {
   min-height: 100dvh;
 }
 
+body {
+  padding: 1rem;
+}
+
 button {
+  font-weight: bold;
   transition: ease-in-out 100ms;
 
   &:hover {
@@ -25,6 +30,11 @@ button {
   &:active {
     transform: scale(0.9);
     transition: linear 100ms;
+  }
+
+  &.primary {
+    background-color: #339933;
+    color: #ffffffdd;
   }
 }
 

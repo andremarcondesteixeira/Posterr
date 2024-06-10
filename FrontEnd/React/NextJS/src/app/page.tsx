@@ -75,7 +75,7 @@ export default function Home() {
     <main className={styles.main}>
       <form className={styles.newPostForm} onSubmit={tryCreateNewPost}>
         <textarea placeholder="What are your thoughts?" value={newPostContent} onChange={(event) => setNewPostContent(event.target.value)} />
-        <button>Publish</button>
+        <button className="primary">Publish</button>
       </form>
       <ul className={styles.publicationsList}>
         {publications && publications.map(post => (
