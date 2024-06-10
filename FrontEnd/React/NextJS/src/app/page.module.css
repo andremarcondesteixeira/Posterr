@@ -85,5 +85,9 @@
 
   & > .postContent {
     grid-area: post_content;
+    line-break: anywhere;
+    text-wrap: pretty;
+    word-break: break-word;
+    word-wrap: break-word;
   }
 }
