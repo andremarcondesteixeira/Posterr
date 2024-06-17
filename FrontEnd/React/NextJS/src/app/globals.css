@@ -19,7 +19,11 @@ body {
 }
 
 button {
+  align-items: center;
+  display: inline-flex;
   font-weight: bold;
+  gap: 0.5rem;
+  justify-content: space-evenly;
   transition: ease-in-out 100ms;
 
   &:hover {
@@ -35,6 +39,19 @@ button {
   &.primary {
     background-color: #339933;
     color: #ffffffdd;
+  }
+
+  &.transparent {
+    background-color: transparent;
+    border: none;
+
+    &:hover {
+      background-color: #00000020;
+    }
+  }
+
+  & > svg {
+    height: 1rem;
   }
 }
 

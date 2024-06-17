@@ -56,12 +56,21 @@
   border-radius: 10px;
   display: grid;
   gap: 1rem;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto auto;
   grid-template-columns: 1fr 1fr;
   grid-template-areas:
     'author publication_date'
-    'post_content post_content';
+    'post_content post_content'
+    'divider divider'
+    'actions actions';
   padding: 1rem;
+
+  &.repost {
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'author publication_date'
+      'post_content post_content';
+  }
 
   &:has(> .post) {
     grid-template-areas:
@@ -93,5 +102,19 @@
     text-wrap: pretty;
     word-break: break-word;
     word-wrap: break-word;
+  }
+
+  & > hr {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    grid-area: divider;
+    margin-top: 1rem;
+  }
+
+  & > .postActions {
+    align-items: center;
+    display: flex;
+    grid-area: actions;
+    justify-content: flex-end;
   }
 }
