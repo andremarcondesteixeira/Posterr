@@ -15,76 +15,8 @@
   list-style-position: inside;
   list-style-type: none;
 
-  &, & li, & .post {
+  &, & li {
     max-width: 40rem;
     width: 100%;
-  }
-}
-
-.post {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  display: grid;
-  gap: 1rem;
-  grid-template-rows: auto 1fr auto auto;
-  grid-template-columns: 1fr 1fr;
-  grid-template-areas:
-    'author publication_date'
-    'post_content post_content'
-    'divider divider'
-    'actions actions';
-  padding: 1rem;
-
-  &.repost {
-    grid-template-rows: auto 1fr;
-    grid-template-areas:
-      'author publication_date'
-      'post_content post_content';
-  }
-
-  &:has(> .post) {
-    grid-template-areas:
-      'author publication_date'
-      'post_content post_content'
-      'original_post original_post';
-
-    & > .post {
-      grid-area: original_post;
-    }
-  }
-
-  & > .postAuthor {
-    font-family: "Bebas Neue", sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    grid-area: author;
-    text-transform: uppercase;
-  }
-
-  & > .postPublicationDate {
-    grid-area: publication_date;
-    text-align: right;
-  }
-
-  & > .postContent {
-    grid-area: post_content;
-    line-break: anywhere;
-    text-wrap: pretty;
-    word-break: break-word;
-    word-wrap: break-word;
-  }
-
-  & > hr {
-    border: none;
-    border-bottom: 1px solid #ddd;
-    grid-area: divider;
-    margin-top: 1rem;
-  }
-
-  & > .postActions {
-    align-items: center;
-    display: flex;
-    grid-area: actions;
-    justify-content: flex-end;
   }
 }

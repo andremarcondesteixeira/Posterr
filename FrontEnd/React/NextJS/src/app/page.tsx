@@ -1,6 +1,7 @@
 "use client"
 
 import { NewPostForm } from "@/components/NewPostForm";
+import { Publication } from "@/components/Publication";
 import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
 import { REQUEST_ABORTED } from "@Core/Services/HttpRequestService";
 import { useEffect, useRef, useState } from "react";
@@ -62,33 +63,9 @@ export default function Home() {
     <main className={styles.main}>
       <NewPostForm setPublications={setPublications} />
       <ul className={styles.publicationsList}>
-        {publications && publications.map(post => (
-          <li key={post.id}>
-            <article className={`${styles.post} ${post.isRepost && styles.repost}`}>
-              <span className={styles.postAuthor}>{post.authorUsername}</span>
-              <span className={styles.postPublicationDate}>{new Date(post.publicationDate).toLocaleString()}</span>
-              <span className={styles.postContent}>{post.content}</span>
-              {post.isRepost && (
-                <div className={styles.post}>
-                  <span className={styles.postAuthor}>{post.originalPostAuthorUsername}</span>
-                  <span className={styles.postPublicationDate}>{new Date(post.originalPostPublicationDate!).toLocaleString()}</span>
-                  <span className={styles.postContent}>{post.originalPostContent}</span>
-                </div>
-              )}
-              {!post.isRepost && (
-                <>
-                  <hr />
-                  <section className={styles.postActions}>
-                    <button className="transparent" type="button" onClick={startRepost}>
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                        <path d="M5 4a2 2 0 0 0-2 2v6H0l4 4 4-4H5V6h7l2-2H5zm10 4h-3l4-4 4 4h-3v6a2 2 0 0 1-2 2H6l2-2h7V8z"/>
-                      </svg>
-                      Repost
-                    </button>
-                  </section>
-                </>
-              )}
-            </article>
+        {publications && publications.map(publication => (
+          <li key={publication.id}>
+            <Publication publication={publication} onClickRepost={startRepost} />
           </li>
         ))}
       </ul>

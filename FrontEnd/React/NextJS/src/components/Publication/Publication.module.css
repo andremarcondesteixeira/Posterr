@@ -1,0 +1,69 @@
+.publication {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  display: grid;
+  gap: 1rem;
+  grid-template-rows: auto 1fr auto auto;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    'author publication_date'
+    'post_content post_content'
+    'divider divider'
+    'actions actions';
+  padding: 1rem;
+  max-width: 40rem;
+  width: 100%;
+
+  &.isRepost {
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'author publication_date'
+      'post_content post_content';
+  }
+
+  &:has(> .publication) {
+    grid-template-areas:
+      'author publication_date'
+      'post_content post_content'
+      'original_post original_post';
+
+    & > .publication {
+      grid-area: original_post;
+    }
+  }
+
+  & > .publicationAuthor {
+    font-family: "Bebas Neue", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    grid-area: author;
+    text-transform: uppercase;
+  }
+
+  & > .publicationPublicationDate {
+    grid-area: publication_date;
+    text-align: right;
+  }
+
+  & > .publicationContent {
+    grid-area: post_content;
+    line-break: anywhere;
+    text-wrap: pretty;
+    word-break: break-word;
+    word-wrap: break-word;
+  }
+
+  & > hr {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    grid-area: divider;
+    margin-top: 1rem;
+  }
+
+  & > .publicationActions {
+    align-items: center;
+    display: flex;
+    grid-area: actions;
+    justify-content: flex-end;
+  }
+}
