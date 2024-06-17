@@ -1,16 +1,14 @@
 "use client"
 
+import { NewPostForm } from "@/components/NewPostForm";
 import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
 import { REQUEST_ABORTED } from "@Core/Services/HttpRequestService";
-import { FormEvent, useContext, useEffect, useRef, useState } from "react";
-import { DefaultAuthorUsernameContext } from "./DefaultAuthorUsernameContext";
+import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const [newPostContent, setNewPostContent] = useState("");
   const [publications, setPublications] = useState<PublicationAPIResource[]>([]);
   const feedEndElementRef = useRef<HTMLParagraphElement | null>(null);
-  const { defaultAuthorUsername } = useContext(DefaultAuthorUsernameContext);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -56,31 +54,13 @@ export default function Home() {
     });
   }
 
-  async function tryCreateNewPost(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (!defaultAuthorUsername) {
-      alert("Please select the author for the new post");
-      return;
-    }
-
-    const response = await ApiEndpoint.publications.POST(defaultAuthorUsername, newPostContent);
-    response.match({
-      error: error => alert(`${error.cause.title}\n${error.cause.detail}`),
-      ok: publication => setPublications(prev => [publication, ...prev]),
-    });
-  }
-
   async function startRepost() {
 
   }
 
   return (
     <main className={styles.main}>
-      <form className={styles.newPostForm} onSubmit={tryCreateNewPost}>
-        <textarea placeholder="What are your thoughts?" value={newPostContent} onChange={(event) => setNewPostContent(event.target.value)} />
-        <button className="primary">Publish</button>
-      </form>
+      <NewPostForm setPublications={setPublications} />
       <ul className={styles.publicationsList}>
         {publications && publications.map(post => (
           <li key={post.id}>
