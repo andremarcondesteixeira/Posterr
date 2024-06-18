@@ -1,19 +1,23 @@
 .newPublicationForm {
   align-items: center;
   background-color: #efefef;
-  border-radius: 10px;
   border: 1px solid #ccc;
+  border-left: none;
+  border-right: none;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 40rem;
   padding: 1rem;
   width: 100%;
 
   & .publicationContent {
     background-color: white;
     border: 1px solid #ccc;
-    border-radius: calc(1rem - 10px);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 40rem;
     padding: 1rem;
     width: 100%;
 
