@@ -2,6 +2,7 @@
 
 import { NewPostForm } from "@/components/NewPostForm";
 import { Publication } from "@/components/Publication";
+import type { Publication as PublicationType } from "@Core/Domain/Entities/types";
 import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
 import { REQUEST_ABORTED } from "@Core/Services/HttpRequestService";
 import { useEffect, useRef, useState } from "react";
@@ -9,6 +10,7 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const [publications, setPublications] = useState<PublicationAPIResource[]>([]);
+  const [originalPostForRepost, setOriginalPostForRepost] = useState<PublicationType | null>(null);
   const feedEndElementRef = useRef<HTMLParagraphElement | null>(null);
 
   useEffect(() => {
@@ -55,17 +57,17 @@ export default function Home() {
     });
   }
 
-  async function startRepost() {
-
+  async function startRepost(originalPost: PublicationType) {
+    setOriginalPostForRepost(originalPost);
   }
 
   return (
     <main className={styles.main}>
-      <NewPostForm setPublications={setPublications} />
+      <NewPostForm setPublications={setPublications} originalPost={originalPostForRepost} />
       <ul className={styles.publicationsList}>
         {publications && publications.map(publication => (
           <li key={publication.id}>
-            <Publication publication={publication} onClickRepost={startRepost} />
+            <Publication publication={publication} onClickRepost={() => startRepost(publication)} />
           </li>
         ))}
       </ul>

@@ -1,13 +1,15 @@
 import { DefaultAuthorUsernameContext } from "@/app/DefaultAuthorUsernameContext";
+import { Publication } from "@Core/Domain/Entities/types";
 import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
 import { Dispatch, FormEvent, SetStateAction, useContext, useState } from "react";
 import styles from "./NewPostForm.module.css";
 
 type Props = {
   setPublications: Dispatch<SetStateAction<PublicationAPIResource[]>>;
+  originalPost: Publication | null;
 };
 
-export function NewPostForm({ setPublications }: Props) {
+export function NewPostForm({ setPublications, originalPost }: Props) {
   const [newPostContent, setNewPostContent] = useState("");
   const { defaultAuthorUsername } = useContext(DefaultAuthorUsernameContext);
 
