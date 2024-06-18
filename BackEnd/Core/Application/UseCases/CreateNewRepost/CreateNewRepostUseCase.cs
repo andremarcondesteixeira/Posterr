@@ -29,7 +29,7 @@ public sealed class CreateNewRepostUseCase(
             throw new CannotRepostRepostException(input.AuthorUsername, input.OriginalPostId);
         }
 
-        var unpublishedRepost = new UnpublishedRepost(user, (IPost) originalPost, _domainConfig);
+        var unpublishedRepost = new UnpublishedRepost(user, input.Content, (IPost) originalPost, _domainConfig);
         return unpublishedRepost.Publish(_publicationsRepository);
     }
 }

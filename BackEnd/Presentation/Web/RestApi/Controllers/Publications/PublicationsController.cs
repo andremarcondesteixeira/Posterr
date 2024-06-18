@@ -135,11 +135,11 @@ public class PublicationsController(
     [ProducesResponseType<RepostAPIResourceDTO>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
-    public IActionResult CreateNewRepost(long publicationId, [FromBody] CreateNewRepostRequestBodyDTO requestBody)
+    public IActionResult CreateNewRepost([FromRoute] long publicationId, [FromBody] CreateNewRepostRequestBodyDTO requestBody)
     {
         try
         {
-            CreateNewRepostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, publicationId);
+            CreateNewRepostUseCaseInputDTO useCaseInput = new(requestBody.AuthorUsername, requestBody.Content, publicationId);
             IRepost useCaseOutput = createNewRepostUseCase.Run(useCaseInput);
             var responseResource = RepostAPIResourceDTO.FromIRepost(useCaseOutput, linkGenerationService);
             return Ok(responseResource);

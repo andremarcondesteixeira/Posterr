@@ -180,7 +180,7 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
             Author = repostUser,
             AuthorId = repostUser.Id,
             AuthorUsername = repostUser.Username,
-            Content = string.Empty,
+            Content = unpublishedRepost.Content,
             PublicationDate = DateTime.UtcNow,
             OriginalPost = originalPost,
             OriginalPostId = originalPost.Id,

@@ -5,7 +5,7 @@ using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Domain.Entities.Publications;
 
-public sealed record UnpublishedRepost(IUser Author, IPost OriginalPost, IDomainConfig DomainConfig) : IUnpublishedRepost
+public sealed record UnpublishedRepost(IUser Author, string Content, IPost OriginalPost, IDomainConfig DomainConfig) : IUnpublishedRepost
 {
     public IUser Author { get; } = Author ?? throw new ArgumentNullException(nameof(Author));
     public IPost OriginalPost { get; } = OriginalPost ?? throw new ArgumentNullException(nameof(OriginalPost));

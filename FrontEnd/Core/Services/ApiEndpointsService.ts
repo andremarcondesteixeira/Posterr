@@ -8,6 +8,7 @@ export const ApiEndpoint = {
     url: `${baseUrl}/publications`,
     GET: publications_GET,
     POST: publications_POST,
+    PATCH: publications_PATCH,
   },
   users: {
     url: `${baseUrl}/users`,
@@ -23,6 +24,17 @@ function publications_GET(lastSeenPublicationId: number, isFirstPage: boolean, s
 function publications_POST(authorUsername: string, content: string) {
   return makeRequest<PublicationAPIResource>(ApiEndpoint.publications.url, {
     method: "POST",
+    body: JSON.stringify({ authorUsername, content }),
+    headers: {
+      "accept": "*/*",
+      "Content-Type": "application/json"
+    },
+  });
+}
+
+function publications_PATCH(authorUsername: string, content: string, originalPostId: number) {
+  return makeRequest<PublicationAPIResource>(`${ApiEndpoint.publications.url}/${originalPostId}`, {
+    method: "PATCH",
     body: JSON.stringify({ authorUsername, content }),
     headers: {
       "accept": "*/*",

@@ -25,7 +25,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setPublic
     textareaRef.current.style.height = (textareaRef.current.scrollHeight) + "px";
   }, [newPostContent]);
 
-  async function tryCreateNewPost(event: FormEvent<HTMLFormElement>) {
+  async function createNewPublication(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!defaultAuthorUsername) {
@@ -33,7 +33,12 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setPublic
       return;
     }
 
-    const response = await ApiEndpoint.publications.POST(defaultAuthorUsername, newPostContent);
+    const response = await (
+      originalPost ?
+        ApiEndpoint.publications.PATCH(defaultAuthorUsername, newPostContent, originalPost.id) :
+        ApiEndpoint.publications.POST(defaultAuthorUsername, newPostContent)
+    );
+
     response.match({
       error: error => alert(`${error.cause.title}\n${error.cause.detail}`),
       ok: publication => setPublications(prev => [publication, ...prev]),
@@ -41,7 +46,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setPublic
   }
 
   return (
-    <form className={styles.newPublicationForm} onSubmit={tryCreateNewPost}>
+    <form className={styles.newPublicationForm} onSubmit={createNewPublication}>
       <section className={styles.publicationContent}>
         <textarea
           placeholder="Share your thoughts"
