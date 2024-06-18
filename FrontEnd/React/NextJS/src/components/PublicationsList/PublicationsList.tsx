@@ -1,7 +1,7 @@
 import { PublicationEntity } from "@Core/Domain/Entities/types";
+import { RepostIcon } from "../Icons";
 import { Publication } from "../Publication";
 import styles from "./PublicationsList.module.css";
-import { RepostIcon } from "../Icons";
 
 type Props = {
   publications: PublicationEntity[];

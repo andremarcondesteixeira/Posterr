@@ -66,6 +66,10 @@ export default function Home() {
   }
 
   async function startRepost(originalPost: PublicationEntity) {
+    window.scrollTo({
+      behavior: "smooth",
+      top: 0,
+    });
     setOriginalPostForRepost(originalPost);
   }
 
