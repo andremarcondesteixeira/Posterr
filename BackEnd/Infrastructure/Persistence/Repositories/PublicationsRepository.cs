@@ -19,6 +19,14 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         ).Count();
     }
 
+    public int CountRepostsByUserAndOriginalPost(IUser author, IPost originalPost)
+    {
+        return dbContext.Publications.Where(p =>
+            p.AuthorUsername == author.Username &&
+            p.OriginalPostId == originalPost.Id
+        ).Count();
+    }
+
     public IPublication? FindById(long publicationId)
     {
         var queryResult = dbContext
@@ -46,13 +54,13 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         "IDE0305:Simplify collection initialization",
         Justification = "makes code harder to read in this case"
     )]
-    public IList<IPublication> GetNMostRecentPublications(short pageSize)
+    public IList<IPublication> GetNMostRecentPublications(short amount)
     {
         return dbContext
             .Publications
             .Include(publication => publication.Author)
             .OrderByDescending(p => p.PublicationDate)
-            .Take(pageSize)
+            .Take(amount)
             .Select(p => p.ToIPublication())
             .ToList();
     }
@@ -142,16 +150,6 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
 
     public IRepost PublishNewRepost(IUnpublishedRepost unpublishedRepost)
     {
-        bool isDuplicatedRepost = dbContext.Publications.Where(publication =>
-            publication.AuthorUsername == unpublishedRepost.Author.Username &&
-            publication.OriginalPostId == unpublishedRepost.OriginalPost.Id
-        ).Any();
-
-        if (isDuplicatedRepost)
-        {
-            throw new DuplicatedRepostException(unpublishedRepost);
-        }
-
         var repostUserQueryResult = dbContext
             .Users
             .Where(user => user.Username == unpublishedRepost.Author.Username);

@@ -30,6 +30,14 @@ public sealed class CreateNewRepostUseCase(
         }
 
         var unpublishedRepost = new UnpublishedRepost(user, input.Content, (IPost) originalPost, _domainConfig);
+
+        bool isDuplicatedRepost = _publicationsRepository.CountRepostsByUserAndOriginalPost(user, (IPost) originalPost) > 0;
+
+        if (isDuplicatedRepost)
+        {
+            throw new DuplicatedRepostException(unpublishedRepost);
+        }
+
         return unpublishedRepost.Publish(_publicationsRepository);
     }
 }
