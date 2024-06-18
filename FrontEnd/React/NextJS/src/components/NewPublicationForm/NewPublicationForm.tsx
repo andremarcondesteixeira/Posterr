@@ -45,6 +45,8 @@ export function NewPublicationForm({ setPublications, originalPost }: Props) {
           placeholder="Share your thoughts"
           value={newPostContent}
           onChange={(event) => setNewPostContent(event.target.value)}
+          rows={1}
+          style={{ height: "auto" }}
           ref={textareaRef}
         />
         {originalPost && (
