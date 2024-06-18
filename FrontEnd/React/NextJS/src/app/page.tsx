@@ -16,7 +16,12 @@ export default function Home() {
   useEffect(() => {
     const abortController = new AbortController();
     loadPublications(0, true, abortController.signal);
-    return () => abortController.abort(REQUEST_ABORTED);
+
+    return () => {
+      if (!abortController.signal.aborted) {
+        abortController.abort(REQUEST_ABORTED);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -24,12 +29,15 @@ export default function Home() {
 
     const abortController = new AbortController();
     let isLoading = false;
+
     const onIntersect: IntersectionObserverCallback = entries => {
       if (!entries[0].isIntersecting || isLoading) return;
       isLoading = true;
+      feedEndElementRef.current!.innerText = "Loading more posts...";
       const lastSeenPublicationId = publications[publications.length - 1].id;
       loadPublications(lastSeenPublicationId, false, abortController.signal, () => {
         isLoading = false;
+        feedEndElementRef.current!.innerText = "That's all for today!";
       });
     };
     const intersectionObserver = new IntersectionObserver(onIntersect);
@@ -69,7 +77,7 @@ export default function Home() {
         cancelRepostAction={() => setOriginalPostForRepost(null)}
       />
       <PublicationsList publications={publications} startRepostAction={startRepost} />
-      <p ref={feedEndElementRef}>That's all for today!</p>
+      <p ref={feedEndElementRef}>Loading...</p>
     </main>
   );
 }
