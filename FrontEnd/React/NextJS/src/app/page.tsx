@@ -87,6 +87,7 @@ export default function Home() {
       <NewPublicationForm
         setPublications={setPublications}
         originalPost={originalPostForRepost}
+        setOriginalPost={setOriginalPostForRepost}
         cancelRepostAction={() => setOriginalPostForRepost(null)}
       />
       <PublicationsList publications={publications} startRepostAction={startRepost} />

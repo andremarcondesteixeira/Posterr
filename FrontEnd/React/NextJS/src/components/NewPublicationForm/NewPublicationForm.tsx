@@ -9,19 +9,15 @@ import styles from "./NewPublicationForm.module.css";
 type Props = {
   cancelRepostAction: () => void;
   originalPost: PublicationEntity | null;
+  setOriginalPost: Dispatch<SetStateAction<PublicationEntity | null>>;
   setPublications: Dispatch<SetStateAction<PublicationAPIResource[]>>;
 };
 
-export function NewPublicationForm({ cancelRepostAction, originalPost: original, setPublications }: Props) {
+export function NewPublicationForm({ cancelRepostAction, originalPost, setOriginalPost, setPublications }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [newPostContent, setNewPostContent] = useState("");
   const { defaultAuthorUsername } = useContext(DefaultAuthorUsernameContext);
+  const [newPostContent, setNewPostContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [originalPost, setOriginalPost] = useState<PublicationEntity | null>(null);
-
-  useEffect(() => {
-    setOriginalPost(original);
-  }, [original])
 
   useLayoutEffect(() => {
     if (!textareaRef.current) {
