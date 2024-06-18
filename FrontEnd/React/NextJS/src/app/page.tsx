@@ -27,6 +27,8 @@ export default function Home() {
   useEffect(() => {
     if (!feedEndElementRef.current || publications.length === 0) return;
 
+    if (noMorePostsToBeLoaded()) return;
+
     const abortController = new AbortController();
     let isLoading = false;
 
@@ -48,6 +50,10 @@ export default function Home() {
       intersectionObserver.unobserve(feedEndElementRef.current!);
     };
   }, [publications.length]);
+
+  function noMorePostsToBeLoaded() {
+    return publications.length > 0 && publications[publications.length - 1].id === 1;
+  }
 
   function loadPublications(lastSeenPublicationId: number, isFirstPage: boolean, abortSignal: AbortSignal, onSuccess?: () => void) {
     ApiEndpoint.publications.GET(lastSeenPublicationId, isFirstPage, abortSignal).then(response => {
