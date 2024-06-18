@@ -70,6 +70,9 @@ export default function Home() {
       behavior: "smooth",
       top: 0,
     });
+    document.getElementById('newPublicationContent')?.focus({
+      preventScroll: true,
+    });
     setOriginalPostForRepost(originalPost);
   }
 

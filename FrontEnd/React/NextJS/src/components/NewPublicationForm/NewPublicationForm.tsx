@@ -64,6 +64,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost: original,
     <form className={styles.newPublicationForm} onSubmit={createNewPublication}>
       <section className={styles.publicationContent}>
         <textarea
+          id="newPublicationContent"
           placeholder="Share your thoughts"
           value={newPostContent}
           onChange={(event) => setNewPostContent(event.target.value)}
