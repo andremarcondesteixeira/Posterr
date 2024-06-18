@@ -1,1 +1,0 @@
-export { NewPostForm } from "./NewPostForm";

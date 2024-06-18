@@ -1,6 +1,6 @@
 "use client"
 
-import { NewPostForm } from "@/components/NewPostForm";
+import { NewPublicationForm } from "@/components/NewPublicationForm";
 import { Publication } from "@/components/Publication";
 import type { Publication as PublicationType } from "@Core/Domain/Entities/types";
 import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
@@ -63,7 +63,7 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <NewPostForm setPublications={setPublications} originalPost={originalPostForRepost} />
+      <NewPublicationForm setPublications={setPublications} originalPost={originalPostForRepost} />
       <ul className={styles.publicationsList}>
         {publications && publications.map(publication => (
           <li key={publication.id}>
