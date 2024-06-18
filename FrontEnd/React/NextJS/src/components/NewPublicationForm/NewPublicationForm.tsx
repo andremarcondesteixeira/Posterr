@@ -1,7 +1,8 @@
 import { DefaultAuthorUsernameContext } from "@/app/DefaultAuthorUsernameContext";
 import { PublicationEntity } from "@Core/Domain/Entities/types";
 import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
-import { Dispatch, FormEvent, SetStateAction, useContext, useLayoutEffect, useRef, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { LoadingIcon } from "../Icons";
 import { Publication } from "../Publication";
 import styles from "./NewPublicationForm.module.css";
 
@@ -11,10 +12,16 @@ type Props = {
   setPublications: Dispatch<SetStateAction<PublicationAPIResource[]>>;
 };
 
-export function NewPublicationForm({ cancelRepostAction, originalPost, setPublications }: Props) {
+export function NewPublicationForm({ cancelRepostAction, originalPost: original, setPublications }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [newPostContent, setNewPostContent] = useState("");
   const { defaultAuthorUsername } = useContext(DefaultAuthorUsernameContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const [originalPost, setOriginalPost] = useState<PublicationEntity | null>(null);
+
+  useEffect(() => {
+    setOriginalPost(original);
+  }, [original])
 
   useLayoutEffect(() => {
     if (!textareaRef.current) {
@@ -33,15 +40,23 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setPublic
       return;
     }
 
+    setIsLoading(true);
+
     const response = await (
       originalPost ?
         ApiEndpoint.publications.PATCH(defaultAuthorUsername, newPostContent, originalPost.id) :
         ApiEndpoint.publications.POST(defaultAuthorUsername, newPostContent)
     );
 
+    setIsLoading(false);
+
     response.match({
       error: error => alert(`${error.cause.title}\n${error.cause.detail}`),
-      ok: publication => setPublications(prev => [publication, ...prev]),
+      ok: publication => {
+        setPublications(prev => [publication, ...prev]);
+        setOriginalPost(null);
+        setNewPostContent("")
+      },
     });
   }
 
@@ -55,19 +70,27 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setPublic
           rows={1}
           style={{ height: "auto" }}
           ref={textareaRef}
+          disabled={isLoading}
         />
         {originalPost && (
           <Publication publication={originalPost}>
-            <button type="button" className="transparent" onClick={cancelRepostAction}>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                <path d="M10 1a9 9 0 1 0 9 9 9 9 0 0 0-9-9Zm0 16.4a7.4 7.4 0 1 1 7.4-7.4 7.41 7.41 0 0 1-7.4 7.4Zm3.29-12.11L10 8.59l-3.29-3.3-1.42 1.42L8.59 10l-3.3 3.29 1.42 1.42 3.29-3.3 3.29 3.3 1.42-1.42-3.3-3.29 3.3-3.29Z" />
-              </svg>
-              Cancel repost
-            </button>
+            {!isLoading && (
+              <button type="button" className="transparent" onClick={cancelRepostAction} disabled={isLoading}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M10 1a9 9 0 1 0 9 9 9 9 0 0 0-9-9Zm0 16.4a7.4 7.4 0 1 1 7.4-7.4 7.41 7.41 0 0 1-7.4 7.4Zm3.29-12.11L10 8.59l-3.29-3.3-1.42 1.42L8.59 10l-3.3 3.29 1.42 1.42 3.29-3.3 3.29 3.3 1.42-1.42-3.3-3.29 3.3-3.29Z" />
+                </svg>
+                Cancel repost
+              </button>
+            )}
           </Publication>
         )}
       </section>
-      <button className="primary">Publish</button>
+      {!isLoading && (
+        <button className="primary">
+          Publish
+        </button>
+      )}
+      {isLoading && <LoadingIcon />}
     </form>
   );
 }
