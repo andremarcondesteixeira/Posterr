@@ -63,7 +63,11 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <NewPublicationForm setPublications={setPublications} originalPost={originalPostForRepost} />
+      <NewPublicationForm
+        setPublications={setPublications}
+        originalPost={originalPostForRepost}
+        cancelRepostAction={() => setOriginalPostForRepost(null)}
+      />
       <ul className={styles.publicationsList}>
         {publications && publications.map(publication => (
           <li key={publication.id}>
