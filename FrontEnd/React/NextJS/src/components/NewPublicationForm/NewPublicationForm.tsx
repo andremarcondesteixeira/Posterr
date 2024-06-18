@@ -1,7 +1,7 @@
 import { DefaultAuthorUsernameContext } from "@/app/DefaultAuthorUsernameContext";
 import { PublicationEntity } from "@Core/Domain/Entities/types";
 import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
-import { Dispatch, FormEvent, SetStateAction, useContext, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useContext, useLayoutEffect, useRef, useState } from "react";
 import styles from "./NewPublicationForm.module.css";
 
 type Props = {
@@ -10,8 +10,18 @@ type Props = {
 };
 
 export function NewPublicationForm({ setPublications, originalPost }: Props) {
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [newPostContent, setNewPostContent] = useState("");
   const { defaultAuthorUsername } = useContext(DefaultAuthorUsernameContext);
+
+  useLayoutEffect(() => {
+    if (!textareaRef.current) {
+      return;
+    }
+
+    textareaRef.current.style.height = 'auto';
+    textareaRef.current.style.height = (textareaRef.current.scrollHeight) + "px";
+  }, [newPostContent]);
 
   async function tryCreateNewPost(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -29,8 +39,22 @@ export function NewPublicationForm({ setPublications, originalPost }: Props) {
   }
 
   return (
-    <form className={styles.newPostForm} onSubmit={tryCreateNewPost}>
-      <textarea placeholder="What are your thoughts?" value={newPostContent} onChange={(event) => setNewPostContent(event.target.value)} />
+    <form className={styles.newPublicationForm} onSubmit={tryCreateNewPost}>
+      <section className={styles.publicationContent}>
+        <textarea
+          placeholder="Share your thoughts"
+          value={newPostContent}
+          onChange={(event) => setNewPostContent(event.target.value)}
+          ref={textareaRef}
+        />
+        {originalPost && (
+          <article className={styles.originalPost}>
+            <span className={styles.originalPostAuthor}>{originalPost.authorUsername}</span>
+            <span className={styles.originalPostPublicationDate}>{new Date(originalPost.publicationDate).toLocaleString()}</span>
+            <span className={styles.originalPostContent}>{originalPost.content}</span>
+          </article>
+        )}
+      </section>
       <button className="primary">Publish</button>
     </form>
   );
