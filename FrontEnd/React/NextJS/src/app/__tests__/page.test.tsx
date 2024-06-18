@@ -1,4 +1,4 @@
-import { Publication } from "@Core/Domain/Entities/types";
+import { PublicationEntity } from "@Core/Domain/Entities/types";
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterAll, afterEach, describe, expect, test, vi } from 'vitest';
 import Page from '../page';
@@ -47,7 +47,7 @@ describe("Home", () => {
           publicationDate: new Date(2024, 4, 20, 15, 27),
           content: "the content",
         }
-      ] as Publication[],
+      ] as PublicationEntity[],
     });
     render(<Page />);
     expect(screen.queryByText('Loading posts...')).toBeNull();

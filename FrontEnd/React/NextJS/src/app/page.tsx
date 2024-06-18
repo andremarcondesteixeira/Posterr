@@ -2,7 +2,7 @@
 
 import { NewPublicationForm } from "@/components/NewPublicationForm";
 import { Publication } from "@/components/Publication";
-import type { Publication as PublicationType } from "@Core/Domain/Entities/types";
+import type { PublicationEntity } from "@Core/Domain/Entities/types";
 import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
 import { REQUEST_ABORTED } from "@Core/Services/HttpRequestService";
 import { useEffect, useRef, useState } from "react";
@@ -10,7 +10,7 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const [publications, setPublications] = useState<PublicationAPIResource[]>([]);
-  const [originalPostForRepost, setOriginalPostForRepost] = useState<PublicationType | null>(null);
+  const [originalPostForRepost, setOriginalPostForRepost] = useState<PublicationEntity | null>(null);
   const feedEndElementRef = useRef<HTMLParagraphElement | null>(null);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function Home() {
     });
   }
 
-  async function startRepost(originalPost: PublicationType) {
+  async function startRepost(originalPost: PublicationEntity) {
     setOriginalPostForRepost(originalPost);
   }
 

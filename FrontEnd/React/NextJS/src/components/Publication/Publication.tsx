@@ -1,8 +1,8 @@
-import type { Publication as PublicationType } from "@Core/Domain/Entities/types";
+import type { PublicationEntity } from "@Core/Domain/Entities/types";
 import styles from "./Publication.module.css";
 
 type Props = {
-  publication: PublicationType;
+  publication: PublicationEntity;
   onClickRepost: () => void;
 }
 

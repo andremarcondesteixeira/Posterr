@@ -1,12 +1,12 @@
 import { DefaultAuthorUsernameContext } from "@/app/DefaultAuthorUsernameContext";
-import { Publication } from "@Core/Domain/Entities/types";
+import { PublicationEntity } from "@Core/Domain/Entities/types";
 import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
 import { Dispatch, FormEvent, SetStateAction, useContext, useState } from "react";
 import styles from "./NewPublicationForm.module.css";
 
 type Props = {
   setPublications: Dispatch<SetStateAction<PublicationAPIResource[]>>;
-  originalPost: Publication | null;
+  originalPost: PublicationEntity | null;
 };
 
 export function NewPublicationForm({ setPublications, originalPost }: Props) {

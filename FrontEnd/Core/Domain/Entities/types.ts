@@ -1,4 +1,4 @@
-export type Publication = {
+export type PublicationEntity = {
   isRepost: boolean;
   id: number;
   authorUsername: string;
