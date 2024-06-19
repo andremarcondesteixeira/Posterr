@@ -39,6 +39,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
     }
 
     setIsLoading(true);
+    setErrorMessages([]);
 
     const response = await (
       originalPost ?
@@ -60,7 +61,9 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
 
   return (
     <form className={styles.newPublicationForm} onSubmit={createNewPublication}>
-      {errorMessages.length > 0 && <ErrorMessage messages={errorMessages} />}
+      {errorMessages.length > 0 && (
+        <ErrorMessage messages={errorMessages} onClickClose={() => setErrorMessages([])} />
+      )}
       <section className={styles.publicationContent}>
         <textarea
           id="newPublicationContent"

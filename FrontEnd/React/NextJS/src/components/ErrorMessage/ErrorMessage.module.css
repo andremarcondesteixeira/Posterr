@@ -3,7 +3,14 @@
   border: 1px solid red;
   border-radius: 10px;
   max-width: 40rem;
-  padding: 0.5rem;
+  padding: 0.5rem 3rem;
+  position: relative;
   text-align: center;
   width: 100%;
+
+  & .closeButton {
+    position: absolute;
+    right: 0;
+    top: 0.2rem;
+  }
 }

@@ -56,7 +56,7 @@ button, select {
   border: 1px solid #333;
   border-radius: calc(1rem - 10px);
   cursor: pointer;
-  padding: 0.2rem 1rem;
+  padding: 0.2rem 0.5rem;
 }
 
 label:has(select) {
