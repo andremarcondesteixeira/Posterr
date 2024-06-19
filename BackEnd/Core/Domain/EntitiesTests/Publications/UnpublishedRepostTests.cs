@@ -18,9 +18,10 @@ public class UnpublishedRepostTests
     {
         var author = A.Fake<IUser>();
         var originalPost = A.Fake<IPost>();
-        var unpublishedRepost = new UnpublishedRepost(author, originalPost, _domainConfig);
+        var unpublishedRepost = new UnpublishedRepost(author, "content", originalPost, _domainConfig);
 
         Assert.Equal(author, unpublishedRepost.Author);
+        Assert.Equal("content", unpublishedRepost.Content);
         Assert.Equal(originalPost, unpublishedRepost.OriginalPost);
         Assert.Equal(_domainConfig, unpublishedRepost.DomainConfig);
     }
@@ -28,19 +29,19 @@ public class UnpublishedRepostTests
     [Fact]
     public void GivenNullAuthor_WhenInstantiatingUnpublishedRepostEntity_ThenThrowException()
     {
-        Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(null, A.Fake<IPost>(), _domainConfig));
+        Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(null, "", A.Fake<IPost>(), _domainConfig));
     }
 
     [Fact]
     public void GivenNullOriginalPost_WhenInstantiatingUnpublishedRepostEntity_ThenThrowException()
     {
-        Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(A.Fake<IUser>(), null, _domainConfig));
+        Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(A.Fake<IUser>(), "", null, _domainConfig));
     }
 
     [Fact]
     public void GivenNullDomainConfig_WhenInstantiatingUnpublishedRepostEntity_ThenThrowException()
     {
-        Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(A.Fake<IUser>(), A.Fake<IPost>(), null));
+        Assert.Throws<ArgumentNullException>(() => new UnpublishedRepost(A.Fake<IUser>(), "", A.Fake<IPost>(), null));
     }
 
     [Fact]
@@ -48,7 +49,7 @@ public class UnpublishedRepostTests
     {
         var author = A.Fake<IUser>();
         var originalPost = A.Fake<IPost>();
-        var unpublishedRepost = new UnpublishedRepost(author, originalPost, _domainConfig);
+        var unpublishedRepost = new UnpublishedRepost(author, "repost content", originalPost, _domainConfig);
         var now = DateTime.UtcNow;
 
         var publicationsRepository = A.Fake<IPublicationsRepository>();
@@ -58,15 +59,15 @@ public class UnpublishedRepostTests
             A<DateTime>.Ignored
         )).Returns(0);
         A.CallTo(() => publicationsRepository.PublishNewRepost(unpublishedRepost)).Returns(
-            new Repost(1, author, now, "post content", originalPost, _domainConfig)
+            new Repost(1, author, now, unpublishedRepost.Content, originalPost, _domainConfig)
         );
 
         var repost = unpublishedRepost.Publish(publicationsRepository);
 
         Assert.Equal(1, repost.Id);
         Assert.Equal(author, repost.Author);
+        Assert.Equal(unpublishedRepost.Content, repost.Content);
         Assert.Equal(now, repost.PublicationDate);
-        Assert.Equal("post content", repost.Content);
         Assert.Equal(originalPost, repost.OriginalPost);
     }
 
@@ -74,7 +75,7 @@ public class UnpublishedRepostTests
     public void GivenUserHasReachedMaxAllowedDailyPublications_WhenPublishingUnpublishedPost_ThenThrowException()
     {
         var author = A.Fake<IUser>();
-        var unpublishedRepost = new UnpublishedRepost(author, A.Fake<IPost>(), _domainConfig);
+        var unpublishedRepost = new UnpublishedRepost(author, "", A.Fake<IPost>(), _domainConfig);
 
         var publicationsRepository = A.Fake<IPublicationsRepository>();
         A.CallTo(() => publicationsRepository.CountPublicationsMadeByUserBetweenDateTimeRange(
