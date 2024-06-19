@@ -1,7 +1,8 @@
 import { DefaultAuthorUsernameContext } from "@/app/DefaultAuthorUsernameContext";
 import { PublicationEntity } from "@Core/Domain/Entities/types";
 import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
-import { Dispatch, FormEvent, SetStateAction, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useContext, useLayoutEffect, useRef, useState } from "react";
+import { ErrorMessage } from "../ErrorMessage";
 import { LoadingIcon } from "../Icons";
 import { Publication } from "../Publication";
 import styles from "./NewPublicationForm.module.css";
@@ -18,6 +19,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
   const { defaultAuthorUsername } = useContext(DefaultAuthorUsernameContext);
   const [newPostContent, setNewPostContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
 
   useLayoutEffect(() => {
     if (!textareaRef.current) {
@@ -47,7 +49,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
     setIsLoading(false);
 
     response.match({
-      error: error => alert(`${error.cause.title}\n${error.cause.detail}`),
+      error: error => setErrorMessages([error.cause.title, error.cause.detail]),
       ok: publication => {
         setPublications(prev => [publication, ...prev]);
         setOriginalPost(null);
@@ -58,6 +60,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
 
   return (
     <form className={styles.newPublicationForm} onSubmit={createNewPublication}>
+      {errorMessages.length > 0 && <ErrorMessage messages={errorMessages} />}
       <section className={styles.publicationContent}>
         <textarea
           id="newPublicationContent"
