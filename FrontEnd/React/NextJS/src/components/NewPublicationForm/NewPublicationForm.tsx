@@ -6,7 +6,7 @@ import { PosterrAPIErrorResponse } from "@Core/Services/PosterrAPIErrorResponse"
 import { Dispatch, FormEvent, SetStateAction, useContext, useLayoutEffect, useRef, useState } from "react";
 import { ErrorMessage } from "../ErrorMessage";
 import { CancelIcon, LoadingIcon } from "../Icons";
-import { Publication } from "../Publication";
+import { PublicationContainer } from "../PublicationContainer";
 import styles from "./NewPublicationForm.module.css";
 
 type Props = {
@@ -87,14 +87,14 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
           {newPostContent.length} / 777
         </output>
         {originalPost && (
-          <Publication publication={originalPost}>
+          <PublicationContainer publication={originalPost}>
             {!isLoading && (
               <button type="button" className="transparent" onClick={cancelRepostAction} disabled={isLoading}>
                 <CancelIcon />
                 Cancel repost
               </button>
             )}
-          </Publication>
+          </PublicationContainer>
         )}
       </section>
       {!isLoading && (

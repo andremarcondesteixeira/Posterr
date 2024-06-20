@@ -1,13 +1,13 @@
 import type { PublicationEntity } from "@Core/Domain/Entities/types";
 import { ReactNode } from "react";
-import styles from "./Publication.module.css";
+import styles from "./PublicationContainer.module.css";
 
 type Props = {
   publication: PublicationEntity;
   children?: ReactNode;
 }
 
-export function Publication({ publication, children }: Props) {
+export function PublicationContainer({ publication, children }: Props) {
   return (
     <article className={`${styles.publication} ${publication.isRepost && styles.isRepost}`}>
       <span className={styles.publicationAuthor}>{publication.authorUsername}</span>
