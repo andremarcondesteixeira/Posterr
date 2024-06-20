@@ -18,7 +18,7 @@ export const ApiEndpoint = {
 
 function publications_GET(lastSeenPublicationId: number, isFirstPage: boolean, signal: AbortSignal) {
   const url = `${ApiEndpoint.publications.url}?lastSeenPublicationId=${lastSeenPublicationId}&isFirstPage=${isFirstPage}`;
-  return makeRequest<Publications_GET_Response>(url, { signal });
+  return makeRequest<PublicationsListAPIResource>(url, { signal });
 }
 
 function publications_POST(authorUsername: string, content: string) {
@@ -54,5 +54,5 @@ export type APIResource<EMBEDDED = undefined, LINKS = undefined> = {
 export type AuthorAPIResource = Author & APIResource;
 export type NextPageLink = { next?: { href: string } };
 export type PublicationAPIResource = Publication & APIResource<AuthorAPIResource>;
-export type Publications_GET_Response = { count: number } & APIResource<{ publications: PublicationAPIResource[] }, NextPageLink>;
+export type PublicationsListAPIResource = { count: number } & APIResource<{ publications: PublicationAPIResource[] }, NextPageLink>;
 export type Users_GET_Response = { count: number } & APIResource<{ users: AuthorAPIResource[] }>;
