@@ -1,31 +1,17 @@
-import { ApiEndpoint } from "../../Services/ApiEndpointsService";
-import { makeRequest } from "../../Services/HttpRequestService";
+import { ApiEndpoint, Publications_GET_Response } from "../../Services/ApiEndpointsService";
+import { PosterrAPIErrorResponse } from "../../Services/PosterrAPIErrorResponse";
+import { RequestAbortedError } from "../../Services/RequestAbortedError";
 import { Result } from "../../Util/Result";
-import { PublicationEntity } from "../Entities/types";
 
-export type ListPublicationsUseCaseResponse = {
-  count: number;
-  _embedded: {
-    publications: PublicationEntity[];
-  };
-  _links: {
-    self: {
-      href: string;
-    };
-    next?: {
-      href: string;
-    };
-  };
-};
-
-export function PostsPageUrl(page: number) {
-  return `${ApiEndpoint.publications}?pageNumber=${page}`;
-}
-
-export function ListPublicationsUseCase(page: number): Promise<Result<ListPublicationsUseCaseResponse, Error>> {
-  if (!Number.isInteger(page) || page < 1) {
-    throw new Error(`Tried to use invalid page number ${page} when calling GetPostsPageUseCase`);
+export async function ListPublicationsUseCase(
+  lastSeenPublicationId: number,
+  signal: AbortSignal
+): Promise<Result<Publications_GET_Response, PosterrAPIErrorResponse | RequestAbortedError | string>> {
+  if (!Number.isInteger(lastSeenPublicationId) || lastSeenPublicationId < 0) {
+    return Result.Error<Publications_GET_Response, string>(
+      `Last seen publication ID must be a positive integer or 0 (zero). Got ${lastSeenPublicationId} instead.`
+    );
   }
 
-  return makeRequest<ListPublicationsUseCaseResponse>(PostsPageUrl(page));
+  return ApiEndpoint.publications.GET(lastSeenPublicationId, lastSeenPublicationId === 0, signal);
 }

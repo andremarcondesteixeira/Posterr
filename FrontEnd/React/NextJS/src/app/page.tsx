@@ -1,13 +1,15 @@
 "use client"
 
+import { LoadingIcon } from "@/components/Icons";
 import { NewPublicationForm } from "@/components/NewPublicationForm";
 import { PublicationsList } from "@/components/PublicationsList";
 import type { PublicationEntity } from "@Core/Domain/Entities/types";
-import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
+import { ListPublicationsUseCase } from "@Core/Domain/UseCases";
+import { PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
 import { REQUEST_ABORTED } from "@Core/Services/HttpRequestService";
+import { PosterrAPIErrorResponse } from "@Core/Services/PosterrAPIErrorResponse";
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
-import { LoadingIcon } from "@/components/Icons";
 
 export default function Home() {
   const [publications, setPublications] = useState<PublicationAPIResource[]>([]);
@@ -16,7 +18,7 @@ export default function Home() {
 
   useEffect(() => {
     const abortController = new AbortController();
-    loadPublications(0, true, abortController.signal);
+    loadPublications(0, abortController.signal);
 
     return () => {
       if (!abortController.signal.aborted) {
@@ -40,7 +42,7 @@ export default function Home() {
       if (!entries[0].isIntersecting || isLoading) return;
       isLoading = true;
       const lastSeenPublicationId = publications[publications.length - 1].id;
-      loadPublications(lastSeenPublicationId, false, abortController.signal, () => {
+      loadPublications(lastSeenPublicationId, abortController.signal, () => {
         isLoading = false;
       });
     };
@@ -57,19 +59,23 @@ export default function Home() {
     return publications.length > 0 && publications[publications.length - 1].id === 1;
   }
 
-  function loadPublications(lastSeenPublicationId: number, isFirstPage: boolean, abortSignal: AbortSignal, onSuccess?: () => void) {
-    ApiEndpoint.publications.GET(lastSeenPublicationId, isFirstPage, abortSignal).then(response => {
-      response.match({
-        ok(response) {
-          setPublications(prev => [...prev, ...response._embedded.publications]);
-          onSuccess?.();
-        },
-        error(error) {
-          if (error.cause.title !== REQUEST_ABORTED) {
-            alert(`${error.cause.title}\n${error.cause.detail}`);
-          }
+  async function loadPublications(lastSeenPublicationId: number, abortSignal: AbortSignal, onSuccess?: () => void) {
+    const response = await ListPublicationsUseCase(lastSeenPublicationId, abortSignal);
+
+    response.match({
+      ok(response) {
+        setPublications(prev => [...prev, ...response._embedded.publications]);
+        onSuccess?.();
+      },
+      error(error) {
+        // At this point, things should not go wrong if everything is wired correctly.
+        // Since this is only a test, I'll just alert the error if something happens
+        if (typeof error === "string") {
+          alert(error);
+        } else if (error instanceof PosterrAPIErrorResponse) {
+          alert(`${error.cause.title}\n${error.cause.detail}`);
         }
-      });
+      }
     });
   }
 
