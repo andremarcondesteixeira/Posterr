@@ -1,8 +1,8 @@
 import { PublicationEntity } from "@Core/Domain/Entities/types";
+import * as HttpRequestService from "@Core/Services/HttpRequestService";
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterAll, afterEach, describe, expect, test, vi } from 'vitest';
 import Page from '../page';
-import * as HttpRequestService from "@Core/Services/HttpRequestService";
 
 describe("Home", () => {
   const HttpRequestServiceSpy = vi.spyOn(HttpRequestService, "makeRequest");
@@ -18,7 +18,6 @@ describe("Home", () => {
 
   test('It should render', () => {
     HttpRequestServiceSpy.mockReturnValueOnce({
-      errorLoadingPosts: undefined,
       isLoadingPosts: true,
       posts: undefined,
     });

@@ -7,6 +7,7 @@ import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpoints
 import { REQUEST_ABORTED } from "@Core/Services/HttpRequestService";
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
+import { LoadingIcon } from "@/components/Icons";
 
 export default function Home() {
   const [publications, setPublications] = useState<PublicationAPIResource[]>([]);
@@ -27,7 +28,10 @@ export default function Home() {
   useEffect(() => {
     if (!feedEndElementRef.current || publications.length === 0) return;
 
-    if (noMorePostsToBeLoaded()) return;
+    if (noMorePostsToBeLoaded()) {
+      feedEndElementRef.current.innerText = "That's all for today!";
+      return;
+    }
 
     const abortController = new AbortController();
     let isLoading = false;
@@ -35,11 +39,9 @@ export default function Home() {
     const onIntersect: IntersectionObserverCallback = entries => {
       if (!entries[0].isIntersecting || isLoading) return;
       isLoading = true;
-      feedEndElementRef.current!.innerText = "Loading more posts...";
       const lastSeenPublicationId = publications[publications.length - 1].id;
       loadPublications(lastSeenPublicationId, false, abortController.signal, () => {
         isLoading = false;
-        feedEndElementRef.current!.innerText = "That's all for today!";
       });
     };
     const intersectionObserver = new IntersectionObserver(onIntersect);
@@ -91,7 +93,10 @@ export default function Home() {
         cancelRepostAction={() => setOriginalPostForRepost(null)}
       />
       <PublicationsList publications={publications} startRepostAction={startRepost} />
-      <p ref={feedEndElementRef}>Loading...</p>
+      <p className={styles.loading} ref={feedEndElementRef}>
+        <LoadingIcon />
+        Loading
+      </p>
     </main>
   );
 }

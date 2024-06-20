@@ -35,33 +35,12 @@
       resize: none;
       width: 100%;
     }
-
-    /* & .originalPost {
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      display: grid;
-      grid-template-areas:
-        'author publication_date'
-        'content content';
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto 1fr;
-      padding: 1rem;
-
-      & > .originalPostAuthor {
-        font-family: "Bebas Neue", sans-serif;
-        font-style: normal;
-        font-weight: 400;
-        grid-area: author;
-        text-transform: uppercase;
-      }
-
-      & > .originalPostPublicationDate {
-        grid-area: publication_date;
-      }
-
-      & > .originalPostContent {
-        grid-area: content;
-      }
-    } */
   }
+}
+
+.loading {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }

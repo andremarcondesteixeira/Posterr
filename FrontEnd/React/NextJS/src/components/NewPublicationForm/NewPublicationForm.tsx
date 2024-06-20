@@ -91,7 +91,12 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
           Publish
         </button>
       )}
-      {isLoading && <LoadingIcon />}
+      {isLoading && (
+        <p className={styles.loading}>
+          <LoadingIcon />
+          Please wait
+        </p>
+      )}
     </form>
   );
 }
