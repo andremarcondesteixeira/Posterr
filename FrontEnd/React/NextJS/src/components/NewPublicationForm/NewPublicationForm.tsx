@@ -1,6 +1,8 @@
 import { DefaultAuthorUsernameContext } from "@/app/DefaultAuthorUsernameContext";
 import { PublicationEntity } from "@Core/Domain/Entities/types";
-import { ApiEndpoint, PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
+import { CreateNewPostUseCase, CreateNewRepostUseCase } from "@Core/Domain/UseCases";
+import { PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
+import { PosterrAPIErrorResponse } from "@Core/Services/PosterrAPIErrorResponse";
 import { Dispatch, FormEvent, SetStateAction, useContext, useLayoutEffect, useRef, useState } from "react";
 import { ErrorMessage } from "../ErrorMessage";
 import { CancelIcon, LoadingIcon } from "../Icons";
@@ -43,15 +45,21 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
 
     const response = await (
       originalPost ?
-        ApiEndpoint.publications.PATCH(defaultAuthorUsername, newPostContent, originalPost.id) :
-        ApiEndpoint.publications.POST(defaultAuthorUsername, newPostContent)
+        CreateNewRepostUseCase(defaultAuthorUsername, newPostContent, originalPost.id) :
+        CreateNewPostUseCase(defaultAuthorUsername, newPostContent)
     );
 
     setIsLoading(false);
 
     response.match({
-      error: error => setErrorMessages([error.cause.title, error.cause.detail]),
-      ok: publication => {
+      error(error) {
+        if (error instanceof PosterrAPIErrorResponse) {
+          setErrorMessages([error.cause.title, error.cause.detail]);
+        } else if(typeof error === "string") {
+          setErrorMessages([error]);
+        }
+      },
+      ok(publication) {
         setPublications(prev => [publication, ...prev]);
         setOriginalPost(null);
         setNewPostContent("")
