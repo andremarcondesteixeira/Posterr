@@ -3,7 +3,7 @@ import { makeRequest } from "../../Services/HttpRequestService";
 import { Result } from "../../Util/Result";
 import { PublicationEntity } from "../Entities/types";
 
-export type ListPublicationsWithPaginationUseCaseResponse = {
+export type ListPublicationsUseCaseResponse = {
   count: number;
   _embedded: {
     publications: PublicationEntity[];
@@ -22,10 +22,10 @@ export function PostsPageUrl(page: number) {
   return `${ApiEndpoint.publications}?pageNumber=${page}`;
 }
 
-export function ListPublicationsWithPaginationUseCase(page: number): Promise<Result<ListPublicationsWithPaginationUseCaseResponse, Error>> {
+export function ListPublicationsUseCase(page: number): Promise<Result<ListPublicationsUseCaseResponse, Error>> {
   if (!Number.isInteger(page) || page < 1) {
     throw new Error(`Tried to use invalid page number ${page} when calling GetPostsPageUseCase`);
   }
 
-  return makeRequest<ListPublicationsWithPaginationUseCaseResponse>(PostsPageUrl(page));
+  return makeRequest<ListPublicationsUseCaseResponse>(PostsPageUrl(page));
 }
