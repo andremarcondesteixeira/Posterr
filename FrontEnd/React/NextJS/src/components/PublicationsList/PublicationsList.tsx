@@ -1,11 +1,11 @@
-import { PublicationEntity } from "@Core/Domain/Entities/types";
+import { Publication } from "@Core/Domain/Entities/types";
 import { RepostIcon } from "../Icons";
 import { PublicationContainer } from "../PublicationContainer";
 import styles from "./PublicationsList.module.css";
 
 type Props = {
-  publications: PublicationEntity[];
-  startRepostAction: (originalPost: PublicationEntity) => void;
+  publications: Publication[];
+  startRepostAction: (originalPost: Publication) => void;
 }
 
 export function PublicationsList({ publications, startRepostAction }: Props) {

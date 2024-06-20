@@ -3,7 +3,7 @@
 import { LoadingIcon } from "@/components/Icons";
 import { NewPublicationForm } from "@/components/NewPublicationForm";
 import { PublicationsList } from "@/components/PublicationsList";
-import type { PublicationEntity } from "@Core/Domain/Entities/types";
+import type { Publication } from "@Core/Domain/Entities/types";
 import { ListPublicationsUseCase } from "@Core/Domain/UseCases";
 import { PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
 import { REQUEST_ABORTED } from "@Core/Services/HttpRequestService";
@@ -13,7 +13,7 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const [publications, setPublications] = useState<PublicationAPIResource[]>([]);
-  const [originalPostForRepost, setOriginalPostForRepost] = useState<PublicationEntity | null>(null);
+  const [originalPostForRepost, setOriginalPostForRepost] = useState<Publication | null>(null);
   const feedEndElementRef = useRef<HTMLParagraphElement | null>(null);
 
   useEffect(() => {
@@ -79,7 +79,7 @@ export default function Home() {
     });
   }
 
-  async function startRepost(originalPost: PublicationEntity) {
+  async function startRepost(originalPost: Publication) {
     window.scrollTo({
       behavior: "smooth",
       top: 0,

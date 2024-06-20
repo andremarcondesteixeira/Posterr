@@ -1,5 +1,5 @@
 import { DefaultAuthorUsernameContext } from "@/app/DefaultAuthorUsernameContext";
-import { PublicationEntity } from "@Core/Domain/Entities/types";
+import { Publication } from "@Core/Domain/Entities/types";
 import { CreateNewPostUseCase, CreateNewRepostUseCase } from "@Core/Domain/UseCases";
 import { PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
 import { PosterrAPIErrorResponse } from "@Core/Services/PosterrAPIErrorResponse";
@@ -11,8 +11,8 @@ import styles from "./NewPublicationForm.module.css";
 
 type Props = {
   cancelRepostAction: () => void;
-  originalPost: PublicationEntity | null;
-  setOriginalPost: Dispatch<SetStateAction<PublicationEntity | null>>;
+  originalPost: Publication | null;
+  setOriginalPost: Dispatch<SetStateAction<Publication | null>>;
   setPublications: Dispatch<SetStateAction<PublicationAPIResource[]>>;
 };
 

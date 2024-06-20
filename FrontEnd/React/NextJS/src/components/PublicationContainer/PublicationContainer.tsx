@@ -1,9 +1,9 @@
-import type { PublicationEntity } from "@Core/Domain/Entities/types";
+import type { Publication } from "@Core/Domain/Entities/types";
 import { ReactNode } from "react";
 import styles from "./PublicationContainer.module.css";
 
 type Props = {
-  publication: PublicationEntity;
+  publication: Publication;
   children?: ReactNode;
 }
 

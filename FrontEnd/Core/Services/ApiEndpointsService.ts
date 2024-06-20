@@ -1,4 +1,4 @@
-import { Author, PublicationEntity } from "../Domain/Entities/types";
+import { Author, Publication } from "../Domain/Entities/types";
 import { makeRequest } from "./HttpRequestService";
 
 const baseUrl = `${process.env["NEXT_PUBLIC_API_SERVER_URL"]}/api`;
@@ -53,6 +53,6 @@ export type APIResource<EMBEDDED = undefined, LINKS = undefined> = {
 }
 export type AuthorAPIResource = Author & APIResource;
 export type NextPageLink = { next?: { href: string } };
-export type PublicationAPIResource = PublicationEntity & APIResource<AuthorAPIResource>;
+export type PublicationAPIResource = Publication & APIResource<AuthorAPIResource>;
 export type Publications_GET_Response = { count: number } & APIResource<{ publications: PublicationAPIResource[] }, NextPageLink>;
 export type Users_GET_Response = { count: number } & APIResource<{ users: AuthorAPIResource[] }>;
