@@ -60,7 +60,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
   }
 
   return (
-    <form className={styles.newPublicationForm} onSubmit={createNewPublication}>
+    <form className={styles.newPublicationForm} onSubmit={createNewPublication} id="newPublicationForm">
       {errorMessages.length > 0 && (
         <ErrorMessage messages={errorMessages} onClickClose={() => setErrorMessages([])} />
       )}
@@ -75,6 +75,9 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
           ref={textareaRef}
           disabled={isLoading}
         />
+        <output name="contentCharacterCount" htmlFor="newPublicationContent" form="newPublicationForm" className={styles.contentCharacterCount}>
+          {newPostContent.length} / 777
+        </output>
         {originalPost && (
           <Publication publication={originalPost}>
             {!isLoading && (

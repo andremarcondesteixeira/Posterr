@@ -19,6 +19,7 @@
     gap: 1rem;
     max-width: 40rem;
     padding: 1rem;
+    position: relative;
     width: 100%;
 
     &:has(textarea:focus) {
@@ -34,6 +35,13 @@
       padding: 0;
       resize: none;
       width: 100%;
+    }
+
+    .contentCharacterCount {
+      position: absolute;
+      bottom: -1.5rem;
+      right: 0.5rem;
+      font-size: 0.8rem;
     }
   }
 }
