@@ -44,7 +44,7 @@ function publications_PATCH(authorUsername: string, content: string, originalPos
 }
 
 function users_GET() {
-  return makeRequest<Users_GET_Response>(ApiEndpoint.users.url);
+  return makeRequest<UsersListAPIResource>(ApiEndpoint.users.url);
 }
 
 export type APIResource<EMBEDDED = undefined, LINKS = undefined> = {
@@ -55,4 +55,4 @@ export type AuthorAPIResource = Author & APIResource;
 export type NextPageLink = { next?: { href: string } };
 export type PublicationAPIResource = Publication & APIResource<AuthorAPIResource>;
 export type PublicationsListAPIResource = { count: number } & APIResource<{ publications: PublicationAPIResource[] }, NextPageLink>;
-export type Users_GET_Response = { count: number } & APIResource<{ users: AuthorAPIResource[] }>;
+export type UsersListAPIResource = { count: number } & APIResource<{ users: AuthorAPIResource[] }>;
