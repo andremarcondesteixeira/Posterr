@@ -1,6 +1,8 @@
 "use client"
 
-import { ApiEndpoint, AuthorAPIResource } from "@Core/Services/ApiEndpointsService";
+import { ListUsersUseCase } from "@Core/Domain/UseCases";
+import { AuthorAPIResource } from "@Core/Services/ApiEndpointsService";
+import { PosterrAPIErrorResponse } from "@Core/Services/PosterrAPIErrorResponse";
 import { useContext, useEffect, useState } from "react";
 import { DefaultAuthorUsernameContext } from "../../app/DefaultAuthorUsernameContext";
 import { GitHubIcon, LinkedInIcon } from "../Icons";
@@ -11,10 +13,14 @@ export function Header() {
   const { defaultAuthorUsername, setDefaultAuthorUsername } = useContext(DefaultAuthorUsernameContext);
 
   useEffect(() => {
-    ApiEndpoint.users.GET().then(response => {
-      response.match({
+    ListUsersUseCase().then(result => {
+      result.match({
         ok: users => setUsers(users._embedded.users),
-        error: error => alert(error.message),
+        error(error) {
+          if (error instanceof PosterrAPIErrorResponse) {
+            alert(error.message);
+          }
+        }
       });
     });
   }, []);
