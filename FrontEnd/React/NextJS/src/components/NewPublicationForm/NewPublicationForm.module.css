@@ -42,6 +42,10 @@
       bottom: -1.5rem;
       right: 0.5rem;
       font-size: 0.8rem;
+
+      &[aria-invalid="true"] {
+        color: red;
+      }
     }
   }
 }

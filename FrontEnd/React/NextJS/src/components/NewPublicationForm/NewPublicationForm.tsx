@@ -83,7 +83,13 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
           ref={textareaRef}
           disabled={isLoading}
         />
-        <output name="contentCharacterCount" htmlFor="newPublicationContent" form="newPublicationForm" className={styles.contentCharacterCount}>
+        <output
+          name="contentCharacterCount"
+          htmlFor="newPublicationContent"
+          form="newPublicationForm"
+          className={styles.contentCharacterCount}
+          aria-invalid={newPostContent.length > 777}
+        >
           {newPostContent.length} / 777
         </output>
         {originalPost && (
