@@ -1,7 +1,7 @@
 ﻿using Posterr.Core.Shared.PersistenceInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
 
-namespace Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
+namespace Posterr.Core.Application.UseCases.ListPublications;
 
 public sealed class ListPublicationsUseCase(IPublicationsRepository publicationsRepository)
     : IUseCase<ListPublicationsUseCaseInputDTO, IList<IPublication>>

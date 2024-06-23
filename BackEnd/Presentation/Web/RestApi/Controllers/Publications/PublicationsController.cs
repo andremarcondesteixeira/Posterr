@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Routing;
 using Posterr.Core.Application.UseCases.CreateNewPost;
 using Posterr.Core.Application.UseCases.CreateNewRepost;
 using Posterr.Core.Application.UseCases.GetPublicationById;
-using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
+using Posterr.Core.Application.UseCases.ListPublications;
 using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
 using Posterr.Core.Shared.Exceptions;

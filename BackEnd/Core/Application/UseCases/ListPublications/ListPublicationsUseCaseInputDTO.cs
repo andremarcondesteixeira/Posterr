@@ -1,6 +1,6 @@
 ﻿using Posterr.Core.Shared.ConfigurationInterfaces;
 
-namespace Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
+namespace Posterr.Core.Application.UseCases.ListPublications;
 
 public sealed record ListPublicationsUseCaseInputDTO
 {

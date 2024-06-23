@@ -1,5 +1,5 @@
 using FakeItEasy;
-using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
+using Posterr.Core.Application.UseCases.ListPublications;
 using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
 using Posterr.Core.Shared.PersistenceInterfaces;

@@ -1,4 +1,4 @@
-using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
+using Posterr.Core.Application.UseCases.ListPublications;
 using Posterr.Presentation.Web.RestApi.Controllers.SharedModels.HATEOAS.HAL;
 
 namespace Posterr.Presentation.Web.RestApi.Controllers.Publications;
