@@ -101,4 +101,20 @@ public class CreateNewRepostUseCaseTests
             () => useCase.Run(createNewRepostRequest)
         );
     }
+
+    [Fact]
+    public void GivenAPublishedRepost_ThenTheRepostCannotBeReposted()
+    {
+        var yesterday = Fake.CurrentTimeUTC.AddDays(-1);
+        var originalPostAuthor = Fake.User(Fake.OriginalPostAuthorUsername);
+        var originalPost = Fake.Repost(2, originalPostAuthor, yesterday, "content", Fake.Post(1, originalPostAuthor, yesterday.AddHours(-1), "original"));
+        var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
+        var createNewRepostRequest = new CreateNewRepostUseCaseInputDTO(repostAuthor.Username, "", originalPost.Id);
+        A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
+        A.CallTo(() => publicationsRepository.FindById(originalPost.Id)).Returns(originalPost);
+
+        Assert.Throws<CannotRepostRepostException>(
+            () => useCase.Run(createNewRepostRequest)
+        );
+    }
 }
