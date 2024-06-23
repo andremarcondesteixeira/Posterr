@@ -1,4 +1,4 @@
-import type { Publication } from "@Core/Domain/Entities/types";
+import type { Publication } from "@CoreDomain/Entities/types";
 import { ReactNode } from "react";
 import styles from "./PublicationContainer.module.css";
 

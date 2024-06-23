@@ -1,8 +1,6 @@
 import { Result } from "../Util/Result";
-import { PosterrAPIErrorResponse } from "./PosterrAPIErrorResponse";
+import { PosterrAPIErrorResponse } from "../types";
 import { RequestAbortedError } from "./RequestAbortedError";
-
-export const REQUEST_ABORTED = "aborted";
 
 export async function makeRequest<RESPONSE>(url: string, init?: RequestInit): Promise<Result<RESPONSE, PosterrAPIErrorResponse | RequestAbortedError>> {
     try {
@@ -18,7 +16,7 @@ export async function makeRequest<RESPONSE>(url: string, init?: RequestInit): Pr
         return Result.Ok<RESPONSE>(responseAsJson);
     } catch(error: unknown) {
         if (init?.signal?.aborted) {
-          return Result.Error(new RequestAbortedError(typeof error === "string" ? error : JSON.stringify(error)));
+          return Result.Error(new RequestAbortedError());
         }
 
         // Fetch API only throws error objects, and the API should always return an ErrorDetails object when there is an error.

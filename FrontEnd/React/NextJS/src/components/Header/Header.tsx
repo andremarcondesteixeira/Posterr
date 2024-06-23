@@ -1,8 +1,7 @@
 "use client"
 
-import { ListUsersUseCase } from "@Core/Domain/UseCases";
-import { AuthorAPIResource } from "@Core/Services/ApiEndpointsService";
-import { PosterrAPIErrorResponse } from "@Core/Services/PosterrAPIErrorResponse";
+import { ListUsersUseCase } from "@CoreDomain/UseCases";
+import { AuthorAPIResource, PosterrAPIErrorResponse } from "@CoreTypes";
 import { useContext, useEffect, useState } from "react";
 import { DefaultAuthorUsernameContext } from "../../app/DefaultAuthorUsernameContext";
 import { GitHubIcon, LinkedInIcon } from "../Icons";

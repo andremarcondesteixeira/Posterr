@@ -1,9 +1,8 @@
 import { DefaultAuthorUsernameContext } from "@/app/DefaultAuthorUsernameContext";
-import { Publication } from "@Core/Domain/Entities/types";
-import { CreateNewPostUseCase, CreateNewRepostUseCase } from "@Core/Domain/UseCases";
-import config from "@Core/Domain/config.json";
-import { PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
-import { PosterrAPIErrorResponse } from "@Core/Services/PosterrAPIErrorResponse";
+import { Publication } from "@CoreDomain/Entities/types";
+import { CreateNewPostUseCase, CreateNewRepostUseCase } from "@CoreDomain/UseCases";
+import config from "@CoreDomain/config.json";
+import { PosterrAPIErrorResponse, PublicationAPIResource } from "@CoreTypes";
 import { Dispatch, FormEvent, SetStateAction, useContext, useLayoutEffect, useRef, useState } from "react";
 import { ErrorMessage } from "../ErrorMessage";
 import { CancelIcon, LoadingIcon } from "../Icons";

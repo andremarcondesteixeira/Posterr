@@ -1,4 +1,4 @@
-import { Author, Publication } from "../Domain/Entities/types";
+import { PublicationAPIResource, PublicationsListAPIResource, UsersListAPIResource } from "../types";
 import { makeRequest } from "./HttpRequestService";
 
 const baseUrl = `${process.env["NEXT_PUBLIC_API_SERVER_URL"]}/api`;
@@ -46,13 +46,3 @@ function publications_PATCH(authorUsername: string, content: string, originalPos
 function users_GET() {
   return makeRequest<UsersListAPIResource>(ApiEndpoint.users.url);
 }
-
-export type APIResource<EMBEDDED = undefined, LINKS = undefined> = {
-  _links: { self: { href: string } } & LINKS;
-  _embedded: EMBEDDED;
-}
-export type AuthorAPIResource = Author & APIResource;
-export type NextPageLink = { next?: { href: string } };
-export type PublicationAPIResource = Publication & APIResource<AuthorAPIResource>;
-export type PublicationsListAPIResource = { count: number } & APIResource<{ publications: PublicationAPIResource[] }, NextPageLink>;
-export type UsersListAPIResource = { count: number } & APIResource<{ users: AuthorAPIResource[] }>;

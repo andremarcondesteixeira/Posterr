@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@Core/*": ["../../Core/*"],
+      "@CoreDomain/*": ["../../Core/Domain/*"],
+      "@CoreTypes": ["../../Core/types.ts"],
       "@/*": ["./src/*"]
     },
     "forceConsistentCasingInFileNames": true,

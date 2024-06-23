@@ -1,4 +1,4 @@
-import { Publication } from "@Core/Domain/Entities/types";
+import { Publication } from "@CoreDomain/Entities/types";
 import { RepostIcon } from "../Icons";
 import { PublicationContainer } from "../PublicationContainer";
 import styles from "./PublicationsList.module.css";

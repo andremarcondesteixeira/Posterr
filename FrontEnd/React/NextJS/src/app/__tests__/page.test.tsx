@@ -1,4 +1,4 @@
-import { Publication } from "@Core/Domain/Entities/types";
+import { Publication } from "@CoreDomain/Entities/types";
 import * as HttpRequestService from "@Core/Services/HttpRequestService";
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterAll, afterEach, describe, expect, test, vi } from 'vitest';

@@ -3,11 +3,9 @@
 import { LoadingIcon } from "@/components/Icons";
 import { NewPublicationForm } from "@/components/NewPublicationForm";
 import { PublicationsList } from "@/components/PublicationsList";
-import type { Publication } from "@Core/Domain/Entities/types";
-import { ListPublicationsUseCase } from "@Core/Domain/UseCases";
-import { PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
-import { REQUEST_ABORTED } from "@Core/Services/HttpRequestService";
-import { PosterrAPIErrorResponse } from "@Core/Services/PosterrAPIErrorResponse";
+import { Publication } from "@CoreDomain/Entities/types";
+import { ListPublicationsUseCase } from "@CoreDomain/UseCases";
+import { PosterrAPIErrorResponse, PublicationAPIResource } from "@CoreTypes";
 import { useEffect, useRef, useState } from "react";
 import styles from "./page.module.css";
 
@@ -22,7 +20,7 @@ export default function Home() {
 
     return () => {
       if (!abortController.signal.aborted) {
-        abortController.abort(REQUEST_ABORTED);
+        abortController.abort();
       }
     }
   }, []);
@@ -50,7 +48,7 @@ export default function Home() {
     intersectionObserver.observe(feedEndElementRef.current!);
 
     return () => {
-      abortController.abort(REQUEST_ABORTED);
+      abortController.abort();
       intersectionObserver.unobserve(feedEndElementRef.current!);
     };
   }, [publications.length]);
