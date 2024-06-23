@@ -59,7 +59,7 @@ public class PostTests
     public void GivenContentLengthIsGreaterThanMaximumAllowed_WhenInstantiatingPostEntity_ThenThrowException()
     {
         var content = new string('@', (int) _domainConfig.MaxPostLength + 1);
-        Assert.Throws<MaxPostContentLengthExceededException>(() =>
+        Assert.Throws<MaxPublicationContentLengthExceededException>(() =>
         {
             Post.Builder()
                 .WithId(1)

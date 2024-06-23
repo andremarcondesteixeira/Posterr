@@ -36,7 +36,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
     event.preventDefault();
 
     if (!defaultAuthorUsername) {
-      alert("Please select the author for the new post");
+      alert("Please select the author for the new publication");
       return;
     }
 

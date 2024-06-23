@@ -8,11 +8,10 @@ using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
 using Posterr.Core.Shared.Exceptions;
-using Posterr.Presentation.Web.RestApi.Controllers.Publications;
 using Posterr.Presentation.Web.RestApi.Controllers.SharedModels;
 using static Posterr.Presentation.Web.RestApi.Controllers.Publications.PublicationsListAPIResourceDTO;
 
-namespace Posterr.Presentation.Web.RestApi.Controllers;
+namespace Posterr.Presentation.Web.RestApi.Controllers.Publications;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -87,7 +86,7 @@ public class PublicationsController(
                 statusCode: e switch
                 {
                     UserNotFoundException => StatusCodes.Status404NotFound,
-                    EmptyPostContentException or MaxPostContentLengthExceededException => StatusCodes.Status400BadRequest,
+                    EmptyPostContentException or MaxPublicationContentLengthExceededException => StatusCodes.Status400BadRequest,
                     MaxAllowedDailyPublicationsByUserExceededException => StatusCodes.Status403Forbidden,
                     _ => StatusCodes.Status500InternalServerError
                 }
@@ -112,7 +111,7 @@ public class PublicationsController(
 
             return Ok(RepostAPIResourceDTO.FromIRepost((IRepost)publication, linkGenerationService));
         }
-        catch(PosterrException e)
+        catch (PosterrException e)
         {
             return Problem(
                 title: e.Message,

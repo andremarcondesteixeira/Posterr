@@ -44,6 +44,6 @@ public class PostContentTests
     public void GivenContentLengthIsGreaterThanMaxAllowedSize_WhenInstantiatingPostContentValueObject_ThenThrowException()
     {
         var content = new string('@', (int) _domainConfig.MaxPostLength + 1);
-        Assert.Throws<MaxPostContentLengthExceededException>(() => new PostContent(content, _domainConfig));
+        Assert.Throws<MaxPublicationContentLengthExceededException>(() => new PostContent(content, _domainConfig));
     }
 }

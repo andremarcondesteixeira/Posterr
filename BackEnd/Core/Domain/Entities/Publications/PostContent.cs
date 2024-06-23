@@ -18,7 +18,7 @@ public sealed record PostContent
 
         if (content.Length > domainConfig.MaxPostLength)
         {
-            throw new MaxPostContentLengthExceededException(content.Length, domainConfig);
+            throw new MaxPublicationContentLengthExceededException(content.Length, domainConfig);
         }
 
         Value = content;
