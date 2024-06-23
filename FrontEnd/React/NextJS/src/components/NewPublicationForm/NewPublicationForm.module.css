@@ -22,6 +22,14 @@
     position: relative;
     width: 100%;
 
+    &[aria-invalid="true"] {
+      border-color: red;
+
+      &:has(textarea:focus) {
+        outline-color: red;
+      }
+    }
+
     &:has(textarea:focus) {
       outline: 1px solid #000;
     }

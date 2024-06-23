@@ -72,16 +72,17 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
       {errorMessages.length > 0 && (
         <ErrorMessage messages={errorMessages} onClickClose={() => setErrorMessages([])} />
       )}
-      <section className={styles.publicationContent}>
+      <section className={styles.publicationContent} aria-invalid={newPostContent.length > config.maxPublicationContentLength}>
         <textarea
+          disabled={isLoading}
           id="newPublicationContent"
-          placeholder="Share your thoughts"
-          value={newPostContent}
+          maxLength={config.maxPublicationContentLength}
           onChange={(event) => setNewPostContent(event.target.value)}
+          placeholder="Share your thoughts"
+          ref={textareaRef}
           rows={1}
           style={{ height: "auto" }}
-          ref={textareaRef}
-          disabled={isLoading}
+          value={newPostContent}
         />
         <output
           name="contentCharacterCount"
