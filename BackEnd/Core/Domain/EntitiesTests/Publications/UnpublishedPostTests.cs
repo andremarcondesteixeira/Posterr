@@ -2,11 +2,11 @@
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 using FakeItEasy;
+using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
-using Posterr.Core.Shared.PersistenceInterfaces;
-using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.Exceptions;
+using Posterr.Core.Shared.PersistenceInterfaces;
 
 namespace Posterr.Core.Domain.EntitiesTests.Publications;
 
@@ -17,8 +17,8 @@ public class UnpublishedPostTests
     public UnpublishedPostTests()
     {
         _domainConfig = A.Fake<IDomainConfig>();
-        A.CallTo(() => _domainConfig.MaxAllowedDailyPublicationsByUser).Returns((ushort) 5);
-        A.CallTo(() => _domainConfig.MaxPostLength).Returns((uint) 7);
+        A.CallTo(() => _domainConfig.MaxAllowedDailyPublicationsByUser).Returns((ushort)5);
+        A.CallTo(() => _domainConfig.MaxPostLength).Returns((uint)7);
     }
 
     [Fact]

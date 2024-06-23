@@ -23,11 +23,11 @@ public class ListPublicationsUseCaseTests
         var yesterday = DateTime.UtcNow.AddDays(-1);
         IUser postAuthor = Fake.User(Fake.OriginalPostAuthorUsername);
         IPost post = Fake.Post(1, postAuthor, yesterday, Fake.Content);
-        
+
         var now = DateTime.UtcNow;
         IUser repostAuthor = Fake.User(Fake.RepostAuthorUsername);
         IRepost repost = Fake.Repost(2, repostAuthor, now, "repost content", post);
-        
+
         A.CallTo(() => publicationsRepository.GetNMostRecentPublications(15)).Returns([repost, post]);
 
         IList<IPublication> publications = useCase.Run(new ListPublicationsUseCaseInputDTO(true, 0, domainConfig));

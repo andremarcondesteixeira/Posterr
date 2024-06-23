@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Posterr.Core.Shared.EntitiesInterfaces;
-using Posterr.Core.Shared.PersistenceInterfaces;
 using Posterr.Core.Shared.Exceptions;
+using Posterr.Core.Shared.PersistenceInterfaces;
 using Posterr.Infrastructure.Persistence.DbEntities;
 using System.Data;
 using System.Data.Common;

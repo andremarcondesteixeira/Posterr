@@ -2,8 +2,8 @@
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 using FakeItEasy;
-using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Domain.Entities.Publications;
+using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Domain.EntitiesTests.Publications;
@@ -15,7 +15,7 @@ public class PostContentTests
     public PostContentTests()
     {
         _domainConfig = A.Fake<IDomainConfig>();
-        A.CallTo(() => _domainConfig.MaxPostLength).Returns((uint) 7);
+        A.CallTo(() => _domainConfig.MaxPostLength).Returns((uint)7);
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public class PostContentTests
     [Fact]
     public void GivenContentLengthIsGreaterThanMaxAllowedSize_WhenInstantiatingPostContentValueObject_ThenThrowException()
     {
-        var content = new string('@', (int) _domainConfig.MaxPostLength + 1);
+        var content = new string('@', (int)_domainConfig.MaxPostLength + 1);
         Assert.Throws<MaxPublicationContentLengthExceededException>(() => new PostContent(content, _domainConfig));
     }
 }

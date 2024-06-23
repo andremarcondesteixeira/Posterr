@@ -1,8 +1,8 @@
-﻿using Posterr.Core.Shared.ConfigurationInterfaces;
+﻿using Posterr.Core.Domain.Entities.Publications;
+using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
-using Posterr.Core.Shared.PersistenceInterfaces;
-using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.Exceptions;
+using Posterr.Core.Shared.PersistenceInterfaces;
 
 namespace Posterr.Core.Application.UseCases.CreateNewPost;
 

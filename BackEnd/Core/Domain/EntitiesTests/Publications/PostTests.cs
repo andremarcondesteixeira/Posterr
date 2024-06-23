@@ -1,7 +1,7 @@
 ﻿using FakeItEasy;
+using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
-using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Domain.EntitiesTests.Publications;
@@ -13,7 +13,7 @@ public class PostTests
     public PostTests()
     {
         _domainConfig = A.Fake<IDomainConfig>();
-        A.CallTo(() => _domainConfig.MaxPostLength).Returns((uint) 4);
+        A.CallTo(() => _domainConfig.MaxPostLength).Returns((uint)4);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class PostTests
     [Fact]
     public void GivenContentLengthIsGreaterThanMaximumAllowed_WhenInstantiatingPostEntity_ThenThrowException()
     {
-        var content = new string('@', (int) _domainConfig.MaxPostLength + 1);
+        var content = new string('@', (int)_domainConfig.MaxPostLength + 1);
         Assert.Throws<MaxPublicationContentLengthExceededException>(() =>
         {
             Post.Builder()
@@ -70,7 +70,7 @@ public class PostTests
                 .Build();
         });
     }
-    
+
     [Fact]
     public void GivenAnyNullParameter_WhenInstantiatingPostEntity_ThenThrowException()
     {

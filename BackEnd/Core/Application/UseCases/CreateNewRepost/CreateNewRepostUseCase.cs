@@ -1,8 +1,8 @@
-﻿using Posterr.Core.Shared.ConfigurationInterfaces;
+﻿using Posterr.Core.Domain.Entities.Publications;
+using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
-using Posterr.Core.Shared.PersistenceInterfaces;
-using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.Exceptions;
+using Posterr.Core.Shared.PersistenceInterfaces;
 
 namespace Posterr.Core.Application.UseCases.CreateNewRepost;
 
@@ -29,9 +29,9 @@ public sealed class CreateNewRepostUseCase(
             throw new CannotRepostRepostException(input.AuthorUsername, input.OriginalPostId);
         }
 
-        var unpublishedRepost = new UnpublishedRepost(user, input.Content, (IPost) originalPost, _domainConfig);
+        var unpublishedRepost = new UnpublishedRepost(user, input.Content, (IPost)originalPost, _domainConfig);
 
-        bool isDuplicatedRepost = _publicationsRepository.CountRepostsByUserAndOriginalPost(user, (IPost) originalPost) > 0;
+        bool isDuplicatedRepost = _publicationsRepository.CountRepostsByUserAndOriginalPost(user, (IPost)originalPost) > 0;
 
         if (isDuplicatedRepost)
         {

@@ -30,9 +30,9 @@ public class PublicationDbEntity : BaseDbEntity
         PublicationDate,
         Content,
         new Post(
-            (long) OriginalPostId!,
-            new User((long) OriginalPostAuthorId!, OriginalPostAuthorUsername!),
-            (DateTime) OriginalPostPublicationDate!,
+            (long)OriginalPostId!,
+            new User((long)OriginalPostAuthorId!, OriginalPostAuthorUsername!),
+            (DateTime)OriginalPostPublicationDate!,
             OriginalPostContent!
         )
     );

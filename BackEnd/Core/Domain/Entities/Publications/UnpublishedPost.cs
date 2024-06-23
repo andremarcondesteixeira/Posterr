@@ -1,7 +1,7 @@
 ﻿using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
-using Posterr.Core.Shared.PersistenceInterfaces;
 using Posterr.Core.Shared.Exceptions;
+using Posterr.Core.Shared.PersistenceInterfaces;
 
 namespace Posterr.Core.Domain.Entities.Publications;
 
@@ -11,7 +11,7 @@ public sealed record UnpublishedPost : IUnpublishedPost
 {
     private readonly PostContent _content;
     public string Content { get => _content.Value; }
-    public IUser Author { get; }   
+    public IUser Author { get; }
     public IDomainConfig DomainConfig { get; }
 
     public UnpublishedPost(IUser author, string content, IDomainConfig domainConfig)

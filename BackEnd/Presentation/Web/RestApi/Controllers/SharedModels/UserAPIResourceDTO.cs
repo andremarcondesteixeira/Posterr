@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Posterr.Core.Shared.EntitiesInterfaces;
+﻿using Posterr.Core.Shared.EntitiesInterfaces;
 using Posterr.Presentation.Web.RestApi.Controllers.SharedModels.HATEOAS.HAL;
 using Posterr.Presentation.Web.RestApi.Controllers.Users;
 
