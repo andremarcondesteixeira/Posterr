@@ -22,7 +22,7 @@
     position: relative;
     width: 100%;
 
-    &[aria-invalid="true"] {
+    &[data-is-invalid="true"] {
       border-color: red;
 
       &:has(textarea:focus) {
@@ -51,7 +51,7 @@
       right: 0.5rem;
       font-size: 0.8rem;
 
-      &[aria-invalid="true"] {
+      &[data-is-invalid="true"] {
         color: red;
       }
     }

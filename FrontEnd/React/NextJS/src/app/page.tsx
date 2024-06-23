@@ -33,6 +33,7 @@ export default function Home() {
       return;
     }
 
+    const currentRef = feedEndElementRef.current;
     const abortController = new AbortController();
     let isLoading = false;
 
@@ -45,13 +46,13 @@ export default function Home() {
       });
     };
     const intersectionObserver = new IntersectionObserver(onIntersect);
-    intersectionObserver.observe(feedEndElementRef.current!);
+    intersectionObserver.observe(currentRef);
 
     return () => {
       abortController.abort();
-      intersectionObserver.unobserve(feedEndElementRef.current!);
+      intersectionObserver.unobserve(currentRef);
     };
-  }, [publications.length]);
+  }, [publications, noMorePostsToBeLoaded]);
 
   function noMorePostsToBeLoaded() {
     return publications.length > 0 && publications[publications.length - 1].id === 1;

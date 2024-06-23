@@ -72,7 +72,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
       {errorMessages.length > 0 && (
         <ErrorMessage messages={errorMessages} onClickClose={() => setErrorMessages([])} />
       )}
-      <section className={styles.publicationContent} aria-invalid={newPostContent.length > config.maxPublicationContentLength}>
+      <section className={styles.publicationContent} data-is-invalid={newPostContent.length > config.maxPublicationContentLength}>
         <textarea
           disabled={isLoading}
           id="newPublicationContent"
@@ -89,7 +89,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
           htmlFor="newPublicationContent"
           form="newPublicationForm"
           className={styles.contentCharacterCount}
-          aria-invalid={newPostContent.length > config.maxPublicationContentLength}
+          data-is-invalid={newPostContent.length > config.maxPublicationContentLength}
         >
           {newPostContent.length} / {config.maxPublicationContentLength}
         </output>

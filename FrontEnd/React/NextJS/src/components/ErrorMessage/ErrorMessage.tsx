@@ -13,7 +13,7 @@ export function ErrorMessage({ messages, onClickClose }: Props) {
         <CloseIcon />
       </button>
       {messages.map(message => (
-        <p>{message}</p>
+        <p key={message}>{message}</p>
       ))}
     </article>
   );
