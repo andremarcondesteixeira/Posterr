@@ -28,7 +28,8 @@ export default function Home() {
   useEffect(() => {
     if (!feedEndElementRef.current || publications.length === 0) return;
 
-    if (noMorePostsToBeLoaded()) {
+    const noMorePostsToBeLoaded = publications.length > 0 && publications[publications.length - 1].id === 1;
+    if (noMorePostsToBeLoaded) {
       feedEndElementRef.current.innerText = "That's all for today!";
       return;
     }
@@ -52,11 +53,7 @@ export default function Home() {
       abortController.abort();
       intersectionObserver.unobserve(currentRef);
     };
-  }, [publications, noMorePostsToBeLoaded]);
-
-  function noMorePostsToBeLoaded() {
-    return publications.length > 0 && publications[publications.length - 1].id === 1;
-  }
+  }, [publications]);
 
   async function loadPublications(lastSeenPublicationId: number, abortSignal: AbortSignal, onSuccess?: () => void) {
     const response = await ListPublicationsUseCase(lastSeenPublicationId, abortSignal);
