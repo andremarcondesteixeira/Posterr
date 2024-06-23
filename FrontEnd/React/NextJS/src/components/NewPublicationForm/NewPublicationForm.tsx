@@ -1,7 +1,7 @@
 import { DefaultAuthorUsernameContext } from "@/app/DefaultAuthorUsernameContext";
+import config from "@CoreConfig";
 import { Publication } from "@CoreDomain/Entities/types";
 import { CreateNewPostUseCase, CreateNewRepostUseCase } from "@CoreDomain/UseCases";
-import config from "@CoreDomain/config.json";
 import { PosterrAPIErrorResponse, PublicationAPIResource } from "@CoreTypes";
 import { Dispatch, FormEvent, SetStateAction, useContext, useLayoutEffect, useRef, useState } from "react";
 import { ErrorMessage } from "../ErrorMessage";

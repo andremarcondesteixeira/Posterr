@@ -21,6 +21,7 @@
     "paths": {
       "@CoreDomain/*": ["../../Core/Domain/*"],
       "@CoreTypes": ["../../Core/types.ts"],
+      "@CoreConfig": ["../../Core/config.json"],
       "@/*": ["./src/*"]
     },
     "forceConsistentCasingInFileNames": true,
