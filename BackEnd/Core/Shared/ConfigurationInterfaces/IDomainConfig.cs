@@ -1,4 +1,4 @@
-﻿namespace Posterr.Core.Shared.ConfigurationInterface;
+﻿namespace Posterr.Core.Shared.ConfigurationInterfaces;
 
 public interface IDomainConfig
 {

@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\ConfigurationInterfaces\Posterr.Core.Shared.ConfigurationInterfaces.csproj" />
-    <ProjectReference Include="..\..\Shared\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj" />
+    <ProjectReference Include="..\ConfigurationInterfaces\Posterr.Core.Shared.ConfigurationInterfaces.csproj" />
+    <ProjectReference Include="..\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj" />
   </ItemGroup>
 
 </Project>
