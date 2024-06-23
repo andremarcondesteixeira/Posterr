@@ -1,0 +1,4 @@
+{
+  "maxPublicationContentLength": 777,
+  "apiBaseUrl": "http://localhost:5250/api"
+}

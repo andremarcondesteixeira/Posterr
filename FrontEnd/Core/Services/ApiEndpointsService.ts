@@ -1,7 +1,8 @@
+import config from "../config.json";
 import { PublicationAPIResource, PublicationsListAPIResource, UsersListAPIResource } from "../types";
 import { makeRequest } from "./HttpRequestService";
 
-const baseUrl = `${process.env["NEXT_PUBLIC_API_SERVER_URL"]}/api`;
+const baseUrl = config.apiBaseUrl;
 
 export const ApiEndpoint = {
   publications: {

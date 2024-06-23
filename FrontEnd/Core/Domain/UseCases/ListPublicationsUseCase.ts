@@ -1,7 +1,7 @@
-import { ApiEndpoint, PublicationsListAPIResource } from "../../Services/ApiEndpointsService";
-import { PosterrAPIErrorResponse } from "../../Services/PosterrAPIErrorResponse";
+import { ApiEndpoint } from "../../Services/ApiEndpointsService";
 import { RequestAbortedError } from "../../Services/RequestAbortedError";
 import { Result } from "../../Util/Result";
+import { PosterrAPIErrorResponse, PublicationsListAPIResource } from "../../types";
 
 export async function ListPublicationsUseCase(
   lastSeenPublicationId: number,

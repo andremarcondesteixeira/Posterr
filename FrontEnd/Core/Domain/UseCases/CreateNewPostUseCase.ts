@@ -1,8 +1,8 @@
-import { ApiEndpoint, PublicationAPIResource } from "../../Services/ApiEndpointsService";
-import { PosterrAPIErrorResponse } from "../../Services/PosterrAPIErrorResponse";
+import { ApiEndpoint } from "../../Services/ApiEndpointsService";
 import { RequestAbortedError } from "../../Services/RequestAbortedError";
 import { Result } from "../../Util/Result";
-import config from "../config.json";
+import config from "../../config.json";
+import { PosterrAPIErrorResponse, PublicationAPIResource } from "../../types";
 
 export async function CreateNewPostUseCase(
   authorUsername: string,
