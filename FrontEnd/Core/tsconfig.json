@@ -11,6 +11,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "outDir": "dist",
+    "resolveJsonModule": true,
     "strict": true,
     "target": "ESNext"
   },

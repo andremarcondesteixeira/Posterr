@@ -1,6 +1,7 @@
 import { DefaultAuthorUsernameContext } from "@/app/DefaultAuthorUsernameContext";
 import { Publication } from "@Core/Domain/Entities/types";
 import { CreateNewPostUseCase, CreateNewRepostUseCase } from "@Core/Domain/UseCases";
+import config from "@Core/Domain/config.json";
 import { PublicationAPIResource } from "@Core/Services/ApiEndpointsService";
 import { PosterrAPIErrorResponse } from "@Core/Services/PosterrAPIErrorResponse";
 import { Dispatch, FormEvent, SetStateAction, useContext, useLayoutEffect, useRef, useState } from "react";
@@ -88,9 +89,9 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
           htmlFor="newPublicationContent"
           form="newPublicationForm"
           className={styles.contentCharacterCount}
-          aria-invalid={newPostContent.length > 777}
+          aria-invalid={newPostContent.length > config.maxPublicationContentLength}
         >
-          {newPostContent.length} / 777
+          {newPostContent.length} / {config.maxPublicationContentLength}
         </output>
         {originalPost && (
           <PublicationContainer publication={originalPost}>
