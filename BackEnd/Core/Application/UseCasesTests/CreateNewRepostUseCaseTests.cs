@@ -1,6 +1,4 @@
-﻿#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-
-using FakeItEasy;
+﻿using FakeItEasy;
 using Posterr.Core.Application.UseCases.CreateNewRepost;
 using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
@@ -32,7 +30,7 @@ public class CreateNewRepostUseCaseTests
         var publishedRepost = Fake.Repost(2, unpublishedRepost.Author, Fake.CurrentTimeUTC, "repost content", unpublishedRepost.OriginalPost);
         A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
         A.CallTo(() => publicationsRepository.FindById(originalPost.Id)).Returns(originalPost);
-        A.CallTo(() => publicationsRepository.CountRepostsByUserAndOriginalPost(A<IUser>.Ignored, A<IPost>.Ignored)).Returns(0);
+        A.CallTo(() => publicationsRepository.CountRepostsByUserAndOriginalPost(repostAuthor, originalPost)).Returns(0);
         A.CallTo(() => publicationsRepository.CountPublicationsMadeByUserBetweenDateTimeRange(
             repostAuthor,
             A<DateTime>.Ignored,
@@ -86,7 +84,7 @@ public class CreateNewRepostUseCaseTests
         var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
         A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
         A.CallTo(() => publicationsRepository.FindById(originalPost.Id)).Returns(originalPost);
-        A.CallTo(() => publicationsRepository.CountRepostsByUserAndOriginalPost(A<IUser>.Ignored, A<IPost>.Ignored)).Returns(0);
+        A.CallTo(() => publicationsRepository.CountRepostsByUserAndOriginalPost(repostAuthor, originalPost)).Returns(0);
         A.CallTo(() => publicationsRepository.CountPublicationsMadeByUserBetweenDateTimeRange(
             repostAuthor,
             A<DateTime>.Ignored,
@@ -107,13 +105,31 @@ public class CreateNewRepostUseCaseTests
     {
         var yesterday = Fake.CurrentTimeUTC.AddDays(-1);
         var originalPostAuthor = Fake.User(Fake.OriginalPostAuthorUsername);
-        var originalPost = Fake.Repost(2, originalPostAuthor, yesterday, "content", Fake.Post(1, originalPostAuthor, yesterday.AddHours(-1), "original"));
+        var originalPost = Fake.Post(1, originalPostAuthor, yesterday.AddHours(-1), "original");
+        var originalRepost = Fake.Repost(2, originalPostAuthor, yesterday, "content", originalPost);
+        var authorOfTheNewRepostOfRepost = Fake.User(Fake.RepostAuthorUsername);
+        var createNewRepostRequest = new CreateNewRepostUseCaseInputDTO(authorOfTheNewRepostOfRepost.Username, "", originalRepost.Id);
+        A.CallTo(() => usersRepository.FindByUsername(authorOfTheNewRepostOfRepost.Username)).Returns(authorOfTheNewRepostOfRepost);
+        A.CallTo(() => publicationsRepository.FindById(originalRepost.Id)).Returns(originalRepost);
+
+        Assert.Throws<CannotRepostRepostException>(
+            () => useCase.Run(createNewRepostRequest)
+        );
+    }
+
+    [Fact]
+    public void GivenAPublishedPost_ThenItCannotBeRepostedTwiceByTheSameUser()
+    {
+        var yesterday = Fake.CurrentTimeUTC.AddDays(-1);
+        var originalPostAuthor = Fake.User(Fake.OriginalPostAuthorUsername);
+        var originalPost = Fake.Post(1, originalPostAuthor, yesterday, "original");
         var repostAuthor = Fake.User(Fake.RepostAuthorUsername);
         var createNewRepostRequest = new CreateNewRepostUseCaseInputDTO(repostAuthor.Username, "", originalPost.Id);
         A.CallTo(() => usersRepository.FindByUsername(repostAuthor.Username)).Returns(repostAuthor);
         A.CallTo(() => publicationsRepository.FindById(originalPost.Id)).Returns(originalPost);
+        A.CallTo(() => publicationsRepository.CountRepostsByUserAndOriginalPost(repostAuthor, originalPost)).Returns(1);
 
-        Assert.Throws<CannotRepostRepostException>(
+        Assert.Throws<DuplicatedRepostException>(
             () => useCase.Run(createNewRepostRequest)
         );
     }
