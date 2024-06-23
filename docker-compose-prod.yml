@@ -1,4 +1,4 @@
-name: posterr-andre-teixeira
+name: posterr-prod-andre-teixeira
 
 services:
 
@@ -20,6 +20,22 @@ services:
     restart: always
     ports:
       - 8080:8080
+
+  backend:
+    build: ./Backend
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    ports:
+      - 5250:5250
+    depends_on:
+      - db
+
+  frontend:
+    build: ./FrontEnd
+    restart: always
+    ports:
+      - 3000:3000
 
 volumes:
   db:
