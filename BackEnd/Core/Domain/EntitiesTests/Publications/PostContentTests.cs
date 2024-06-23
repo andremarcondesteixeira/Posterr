@@ -2,7 +2,7 @@
 #pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
 
 using FakeItEasy;
-using Posterr.Core.Boundaries.ConfigurationInterface;
+using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.Exceptions;
 

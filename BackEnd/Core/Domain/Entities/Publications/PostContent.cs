@@ -1,4 +1,4 @@
-﻿using Posterr.Core.Boundaries.ConfigurationInterface;
+﻿using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.Exceptions;
 
 namespace Posterr.Core.Domain.Entities.Publications;

@@ -1,6 +1,6 @@
-﻿using Posterr.Core.Boundaries.ConfigurationInterface;
-using Posterr.Core.Boundaries.EntitiesInterfaces;
-using Posterr.Core.Boundaries.Persistence;
+﻿using Posterr.Core.Shared.ConfigurationInterfaces;
+using Posterr.Core.Shared.EntitiesInterfaces;
+using Posterr.Core.Shared.PersistenceInterfaces;
 using Posterr.Core.Domain.Entities.Publications;
 using Posterr.Core.Shared.Exceptions;
 

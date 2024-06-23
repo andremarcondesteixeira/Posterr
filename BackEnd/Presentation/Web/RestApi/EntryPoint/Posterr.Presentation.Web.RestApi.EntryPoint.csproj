@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Core\Application\UseCases\Posterr.Core.Application.UseCases.csproj" />
-    <ProjectReference Include="..\..\..\..\Core\Boundaries\Configuration\Posterr.Core.Shared.ConfigurationInterface.csproj" />
+    <ProjectReference Include="..\..\..\..\Core\Shared\ConfigurationInterfaces\Posterr.Core.Shared.ConfigurationInterfaces.csproj" />
     <ProjectReference Include="..\..\..\..\Infrastructure\Persistence\Posterr.Infrastructure.Persistence.csproj" />
     <ProjectReference Include="..\Controllers\Posterr.Presentation.Web.RestApi.Controllers.csproj" />
   </ItemGroup>

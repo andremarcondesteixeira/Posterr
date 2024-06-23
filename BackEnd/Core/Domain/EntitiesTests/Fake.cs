@@ -1,5 +1,5 @@
 ﻿using FakeItEasy;
-using Posterr.Core.Boundaries.ConfigurationInterface;
+using Posterr.Core.Shared.ConfigurationInterfaces;
 
 namespace Posterr.Core.Domain.EntitiesTests;
 

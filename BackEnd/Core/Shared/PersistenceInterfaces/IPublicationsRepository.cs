@@ -1,6 +1,6 @@
-﻿using Posterr.Core.Boundaries.EntitiesInterfaces;
+﻿using Posterr.Core.Shared.EntitiesInterfaces;
 
-namespace Posterr.Core.Boundaries.Persistence;
+namespace Posterr.Core.Shared.PersistenceInterfaces;
 
 public interface IPublicationsRepository
 {

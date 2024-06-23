@@ -1,4 +1,4 @@
-﻿using Posterr.Core.Boundaries.EntitiesInterfaces;
+﻿using Posterr.Core.Shared.EntitiesInterfaces;
 
 namespace Posterr.Core.Shared.Exceptions;
 

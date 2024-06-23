@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Boundaries\Configuration\Posterr.Core.Shared.ConfigurationInterface.csproj" />
-    <ProjectReference Include="..\..\Boundaries\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj" />
-    <ProjectReference Include="..\..\Boundaries\Persistence\Posterr.Core.Shared.PersistenceInterfaces.csproj" />
     <ProjectReference Include="..\..\Domain\Entities\Posterr.Core.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\Shared\ConfigurationInterfaces\Posterr.Core.Shared.ConfigurationInterfaces.csproj" />
+    <ProjectReference Include="..\..\Shared\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj" />
+    <ProjectReference Include="..\..\Shared\PersistenceInterfaces\Posterr.Core.Shared.PersistenceInterfaces.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 

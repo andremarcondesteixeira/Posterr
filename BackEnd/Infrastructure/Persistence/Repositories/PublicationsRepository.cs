@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Posterr.Core.Boundaries.EntitiesInterfaces;
-using Posterr.Core.Boundaries.Persistence;
+using Posterr.Core.Shared.EntitiesInterfaces;
+using Posterr.Core.Shared.PersistenceInterfaces;
 using Posterr.Core.Shared.Exceptions;
 using Posterr.Infrastructure.Persistence.DbEntities;
 using System.Data;

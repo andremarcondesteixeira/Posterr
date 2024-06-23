@@ -25,9 +25,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Application\UseCases\Posterr.Core.Application.UseCases.csproj" />
-    <ProjectReference Include="..\..\Core\Boundaries\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj" />
-    <ProjectReference Include="..\..\Core\Boundaries\Persistence\Posterr.Core.Shared.PersistenceInterfaces.csproj" />
+    <ProjectReference Include="..\..\Core\Shared\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj" />
     <ProjectReference Include="..\..\Core\Shared\Exceptions\Posterr.Core.Shared.Exceptions.csproj" />
+    <ProjectReference Include="..\..\Core\Shared\PersistenceInterfaces\Posterr.Core.Shared.PersistenceInterfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>

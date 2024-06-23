@@ -1,8 +1,8 @@
 using FakeItEasy;
 using Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
-using Posterr.Core.Boundaries.ConfigurationInterface;
-using Posterr.Core.Boundaries.EntitiesInterfaces;
-using Posterr.Core.Boundaries.Persistence;
+using Posterr.Core.Shared.ConfigurationInterfaces;
+using Posterr.Core.Shared.EntitiesInterfaces;
+using Posterr.Core.Shared.PersistenceInterfaces;
 
 namespace Posterr.Core.Application.UseCasesTests;
 

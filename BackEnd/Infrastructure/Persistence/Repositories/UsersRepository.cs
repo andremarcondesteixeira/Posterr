@@ -1,5 +1,5 @@
-﻿using Posterr.Core.Boundaries.Persistence;
-using Posterr.Core.Boundaries.EntitiesInterfaces;
+﻿using Posterr.Core.Shared.PersistenceInterfaces;
+using Posterr.Core.Shared.EntitiesInterfaces;
 
 namespace Posterr.Infrastructure.Persistence.Repositories;
 

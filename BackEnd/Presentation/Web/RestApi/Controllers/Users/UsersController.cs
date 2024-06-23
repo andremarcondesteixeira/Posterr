@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Posterr.Core.Application.UseCases.GetUserById;
 using Posterr.Core.Application.UseCases.ListUsers;
-using Posterr.Core.Boundaries.EntitiesInterfaces;
+using Posterr.Core.Shared.EntitiesInterfaces;
 using Posterr.Core.Shared.Exceptions;
 using Posterr.Presentation.Web.RestApi.Controllers.SharedModels;
 

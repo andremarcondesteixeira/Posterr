@@ -1,4 +1,4 @@
-﻿using Posterr.Core.Boundaries.ConfigurationInterface;
+﻿using Posterr.Core.Shared.ConfigurationInterfaces;
 
 namespace Posterr.Core.Application.UseCases.ListPublicationsWithPagination;
 

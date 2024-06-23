@@ -1,4 +1,4 @@
-﻿using Posterr.Core.Boundaries.EntitiesInterfaces;
+﻿using Posterr.Core.Shared.EntitiesInterfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Posterr.Infrastructure.Persistence.DbEntities;

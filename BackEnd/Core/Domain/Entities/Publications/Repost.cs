@@ -1,5 +1,5 @@
-﻿using Posterr.Core.Boundaries.ConfigurationInterface;
-using Posterr.Core.Boundaries.EntitiesInterfaces;
+﻿using Posterr.Core.Shared.ConfigurationInterfaces;
+using Posterr.Core.Shared.EntitiesInterfaces;
 
 namespace Posterr.Core.Domain.Entities.Publications;
 

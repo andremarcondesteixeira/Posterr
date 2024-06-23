@@ -1,5 +1,5 @@
-using Posterr.Core.Boundaries.EntitiesInterfaces;
-using Posterr.Core.Boundaries.Persistence;
+using Posterr.Core.Shared.EntitiesInterfaces;
+using Posterr.Core.Shared.PersistenceInterfaces;
 
 namespace Posterr.Core.Application.UseCases.ListUsers;
 

@@ -1,4 +1,4 @@
-﻿namespace Posterr.Core.Boundaries.EntitiesInterfaces;
+﻿namespace Posterr.Core.Shared.EntitiesInterfaces;
 
 public interface IPublication
 {
