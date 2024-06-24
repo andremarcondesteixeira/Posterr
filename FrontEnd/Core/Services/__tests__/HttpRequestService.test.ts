@@ -1,5 +1,6 @@
 import { strict as assert } from "node:assert";
 import { suite, test } from "node:test";
+import { PosterrAPIErrorResponse } from "../../types";
 import { makeRequest } from "../HttpRequestService";
 
 // https://github.com/nodejs/node/issues/52015
@@ -19,17 +20,21 @@ suite("HttpRequestService", () => {
     });
 
     test("Given the HTTP status code is not in the ok range (200 - 299) when doing a request, then return an Error Result object", async (context) => {
-      context.mock.method(global, "fetch", () => Promise.resolve({ status: 404, ok: false }));
+      context.mock.method(global, "fetch", () => Promise.resolve({
+        status: 404,
+        ok: false,
+        json: () => Promise.resolve({ foo: "bar" }),
+      }));
       const response = await makeRequest<never>("/");
-      assert.equal(response.errorValue?.message, "Response HTTP status code was 404 when fetching /");
-      assert.deepEqual(response.errorValue?.cause, { status: 404, ok: false });
+      assert.equal((response.errorValue as PosterrAPIErrorResponse).message, "Response HTTP status code was 404 when fetching /");
+      assert.deepEqual((response.errorValue as PosterrAPIErrorResponse).cause, { foo: "bar" });
       context.mock.reset();
     });
 
     test("Given an Error object is thrown when doing an HTTP request, then return an Error Result object", async (context) => {
       context.mock.method(global, "fetch", () => Promise.reject(new Error("something bad happened")));
       const response = await makeRequest<{ foo: "bar" }>("/");
-      assert.equal(response.errorValue?.message, "something bad happened");
+      assert.equal((response.errorValue as PosterrAPIErrorResponse).message, "something bad happened");
       context.mock.reset();
     });
   });
