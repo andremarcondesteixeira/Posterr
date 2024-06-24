@@ -76,3 +76,29 @@ Here are the application business rules:
 - Absence of users CRUD operations
 - Configurable default user
 - Confirmation prompt for reposting actions
+
+# Architecture
+
+The application is divided into a FrontEnd app and a BackEnd app.
+
+The FrontEnd is a NextJS application, and the BackEnd is a modularized monolith written in Asp.Net Core 8.
+
+In the BackEnd side, I used principles from Domain Driven Design, Clean Architecture and Ports and Adapters. The BackEnd application is divided into several layers, aiming to improve the maintainability and scalability of the project:
+
+1. Core: Contains all the business logic
+    1. Application/UseCases: Contains the business logic, i.e, the use cases (Application Business Logic in Clean Architecture)
+    2. Domain/Entities: Contains the core entities. Those are not database entities, but types that define core behaviors related to the business entities. (Enterprise Business Logic in Clean Architecture)
+    3. Shared: Serves as a boundary that allows a clear separation of concerns between different layers without creating tight coupling through direct project dependencies. (Boundaries in Clean Architecture)
+2. Infrastructure/Persistence: Contains all the database related logic.
+3. Presentation/Web/RestApi: Receives and Responds user requests through HTTP calls
+    1. Controllers: Contains the Rest API controllers.
+    2. EntryPoint: Starts the application. This is separated from the controllers so that the controllers do not have access to the database repositories, which would break the separation of layers.
+
+# What I would like to to better
+
+1. I would like to have used TDD in the frontend side. The NextJS application ended up without any unit test.
+2. Write e2e tests with Playwright
+3. Use Terraform to automatically deploy the application in AWS
+4. Setup CI/CD with GitHub Actions
+5. I wrote this app in the rare spare time slots I had. I currently work doing freelance projects and also I need to take care of my son, and because of that, it took a long time to finish. I wish I had finished this quicker.
+
