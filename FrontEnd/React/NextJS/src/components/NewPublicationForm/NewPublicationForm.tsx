@@ -5,7 +5,7 @@ import { CreateNewPostUseCase, CreateNewRepostUseCase } from "@CoreDomain/UseCas
 import { PosterrAPIErrorResponse, PublicationAPIResource } from "@CoreTypes";
 import { Dispatch, FormEvent, SetStateAction, useContext, useLayoutEffect, useRef, useState } from "react";
 import { ErrorMessage } from "../ErrorMessage";
-import { CancelIcon, LoadingIcon } from "../Icons";
+import { CancelIcon, LoadingIcon, UploadIcon } from "../Icons";
 import { PublicationContainer } from "../PublicationContainer";
 import styles from "./NewPublicationForm.module.css";
 
@@ -106,6 +106,7 @@ export function NewPublicationForm({ cancelRepostAction, originalPost, setOrigin
       </section>
       {!isLoading && (
         <button className="primary">
+          <UploadIcon color="white" />
           Publish
         </button>
       )}

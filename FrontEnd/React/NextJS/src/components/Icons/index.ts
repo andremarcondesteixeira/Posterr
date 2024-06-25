@@ -4,3 +4,5 @@ export { GitHubIcon } from "./GitHubIcon";
 export { LinkedInIcon } from "./LinkedInIcon";
 export { LoadingIcon } from "./LoadingIcon"
 export { RepostIcon } from "./RepostIcon";
+export { SearchIcon } from "./SearchIcon";
+export { UploadIcon } from "./UploadIcon";
