@@ -17,8 +17,9 @@ body {
 
 button {
   align-items: center;
+  border: 1px solid #00000020;
   display: inline-flex;
-  font-weight: bold;
+  font-weight: normal;
   gap: 0.5rem;
   justify-content: space-evenly;
   transition: ease-in-out 100ms;
@@ -52,11 +53,36 @@ button {
   }
 }
 
-button, select {
-  border: 1px solid #333;
+button, input, select {
   border-radius: calc(1rem - 10px);
-  cursor: pointer;
   padding: 0.2rem 0.5rem;
+
+  &:focus {
+    outline: 1px solid #000;
+  }
+}
+
+button, select {
+  cursor: pointer;
+}
+
+input, select {
+  border: 1px solid #ccc;
+}
+
+form {
+  > input {
+    &:has(+ button) {
+      border-bottom-right-radius: 0;
+      border-right-width: 0;
+      border-top-right-radius: 0;
+    }
+
+    + button {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+    }
+  }
 }
 
 label:has(select) {
