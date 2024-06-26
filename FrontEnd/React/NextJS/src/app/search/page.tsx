@@ -39,6 +39,10 @@ export default function SearchPage() {
     return () => abortController.abort();
   }, []);
 
+  const redirectToHomeWithRepostAction = (originalPost: Publication) => {
+    window.location.href = `${window.location.protocol}//${window.location.host}?repost=${originalPost.id}`;
+  }
+
   return (
     <>
       <ContainerBand className={styles.containerBand}>
@@ -52,7 +56,7 @@ export default function SearchPage() {
           <p className={styles.resultsDescriptionText}>
             {publications.length} results found:
           </p>
-          <PublicationsList publications={publications} startRepostAction={() => { }} />
+          <PublicationsList publications={publications} startRepostAction={redirectToHomeWithRepostAction} />
         </>
       )}
       {!isLoading && publications.length === 0 && (
