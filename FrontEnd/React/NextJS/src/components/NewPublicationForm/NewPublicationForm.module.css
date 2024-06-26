@@ -1,14 +1,8 @@
 .newPublicationForm {
   align-items: center;
-  background-color: #efefef;
-  border: 1px solid #ccc;
-  border-left: none;
-  border-right: none;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1rem;
-  width: 100%;
 
   & .publicationContent {
     background-color: white;
