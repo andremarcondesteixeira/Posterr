@@ -95,3 +95,7 @@ label:has(select) {
   display: flex;
   gap: 1rem;
 }
+
+main {
+  padding-bottom: 1rem;
+}
