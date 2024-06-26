@@ -103,7 +103,7 @@ export default function Home() {
         />
       </ContainerBand>
       <div className={styles.additionalFeedActions}>
-        <SortingOrderSelector onChange={order => setSortingOrder(order)} />
+        <SortingOrderSelector value={sortingOrder} onChange={order => setSortingOrder(order)} />
         <SearchForm />
       </div>
       <PublicationsList publications={publications} startRepostAction={startRepost} />
