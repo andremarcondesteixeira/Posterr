@@ -88,12 +88,15 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <NewPublicationForm
-        setPublications={setPublications}
-        originalPost={originalPostForRepost}
-        setOriginalPost={setOriginalPostForRepost}
-        cancelRepostAction={() => setOriginalPostForRepost(null)}
-      />
+      <ContainerBand>
+        <NewPublicationForm
+          setPublications={setPublications}
+          originalPost={originalPostForRepost}
+          setOriginalPost={setOriginalPostForRepost}
+          cancelRepostAction={() => setOriginalPostForRepost(null)}
+        />
+        <SearchForm />
+      </ContainerBand>
       <PublicationsList publications={publications} startRepostAction={startRepost} />
       <p className={styles.loading} ref={feedEndElementRef}>
         <LoadingIcon />

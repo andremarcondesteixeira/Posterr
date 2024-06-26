@@ -1,0 +1,7 @@
+.containerBand {
+  background-color: #efefef;
+  border: 1px solid #ccc;
+  border-left: none;
+  border-right: none;
+  padding: 1rem;
+}
