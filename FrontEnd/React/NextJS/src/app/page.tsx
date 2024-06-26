@@ -1,7 +1,7 @@
 "use client"
 
 import { ContainerBand } from "@/components/ContainerBand";
-import { LoadingIcon } from "@/components/Icons";
+import { Loading } from "@/components/Loading";
 import { NewPublicationForm } from "@/components/NewPublicationForm";
 import { PublicationsList } from "@/components/PublicationsList";
 import { SearchForm } from "@/components/SearchForm";
@@ -102,10 +102,7 @@ export default function Home() {
         <SearchForm />
       </div>
       <PublicationsList publications={publications} startRepostAction={startRepost} />
-      <p className={styles.loading} ref={feedEndElementRef}>
-        <LoadingIcon />
-        Loading
-      </p>
+      <Loading ref={feedEndElementRef} />
     </section>
   );
 }

@@ -8,13 +8,6 @@
   padding-bottom: 1rem;
 }
 
-.loading {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
 .additionalFeedActions {
   display: flex;
   justify-content: flex-end;
