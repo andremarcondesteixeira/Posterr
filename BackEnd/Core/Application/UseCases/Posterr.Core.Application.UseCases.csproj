@@ -10,6 +10,7 @@
     <ProjectReference Include="..\..\Domain\Entities\Posterr.Core.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\Shared\ConfigurationInterfaces\Posterr.Core.Shared.ConfigurationInterfaces.csproj" />
     <ProjectReference Include="..\..\Shared\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj" />
+    <ProjectReference Include="..\..\Shared\Enums\Posterr.Core.Shared.Enums.csproj" />
     <ProjectReference Include="..\..\Shared\PersistenceInterfaces\Posterr.Core.Shared.PersistenceInterfaces.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>

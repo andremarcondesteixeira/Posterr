@@ -8,6 +8,7 @@ using Posterr.Core.Application.UseCases.ListPublications;
 using Posterr.Core.Application.UseCases.SearchPublications;
 using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
+using Posterr.Core.Shared.Enums;
 using Posterr.Core.Shared.Exceptions;
 using Posterr.Presentation.Web.RestApi.Controllers.SharedModels;
 using static Posterr.Presentation.Web.RestApi.Controllers.Publications.PublicationsListAPIResourceDTO;
@@ -28,12 +29,13 @@ public class PublicationsController(
 {
     [HttpGet(Name = nameof(ListPublications))]
     [ProducesResponseType<PublicationsListAPIResourceDTO>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
-    public IActionResult ListPublications([FromQuery] long lastSeenPublicationId, [FromQuery] bool isFirstPage)
+    public IActionResult ListPublications([FromQuery] long lastSeenPublicationId, [FromQuery] bool isFirstPage, [FromQuery] int sortingOrder)
     {
         try
         {
-            var paginationParameters = new ListPublicationsUseCaseInputDTO(isFirstPage, lastSeenPublicationId, domainConfig);
+            var paginationParameters = new ListPublicationsUseCaseInputDTO(isFirstPage, lastSeenPublicationId, domainConfig, sortingOrder);
             IList<IPublication> useCaseOutput = listPublicationsUseCase.Run(paginationParameters);
             var publications = useCaseOutput.Select(p => PublicationAPIResourceDTO.FromIPublication(p, linkGenerationService)).ToList();
             var response = new PublicationsListAPIResourceDTO(publications, paginationParameters, linkGenerationService)
@@ -50,7 +52,11 @@ public class PublicationsController(
         {
             return Problem(
                 title: ex.Message,
-                statusCode: StatusCodes.Status500InternalServerError,
+                statusCode: ex switch
+                {
+                    InvalidSortOrderException => StatusCodes.Status400BadRequest,
+                    _ => StatusCodes.Status500InternalServerError,
+                },
                 detail: ex.Mitigation,
                 instance: linkGenerationService.Generate(
                     controller: nameof(PublicationsController),

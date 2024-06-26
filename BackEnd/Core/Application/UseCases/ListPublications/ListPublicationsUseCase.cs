@@ -8,11 +8,6 @@ public sealed class ListPublicationsUseCase(IPublicationsRepository publications
 {
     public IList<IPublication> Run(ListPublicationsUseCaseInputDTO input)
     {
-        if (input.IsFirstPage)
-        {
-            return publicationsRepository.GetNMostRecentPublications(input.PageSize);
-        }
-
-        return publicationsRepository.Paginate(input.LastSeenPublicationId, input.PageSize);
+        return publicationsRepository.Paginate(input.IsFirstPage, input.LastSeenPublicationId, input.PageSize, input.SortOrder);
     }
 }

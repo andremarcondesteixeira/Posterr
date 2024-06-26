@@ -21,6 +21,7 @@ export default function Home() {
 
   useEffect(() => {
     const abortController = new AbortController();
+    setPublications([]);
     loadPublications(0, sortingOrder, abortController.signal);
 
     return () => {

@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj" />
+    <ProjectReference Include="..\Enums\Posterr.Core.Shared.Enums.csproj" />
   </ItemGroup>
 
 </Project>

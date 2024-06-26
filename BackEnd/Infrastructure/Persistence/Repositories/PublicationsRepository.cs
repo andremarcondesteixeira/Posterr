@@ -2,6 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Posterr.Core.Shared.EntitiesInterfaces;
+using Posterr.Core.Shared.Enums;
 using Posterr.Core.Shared.Exceptions;
 using Posterr.Core.Shared.PersistenceInterfaces;
 using Posterr.Infrastructure.Persistence.DbEntities;
@@ -51,18 +52,7 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         return publication.ToIRepost();
     }
 
-    public IList<IPublication> GetNMostRecentPublications(short amount)
-    {
-        return dbContext
-            .Publications
-            .Include(p => p.Author)
-            .OrderByDescending(p => p.PublicationDate)
-            .Take(amount)
-            .Select(p => p.ToIPublication())
-            .ToList();
-    }
-
-    public IList<IPublication> Paginate(long lastSeenPublicationId, short pageSize)
+    public IList<IPublication> Paginate(bool isFirstPage, long lastSeenPublicationId, short pageSize, SortOrder sortOrder)
     {
         using DbCommand command = dbContext.Database.GetDbConnection().CreateCommand();
         command.CommandText = """
@@ -72,16 +62,27 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
                 "AuthorUsername",
                 "Content",
                 "PublicationDate",
+                "AmountOfReposts",
                 "OriginalPostId",
                 "OriginalPostAuthorId",
                 "OriginalPostAuthorUsername",
                 "OriginalPostContent",
                 "OriginalPostPublicationDate"
             FROM "Publications"
-            WHERE "Id" < @lastSeenPublicationId
-            ORDER BY "PublicationDate" DESC
+            WHERE 1 = @isFirstPage OR "Id" < @lastSeenPublicationId
+            ORDER BY
+        """ + (
+            sortOrder == SortOrder.NEWEST ?
+                " \"PublicationDate\" DESC" :
+                " \"AmountOfReposts\" DESC, \"PublicationDate\" DESC"
+        ) + """
             OFFSET 0 ROWS FETCH FIRST @pageSize ROWS ONLY;
         """;
+
+        DbParameter isFirstPageParam = command.CreateParameter();
+        isFirstPageParam.ParameterName = "@isFirstPage";
+        isFirstPageParam.Value = isFirstPage ? 1 : 0;
+        command.Parameters.Add(isFirstPageParam);
 
         DbParameter lastSeenPublicationIdParam = command.CreateParameter();
         lastSeenPublicationIdParam.ParameterName = "@lastSeenPublicationId";
@@ -107,11 +108,12 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
                 AuthorUsername = reader.GetString(2),
                 Content = reader.GetString(3),
                 PublicationDate = reader.GetDateTime(4),
-                OriginalPostId = reader.IsDBNull(5) ? null : reader.GetInt64(5),
-                OriginalPostAuthorId = reader.IsDBNull(6) ? null : reader.GetInt64(6),
-                OriginalPostAuthorUsername = reader.IsDBNull(7) ? null : reader.GetString(7),
-                OriginalPostContent = reader.IsDBNull(8) ? null : reader.GetString(8),
-                OriginalPostPublicationDate = reader.IsDBNull(9) ? null : reader.GetDateTime(9),
+                AmountOfReposts = reader.GetInt32(5),
+                OriginalPostId = reader.IsDBNull(6) ? null : reader.GetInt64(6),
+                OriginalPostAuthorId = reader.IsDBNull(7) ? null : reader.GetInt64(7),
+                OriginalPostAuthorUsername = reader.IsDBNull(8) ? null : reader.GetString(8),
+                OriginalPostContent = reader.IsDBNull(9) ? null : reader.GetString(9),
+                OriginalPostPublicationDate = reader.IsDBNull(10) ? null : reader.GetDateTime(10),
             };
 
             if (publication.OriginalPostId == null)
@@ -169,6 +171,8 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         }
 
         PublicationDbEntity originalPost = originalPostQuery.First()!;
+
+        originalPost.AmountOfReposts++;
 
         var publicationDbEntity = new PublicationDbEntity()
         {

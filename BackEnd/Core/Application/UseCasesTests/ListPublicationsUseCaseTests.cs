@@ -2,6 +2,7 @@ using FakeItEasy;
 using Posterr.Core.Application.UseCases.ListPublications;
 using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
+using Posterr.Core.Shared.Enums;
 using Posterr.Core.Shared.PersistenceInterfaces;
 
 namespace Posterr.Core.Application.UseCasesTests;
@@ -28,9 +29,9 @@ public class ListPublicationsUseCaseTests
         IUser repostAuthor = Fake.User(Fake.RepostAuthorUsername);
         IRepost repost = Fake.Repost(2, repostAuthor, now, "repost content", post);
 
-        A.CallTo(() => publicationsRepository.GetNMostRecentPublications(15)).Returns([repost, post]);
+        A.CallTo(() => publicationsRepository.Paginate(true, 0, 15, SortOrder.NEWEST)).Returns([repost, post]);
 
-        IList<IPublication> publications = useCase.Run(new ListPublicationsUseCaseInputDTO(true, 0, domainConfig));
+        IList<IPublication> publications = useCase.Run(new ListPublicationsUseCaseInputDTO(true, 0, domainConfig, SortOrder.NEWEST));
 
         Assert.Equal(2, publications.Count);
 

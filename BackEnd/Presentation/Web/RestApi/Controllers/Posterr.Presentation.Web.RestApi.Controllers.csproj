@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\..\..\Core\Application\UseCases\Posterr.Core.Application.UseCases.csproj" />
     <ProjectReference Include="..\..\..\..\Core\Shared\ConfigurationInterfaces\Posterr.Core.Shared.ConfigurationInterfaces.csproj" />
     <ProjectReference Include="..\..\..\..\Core\Shared\EntitiesInterfaces\Posterr.Core.Shared.EntitiesInterfaces.csproj" />
+    <ProjectReference Include="..\..\..\..\Core\Shared\Enums\Posterr.Core.Shared.Enums.csproj" />
     <ProjectReference Include="..\..\..\..\Core\Shared\Exceptions\Posterr.Core.Shared.Exceptions.csproj" />
   </ItemGroup>
 

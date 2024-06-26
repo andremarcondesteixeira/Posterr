@@ -10,6 +10,7 @@ public class PublicationDbEntity : BaseDbEntity
     public required string AuthorUsername { get; set; }
     public required string Content { get; set; }
     public required DateTime PublicationDate { get; set; }
+    public int AmountOfReposts { get; set; } = 0;
     public long? OriginalPostId { get; set; }
     public long? OriginalPostAuthorId { get; set; }
     public string? OriginalPostAuthorUsername { get; set; }
