@@ -11,5 +11,5 @@ public interface IPublicationsRepository
     IList<IPublication> Paginate(long lastSeenPublicationId, short pageSize);
     IPost PublishNewPost(IUnpublishedPost unpublishedPost);
     IRepost PublishNewRepost(IUnpublishedRepost unpublishedRepost);
-    IList<IPublication> Search(string searchTerm, bool isFirstPage, short pageSize, long lastSeenPublicationId);
+    IList<IPublication> Search(string searchTerm);
 }

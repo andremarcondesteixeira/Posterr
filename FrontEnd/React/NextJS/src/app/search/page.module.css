@@ -5,3 +5,8 @@
   gap: 1rem;
   margin-bottom: 1rem;
 }
+
+.resultsDescriptionText {
+  text-align: center;
+  margin-bottom: 1rem;
+}

@@ -192,14 +192,13 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         return publicationDbEntity.ToIRepost();
     }
 
-    public IList<IPublication> Search(string searchTerm, bool isFirstPage, short pageSize, long lastSeenPublicationId)
+    public IList<IPublication> Search(string searchTerm)
     {
         return dbContext
             .Publications
             .Include(p => p.Author)
             .OrderByDescending(p => p.PublicationDate)
-            .Take(pageSize)
-            .Where(p => p.OriginalPostId == null && p.Content.Contains(searchTerm) && (isFirstPage || p.Id < lastSeenPublicationId))
+            .Where(p => p.OriginalPostId == null && p.Content.Contains(searchTerm))
             .Select(p => p.ToIPublication())
             .ToList();
     }

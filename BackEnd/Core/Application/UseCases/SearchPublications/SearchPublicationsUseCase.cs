@@ -7,6 +7,6 @@ public class SearchPublicationsUseCase(IPublicationsRepository publicationsRepos
 {
     public IList<IPublication> Run(SearchPublicationsUseCaseInputDTO input)
     {
-        return publicationsRepository.Search(input.SearchTerm, input.IsFirstPage, input.PageSize, input.LastSeenPublicationId);
+        return publicationsRepository.Search(input.SearchTerm);
     }
 }

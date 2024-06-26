@@ -168,18 +168,14 @@ public class PublicationsController(
     [HttpGet("search", Name = nameof(SearchPublications))]
     [ProducesResponseType<PublicationsListAPIResourceDTO>(StatusCodes.Status200OK)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
-    public IActionResult SearchPublications([FromQuery] string searchTerm, [FromQuery] long lastSeenPublicationId, [FromQuery] bool isFirstPage)
+    public IActionResult SearchPublications([FromQuery] string searchTerm)
     {
         try
         {
-            SearchPublicationsUseCaseInputDTO input = new(searchTerm, lastSeenPublicationId, isFirstPage, domainConfig);
+            SearchPublicationsUseCaseInputDTO input = new(searchTerm);
             IList<IPublication> useCaseOutput = searchPublicationsUseCase.Run(input);
             var publications = useCaseOutput.Select(p => PublicationAPIResourceDTO.FromIPublication(p, linkGenerationService)).ToList();
-            PublicationsListAPIResourceDTO response = new(
-                publications,
-                new(isFirstPage, lastSeenPublicationId, domainConfig),
-                linkGenerationService
-            )
+            SearchResultsAPIResourceDTO response = new(input, linkGenerationService)
             {
                 Embedded = new()
                 {

@@ -45,8 +45,8 @@ function publications_PATCH(authorUsername: string, content: string, originalPos
   });
 }
 
-function searchPublications(searchTerm: string, lastSeenPublicationId: number, isFirstPage: boolean, signal: AbortSignal) {
-  return makeRequest<PublicationsListAPIResource>(`${ApiEndpoint.publications.url}/search?searchTerm=${encodeURI(searchTerm)}&lastSeenPublicationId=${lastSeenPublicationId}&isFirstPage=${isFirstPage}`, {
+function searchPublications(searchTerm: string, signal: AbortSignal) {
+  return makeRequest<PublicationsListAPIResource>(`${ApiEndpoint.publications.url}/search?searchTerm=${encodeURI(searchTerm)}`, {
     signal
   });
 }
