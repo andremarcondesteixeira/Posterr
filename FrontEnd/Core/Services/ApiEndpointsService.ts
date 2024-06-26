@@ -10,6 +10,7 @@ export const ApiEndpoint = {
     GET: publications_GET,
     POST: publications_POST,
     PATCH: publications_PATCH,
+    search: searchPublications,
   },
   users: {
     url: `${baseUrl}/users`,
@@ -41,6 +42,12 @@ function publications_PATCH(authorUsername: string, content: string, originalPos
       "accept": "*/*",
       "Content-Type": "application/json"
     },
+  });
+}
+
+function searchPublications(searchTerm: string, lastSeenPublicationId: number, isFirstPage: boolean, signal: AbortSignal) {
+  return makeRequest<PublicationsListAPIResource>(`${ApiEndpoint.publications.url}/search?searchTerm=${encodeURI(searchTerm)}&lastSeenPublicationId=${lastSeenPublicationId}&isFirstPage=${isFirstPage}`, {
+    signal
   });
 }
 
