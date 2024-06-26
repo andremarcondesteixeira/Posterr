@@ -1,24 +1,20 @@
-import { MouseEventHandler } from "react";
+import { SortingOrder } from "./SortingOrder";
 import styles from "./SortingOrderSelector.module.css";
 
 type Props = {
-  onChange: (sortingOrder: string) => void;
+  onChange: (sortingOrder: SortingOrder) => void;
 }
 
 export function SortingOrderSelector({ onChange }: Props) {
-  const changeSortingOrder: MouseEventHandler<HTMLInputElement> = (event) => {
-    onChange((event.target as HTMLInputElement).value);
-  }
-
   return (
     <div className={styles.sortingOrderSelector}>
       Sort by:
       <label>
-        <input type="radio" name="sortingOrder" value="newest" onClick={changeSortingOrder} />
+        <input type="radio" name="sortingOrder" value={SortingOrder.NEWEST} onClick={() => onChange(SortingOrder.NEWEST)} />
         Newest
       </label>
       <label>
-        <input type="radio" name="sortingOrder" value="trending" onClick={changeSortingOrder} />
+        <input type="radio" name="sortingOrder" value={SortingOrder.TRENDING} onClick={() => onChange(SortingOrder.TRENDING)} />
         Trending
       </label>
     </div>
