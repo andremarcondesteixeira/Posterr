@@ -1,3 +1,5 @@
+#pragma warning disable IDE0305 // Simplify collection initialization
+
 using Microsoft.EntityFrameworkCore;
 using Posterr.Core.Shared.EntitiesInterfaces;
 using Posterr.Core.Shared.Exceptions;
@@ -49,16 +51,11 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         return publication.ToIRepost();
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Style",
-        "IDE0305:Simplify collection initialization",
-        Justification = "makes code harder to read in this case"
-    )]
     public IList<IPublication> GetNMostRecentPublications(short amount)
     {
         return dbContext
             .Publications
-            .Include(publication => publication.Author)
+            .Include(p => p.Author)
             .OrderByDescending(p => p.PublicationDate)
             .Take(amount)
             .Select(p => p.ToIPublication())
@@ -193,5 +190,17 @@ public class PublicationsRepository(ApplicationDbContext dbContext) : IPublicati
         dbContext.SaveChanges();
 
         return publicationDbEntity.ToIRepost();
+    }
+
+    public IList<IPublication> Search(string searchTerm, bool isFirstPage, short pageSize, long lastSeenPublicationId)
+    {
+        return dbContext
+            .Publications
+            .Include(p => p.Author)
+            .OrderByDescending(p => p.PublicationDate)
+            .Take(pageSize)
+            .Where(p => p.OriginalPostId == null && p.Content.Contains(searchTerm) && (isFirstPage || p.Id < lastSeenPublicationId))
+            .Select(p => p.ToIPublication())
+            .ToList();
     }
 }

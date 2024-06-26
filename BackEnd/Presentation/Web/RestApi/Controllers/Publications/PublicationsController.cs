@@ -5,6 +5,7 @@ using Posterr.Core.Application.UseCases.CreateNewPost;
 using Posterr.Core.Application.UseCases.CreateNewRepost;
 using Posterr.Core.Application.UseCases.GetPublicationById;
 using Posterr.Core.Application.UseCases.ListPublications;
+using Posterr.Core.Application.UseCases.SearchPublications;
 using Posterr.Core.Shared.ConfigurationInterfaces;
 using Posterr.Core.Shared.EntitiesInterfaces;
 using Posterr.Core.Shared.Exceptions;
@@ -17,22 +18,23 @@ namespace Posterr.Presentation.Web.RestApi.Controllers.Publications;
 [Route("api/[controller]")]
 public class PublicationsController(
     IDomainConfig domainConfig,
-    ListPublicationsUseCase listPublicationsWithPaginationUseCase,
+    ListPublicationsUseCase listPublicationsUseCase,
     GetPublicationByIdUseCase getPublicationByIdUseCase,
     CreateNewPostUseCase createNewPostUseCase,
     CreateNewRepostUseCase createNewRepostUseCase,
+    SearchPublicationsUseCase searchPublicationsUseCase,
     LinkGenerationService linkGenerationService
 ) : ControllerBase
 {
     [HttpGet(Name = nameof(ListPublications))]
     [ProducesResponseType<PublicationsListAPIResourceDTO>(StatusCodes.Status200OK)]
-    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public IActionResult ListPublications([FromQuery] long lastSeenPublicationId, [FromQuery] bool isFirstPage)
     {
         try
         {
             var paginationParameters = new ListPublicationsUseCaseInputDTO(isFirstPage, lastSeenPublicationId, domainConfig);
-            IList<IPublication> useCaseOutput = listPublicationsWithPaginationUseCase.Run(paginationParameters);
+            IList<IPublication> useCaseOutput = listPublicationsUseCase.Run(paginationParameters);
             var publications = useCaseOutput.Select(p => PublicationAPIResourceDTO.FromIPublication(p, linkGenerationService)).ToList();
             var response = new PublicationsListAPIResourceDTO(publications, paginationParameters, linkGenerationService)
             {
@@ -159,6 +161,44 @@ public class PublicationsController(
                     MaxAllowedDailyPublicationsByUserExceededException or DuplicatedRepostException => StatusCodes.Status403Forbidden,
                     _ => StatusCodes.Status500InternalServerError
                 }
+            );
+        }
+    }
+
+    [HttpGet("search", Name = nameof(SearchPublications))]
+    [ProducesResponseType<PublicationsListAPIResourceDTO>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
+    public IActionResult SearchPublications([FromQuery] string searchTerm, [FromQuery] long lastSeenPublicationId, [FromQuery] bool isFirstPage)
+    {
+        try
+        {
+            SearchPublicationsUseCaseInputDTO input = new(searchTerm, lastSeenPublicationId, isFirstPage, domainConfig);
+            IList<IPublication> useCaseOutput = searchPublicationsUseCase.Run(input);
+            var publications = useCaseOutput.Select(p => PublicationAPIResourceDTO.FromIPublication(p, linkGenerationService)).ToList();
+            PublicationsListAPIResourceDTO response = new(
+                publications,
+                new(isFirstPage, lastSeenPublicationId, domainConfig),
+                linkGenerationService
+            )
+            {
+                Embedded = new()
+                {
+                    Publications = publications,
+                }
+            };
+            return Ok(response);
+        }
+        catch(PosterrException e)
+        {
+            return Problem(
+                title: e.Message,
+                detail: e.Mitigation,
+                instance: linkGenerationService.Generate(
+                    controller: nameof(PublicationsController),
+                    action: nameof(SearchPublications),
+                    values: null
+                ),
+                statusCode: StatusCodes.Status500InternalServerError
             );
         }
     }
