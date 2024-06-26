@@ -5,7 +5,9 @@ import { Loading } from "@/components/Loading";
 import { NewPublicationForm } from "@/components/NewPublicationForm";
 import { PublicationsList } from "@/components/PublicationsList";
 import { SearchForm } from "@/components/SearchForm";
+import { SortingOrderSelector } from "@/components/SortingOrderSelector";
 import { Publication } from "@CoreDomain/Entities/types";
+import { SortingOrder } from "@CoreDomain/SortingOrder";
 import { ListPublicationsUseCase } from "@CoreDomain/UseCases";
 import { PosterrAPIErrorResponse, PublicationAPIResource } from "@CoreTypes";
 import { useEffect, useRef, useState } from "react";
@@ -14,18 +16,19 @@ import styles from "./page.module.css";
 export default function Home() {
   const [publications, setPublications] = useState<PublicationAPIResource[]>([]);
   const [originalPostForRepost, setOriginalPostForRepost] = useState<Publication | null>(null);
+  const [sortingOrder, setSortingOrder] = useState<SortingOrder>(SortingOrder.NEWEST);
   const feedEndElementRef = useRef<HTMLParagraphElement | null>(null);
 
   useEffect(() => {
     const abortController = new AbortController();
-    loadPublications(0, abortController.signal);
+    loadPublications(0, sortingOrder, abortController.signal);
 
     return () => {
       if (!abortController.signal.aborted) {
         abortController.abort();
       }
     }
-  }, []);
+  }, [sortingOrder]);
 
   useEffect(() => {
     if (!feedEndElementRef.current || publications.length === 0) return;
@@ -44,7 +47,7 @@ export default function Home() {
       if (!entries[0].isIntersecting || isLoading) return;
       isLoading = true;
       const lastSeenPublicationId = publications[publications.length - 1].id;
-      loadPublications(lastSeenPublicationId, abortController.signal, () => {
+      loadPublications(lastSeenPublicationId, sortingOrder, abortController.signal, () => {
         isLoading = false;
       });
     };
@@ -55,10 +58,10 @@ export default function Home() {
       abortController.abort();
       intersectionObserver.unobserve(currentRef);
     };
-  }, [publications]);
+  }, [publications, sortingOrder]);
 
-  async function loadPublications(lastSeenPublicationId: number, abortSignal: AbortSignal, onSuccess?: () => void) {
-    const response = await ListPublicationsUseCase(lastSeenPublicationId, abortSignal);
+  async function loadPublications(lastSeenPublicationId: number, sortingOrder: SortingOrder, abortSignal: AbortSignal, onSuccess?: () => void) {
+    const response = await ListPublicationsUseCase(lastSeenPublicationId, sortingOrder, abortSignal);
 
     response.match({
       ok(response) {
@@ -99,6 +102,7 @@ export default function Home() {
         />
       </ContainerBand>
       <div className={styles.additionalFeedActions}>
+        <SortingOrderSelector onChange={order => setSortingOrder(order)} />
         <SearchForm />
       </div>
       <PublicationsList publications={publications} startRepostAction={startRepost} />

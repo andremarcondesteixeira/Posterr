@@ -1,4 +1,4 @@
-import { SortingOrder } from "./SortingOrder";
+import { SortingOrder } from "../../Domain/UseCases/SortingOrder";
 import styles from "./SortingOrderSelector.module.css";
 
 type Props = {

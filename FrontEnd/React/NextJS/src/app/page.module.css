@@ -10,7 +10,7 @@
 
 .additionalFeedActions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   max-width: 40rem;
   width: 100%;
 }

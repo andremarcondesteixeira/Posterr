@@ -2,9 +2,11 @@ import { ApiEndpoint } from "../../Services/ApiEndpointsService";
 import { RequestAbortedError } from "../../Services/RequestAbortedError";
 import { Result } from "../../Util/Result";
 import { PosterrAPIErrorResponse, PublicationsListAPIResource } from "../../types";
+import { SortingOrder } from "../SortingOrder";
 
 export async function ListPublicationsUseCase(
   lastSeenPublicationId: number,
+  sortingOrder: SortingOrder,
   signal: AbortSignal
 ): Promise<Result<PublicationsListAPIResource, PosterrAPIErrorResponse | RequestAbortedError | string>> {
   if (!Number.isInteger(lastSeenPublicationId) || lastSeenPublicationId < 0) {
@@ -13,5 +15,5 @@ export async function ListPublicationsUseCase(
     );
   }
 
-  return ApiEndpoint.publications.GET(lastSeenPublicationId, lastSeenPublicationId === 0, signal);
+  return ApiEndpoint.publications.GET(lastSeenPublicationId, sortingOrder, lastSeenPublicationId === 0, signal);
 }

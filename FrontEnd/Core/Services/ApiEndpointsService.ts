@@ -1,3 +1,4 @@
+import { SortingOrder } from "../Domain/SortingOrder";
 import config from "../config.json";
 import { PublicationAPIResource, PublicationsListAPIResource, UsersListAPIResource } from "../types";
 import { makeRequest } from "./HttpRequestService";
@@ -18,8 +19,8 @@ export const ApiEndpoint = {
   }
 };
 
-function publications_GET(lastSeenPublicationId: number, isFirstPage: boolean, signal: AbortSignal) {
-  const url = `${ApiEndpoint.publications.url}?lastSeenPublicationId=${lastSeenPublicationId}&isFirstPage=${isFirstPage}`;
+function publications_GET(lastSeenPublicationId: number, sortingOrder: SortingOrder, isFirstPage: boolean, signal: AbortSignal) {
+  const url = `${ApiEndpoint.publications.url}?lastSeenPublicationId=${lastSeenPublicationId}&isFirstPage=${isFirstPage}&sortingOrder=${sortingOrder}`;
   return makeRequest<PublicationsListAPIResource>(url, { signal });
 }
 
