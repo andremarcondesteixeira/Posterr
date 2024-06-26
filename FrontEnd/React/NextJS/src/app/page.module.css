@@ -14,3 +14,10 @@
   flex-direction: column;
   justify-content: center;
 }
+
+.additionalFeedActions {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 40rem;
+  width: 100%;
+}

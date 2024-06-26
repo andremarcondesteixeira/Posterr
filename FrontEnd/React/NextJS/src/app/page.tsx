@@ -89,7 +89,7 @@ export default function Home() {
   }
 
   return (
-    <main className={styles.main}>
+    <section className={styles.main}>
       <ContainerBand>
         <NewPublicationForm
           setPublications={setPublications}
@@ -97,13 +97,15 @@ export default function Home() {
           setOriginalPost={setOriginalPostForRepost}
           cancelRepostAction={() => setOriginalPostForRepost(null)}
         />
-        <SearchForm />
       </ContainerBand>
+      <div className={styles.additionalFeedActions}>
+        <SearchForm />
+      </div>
       <PublicationsList publications={publications} startRepostAction={startRepost} />
       <p className={styles.loading} ref={feedEndElementRef}>
         <LoadingIcon />
         Loading
       </p>
-    </main>
+    </section>
   );
 }

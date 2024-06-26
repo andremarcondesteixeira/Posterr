@@ -6,8 +6,12 @@
   list-style-position: inside;
   list-style-type: none;
 
-  &, & li {
-    max-width: 40rem;
+  &, & > li {
     width: 100%;
+  }
+
+  & > li {
+    display: flex;
+    justify-content: center;
   }
 }
