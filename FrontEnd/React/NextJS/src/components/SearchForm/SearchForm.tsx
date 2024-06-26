@@ -25,7 +25,7 @@ export function SearchForm({ initialValue }: Props) {
         onChange={event => setSearchTerm(event.target.value)}
         required
       />
-      <button className="primary" type="submit">
+      <button type="submit" className="primary">
         <SearchIcon color="white" />
         Search
       </button>
