@@ -1,8 +1,10 @@
 "use client"
 
+import { ContainerBand } from "@/components/ContainerBand";
 import { LoadingIcon } from "@/components/Icons";
 import { NewPublicationForm } from "@/components/NewPublicationForm";
 import { PublicationsList } from "@/components/PublicationsList";
+import { SearchForm } from "@/components/SearchForm";
 import { Publication } from "@CoreDomain/Entities/types";
 import { ListPublicationsUseCase } from "@CoreDomain/UseCases";
 import { PosterrAPIErrorResponse, PublicationAPIResource } from "@CoreTypes";
