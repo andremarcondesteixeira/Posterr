@@ -11,7 +11,7 @@
 1. Run `dotnet test --collect:"XPlat Code Coverage"` from the root folder of the backend project to generate test coverage data
 2. Take note of the test coverage data files. They are shown in the ending "Attachments" section of the previous command's output. Each test coverage data file is named `coverage.cobertura.xml` and will be present in a `TestResults` folder of each test project.
 3. Make sure you have `dotnet-reportgenerator-globaltool` installed: `dotnet tool install -g dotnet-reportgenerator-globaltool`
-4. run the following command, including all the generated `coverage.cobertura.xml` files in the `reports` parameter:
+4. run the following command, including all the generated `coverage.cobertura.xml` files in the `reports` parameter: (NOTE: run this in s single line in the terminal. In my experience, it is the only way to make it work without returning an error output caused by the command format in the terminal)
    ```
    reportgenerator
        -reports:"Path\To\TestProject\TestResults\{guid}\coverage.cobertura.xml", "Path2" ..., "PathN"
