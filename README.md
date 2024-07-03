@@ -33,8 +33,8 @@ Here's the breakdown of the core domain entities:
 - User
     - Username
 
-All entities have an interface that directly represents them, so that I can use their definitions while keeping a clear boundary between the application layers.
-Post and Repost both implement the IPublication interface.
+All entities have an interface that directly represents them, so that I can use their definitions while keeping a clear boundary between the application layers: IPost, IRepost and IUser
+IPost and IRepost both extends the IPublication interface.
 
 ## Domain Entities (Front End)
 
