@@ -33,11 +33,14 @@ Here's the breakdown of the core domain entities:
 - User
     - Username
 
+All entities have an interface that directly represents them, so that I can use their definitions while keeping a clear boundary between the application layers.
+Post and Repost both implement the IPublication interface.
+
 ## Domain Entities (Front End)
 
 On the front-end side, I've decided not to strictly enforce domain rules, delegating this responsibility to the backend.
 
-Validation on the front end will primarily focus on enhancing the user experience, without imposing strict enforcement by the type system. Validation will only occur during form submissions for creating new posts.
+Validation on the front end will primarily focus on enhancing the user experience, without imposing strict enforcement by the type system. Validation will only occur during form submissions for creating new publications.
 
 ## Core Business Rules
 
