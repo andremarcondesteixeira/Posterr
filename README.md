@@ -96,3 +96,5 @@ In the BackEnd side, I used principles from Domain Driven Design, Clean Architec
 2. Write e2e tests with Playwright
 3. Use Terraform to automatically deploy the application in AWS
 4. Setup CI/CD with GitHub Actions
+5. Explore alternative databases (NoSQL databases to be more precise) to save the publications.
+6. Stress testing
