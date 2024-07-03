@@ -35,7 +35,7 @@ Here's the breakdown of the core domain entities:
 
 All entities have an interface that directly represents them, so that I can use their definitions while keeping a clear boundary between the application layers: IPost, IRepost and IUser.
 
-Both IPost and IRepost both extend the IPublication interface.
+Both IPost and IRepost extend the IPublication interface.
 
 ## Domain Entities (Front End)
 
