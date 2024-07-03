@@ -1,6 +1,6 @@
 # Posterr
 
-This is a simple Twitter like feed.
+This is a simple Twitter-like feed.
 
 Users can create posts and repost posts once. A maximum publication size and a maximum allowed amount of daily publications can be configured.
 
