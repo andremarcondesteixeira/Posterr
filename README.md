@@ -98,3 +98,5 @@ In the BackEnd side, I used principles from Domain Driven Design, Clean Architec
 4. Setup CI/CD with GitHub Actions
 5. Explore alternative databases (NoSQL databases to be more precise) to save the publications.
 6. Stress testing
+7. Add Authentication and Authorization
+8. Write a Backoffice app to manage users and publications
