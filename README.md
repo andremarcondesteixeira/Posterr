@@ -1,12 +1,10 @@
-# Posterr - André Teixeira's Full Stack Technical Evaluation
+# Posterr
 
-For this evaluation, I've integrated principles from Clean Architecture and common design patterns associated with Domain Driven Design.
+This is a simple Twitter like feed.
 
-I'll start by developing the Core Domain layer (equivalent to the Entities layer in Clean Architecture) using Test-Driven Development (TDD), and then move on to implementing the outer layers.
+Users can create posts and repost posts once. A maximum publication size and a maximum allowed amount of daily publications can be configured.
 
-Throughout the process, I'll be adding comments within the codebase to shed light on my decision-making process.
-
-To kick things off, I began by mapping out the functional requirements and outlining domain entities, setting a solid foundation for development.
+In this project, I've integrated principles from Clean Architecture and common design patterns associated with Domain Driven Design.
 
 ## Domain Entities (Back End)
 
@@ -41,11 +39,9 @@ On the front-end side, I've decided not to strictly enforce domain rules, delega
 
 Validation on the front end will primarily focus on enhancing the user experience, without imposing strict enforcement by the type system. Validation will only occur during form submissions for creating new posts.
 
-This approach will expedite the development of the front end.
-
 ## Core Business Rules
 
-Following principles from Clean Architecture, I've identified the following Enterprise Business Rules:
+Following principles from Clean Architecture, I've implemented the following Enterprise Business Rules:
 
 - Usernames must be unique and alphanumeric (ensured at the database level)
 - Posts are restricted to text content
@@ -66,14 +62,10 @@ Following principles from Clean Architecture, I've identified the following Ente
 
 # Application Business Rules
 
-The pagination guideline, stipulating 15 Publications on the first page and 20 on subsequent pages, could be considered an Application Business Rule, albeit subject to interpretation. For this assessment's purposes, I'll treat it as such.
-
 Here are the application business rules:
 
-- Pagination with infinite scroll (first page displays 15 Publications, subsequent pages display 20)
+- Pagination with infinite scroll (first page displays 15 Publications, subsequent pages display 20, but this is configurable)
 - Comprehensive display of Post information (user, publication date, content)
-- No authentication mechanism
-- Absence of users CRUD operations
 - Configurable default user
 - Confirmation prompt for reposting actions
 
@@ -94,27 +86,9 @@ In the BackEnd side, I used principles from Domain Driven Design, Clean Architec
     1. Controllers: Contains the Rest API controllers.
     2. EntryPoint: Starts the application. This is separated from the controllers so that the controllers do not have access to the database repositories, which would break the separation of layers.
 
-# Critique
+# What I would like to do next
 
-## What I would like to to better
-
-1. I would like to have used TDD in the frontend side. The NextJS application ended up without any unit test.
+1. Write unit tests for the frontend
 2. Write e2e tests with Playwright
 3. Use Terraform to automatically deploy the application in AWS
 4. Setup CI/CD with GitHub Actions
-5. I wrote this app in the rare spare time slots I had. I currently work doing freelance projects and also I need to take care of my son, and because of that, it took a long time to finish. I wish I had finished this quicker.
-
-## Scaling
-
-1. If this project were to grow and have many users and posts, which part do you think would fail first? R: The backend side would fail first. The frontend side could use cache and CDN's to scale easily as it is, but the backend side would suffer from performance related to database. The database schema was not created with millions of users in mind.
-2. How would I scale it?
-    1. In the frontend side:
-        1. CDN's to distribute static assets
-        2. Caching
-    2. In the backend side:
-        1. Caching of requests
-        2. Elastic container services, like AWS ECS, to automatically create or delete instances according to volume of requests
-        3. A Load Balancer
-        4. Separate the database into a READ database and a WRITE database
-        5. Maybe trying other kind of database, such as NoSQL databases like MongoDB or Redis, created for high volume transactions.
-        6. Break the architecture into separate services so that they could be scaled independently.
